@@ -1,0 +1,25 @@
+Package: golfastr
+Type: Package
+Title: Efficiently Access Pro Golf Data
+Version: 0.1.0
+Authors@R:
+    person("Ray", "Carpenter", email = "raymondcarpenter1.com", role = c("aut", "cre"))
+Description: Fetch PGA Tour tournament data from ESPN including leaderboards
+    and hole-by-hole scoring. Data is returned in tidy tibble format ready for
+    analysis. Supports local DuckDB storage for fast repeated access.
+License: MIT + file LICENSE
+Encoding: UTF-8
+RoxygenNote: 7.3.3
+Imports:
+    httr2,
+    dplyr,
+    tibble,
+    DBI
+Suggests:
+    testthat (>= 3.0.0),
+    duckdb,
+    arrow,
+    ggplot2
+Config/testthat/edition: 3
+URL: https://github.com/raycarpenter/golfastr
+BugReports: https://github.com/raycarpenter/golfastr/issues

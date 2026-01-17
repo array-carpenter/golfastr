@@ -1,0 +1,32 @@
+^.*\.Rproj$
+^\.Rproj\.user$
+^LICENSE\.md$
+^README\.Rmd$
+^\.github$
+^codecov\.yml$
+^_pkgdown\.yml$
+^docs$
+^pkgdown$
+^\.lintr$
+^cran-comments\.md$
+^CRAN-SUBMISSION$
+^\.local$
+
+# Development files
+^test_functions\.R$
+^test_get_golf_data\.R$
+^test_year_data\.R$
+^test_export_2025_2026\.R$
+^generate_test_data\.R$
+
+# Internal documentation
+^ESPN_API_REFERENCE\.md$
+^DATA_HOSTING\.md$
+^PACKAGE_SUMMARY\.md$
+
+# Example outputs
+^examples$
+
+# Data preparation
+^data-raw$
+^scripts$

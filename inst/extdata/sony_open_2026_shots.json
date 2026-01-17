@@ -1,0 +1,117 @@
+{
+  "data": {
+    "shotDetailsV3": {
+      "playerId": "32102",
+      "holes": [
+        {
+          "holeNumber": 1,
+          "par": 4,
+          "score": "-",
+          "strokes": []
+        },
+        {
+          "holeNumber": 2,
+          "par": 4,
+          "score": "-",
+          "strokes": []
+        },
+        {
+          "holeNumber": 3,
+          "par": 4,
+          "score": "-",
+          "strokes": []
+        },
+        {
+          "holeNumber": 4,
+          "par": 3,
+          "score": "-",
+          "strokes": []
+        },
+        {
+          "holeNumber": 5,
+          "par": 4,
+          "score": "-",
+          "strokes": []
+        },
+        {
+          "holeNumber": 6,
+          "par": 4,
+          "score": "-",
+          "strokes": []
+        },
+        {
+          "holeNumber": 7,
+          "par": 3,
+          "score": "-",
+          "strokes": []
+        },
+        {
+          "holeNumber": 8,
+          "par": 4,
+          "score": "-",
+          "strokes": []
+        },
+        {
+          "holeNumber": 9,
+          "par": 5,
+          "score": "-",
+          "strokes": []
+        },
+        {
+          "holeNumber": 10,
+          "par": 4,
+          "score": "-",
+          "strokes": []
+        },
+        {
+          "holeNumber": 11,
+          "par": 3,
+          "score": "-",
+          "strokes": []
+        },
+        {
+          "holeNumber": 12,
+          "par": 4,
+          "score": "-",
+          "strokes": []
+        },
+        {
+          "holeNumber": 13,
+          "par": 4,
+          "score": "-",
+          "strokes": []
+        },
+        {
+          "holeNumber": 14,
+          "par": 4,
+          "score": "-",
+          "strokes": []
+        },
+        {
+          "holeNumber": 15,
+          "par": 4,
+          "score": "-",
+          "strokes": []
+        },
+        {
+          "holeNumber": 16,
+          "par": 4,
+          "score": "-",
+          "strokes": []
+        },
+        {
+          "holeNumber": 17,
+          "par": 3,
+          "score": "-",
+          "strokes": []
+        },
+        {
+          "holeNumber": 18,
+          "par": 5,
+          "score": "-",
+          "strokes": []
+        }
+      ]
+    }
+  }
+}

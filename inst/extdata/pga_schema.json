@@ -1,0 +1,4897 @@
+{
+  "data": {
+    "__schema": {
+      "queryType": {
+        "name": "Query",
+        "fields": [
+          {
+            "name": "liveVideoOverride",
+            "description": {},
+            "args": [
+              {
+                "name": "tourCode",
+                "type": {
+                  "name": {},
+                  "kind": "NON_NULL"
+                }
+              },
+              {
+                "name": "tournamentId",
+                "type": {
+                  "name": {},
+                  "kind": "NON_NULL"
+                }
+              }
+            ],
+            "type": {
+              "name": {},
+              "kind": "NON_NULL",
+              "ofType": {
+                "name": "LiveVideoOverride",
+                "kind": "OBJECT"
+              }
+            }
+          },
+          {
+            "name": "videoLandingPage",
+            "description": {},
+            "args": [
+              {
+                "name": "tourCode",
+                "type": {
+                  "name": {},
+                  "kind": "NON_NULL"
+                }
+              }
+            ],
+            "type": {
+              "name": "WatchLanding",
+              "kind": "OBJECT",
+              "ofType": {}
+            }
+          },
+          {
+            "name": "videoNavigation",
+            "description": {},
+            "args": [
+              {
+                "name": "tourCode",
+                "type": {
+                  "name": {},
+                  "kind": "NON_NULL"
+                }
+              }
+            ],
+            "type": {
+              "name": "VideoNavigation",
+              "kind": "OBJECT",
+              "ofType": {}
+            }
+          },
+          {
+            "name": "contentFragmentTabs",
+            "description": {},
+            "args": [
+              {
+                "name": "path",
+                "type": {
+                  "name": {},
+                  "kind": "NON_NULL"
+                }
+              }
+            ],
+            "type": {
+              "name": {},
+              "kind": "NON_NULL",
+              "ofType": {
+                "name": "ContentFragmentTabs",
+                "kind": "OBJECT"
+              }
+            }
+          },
+          {
+            "name": "ryderCupContentPageTabs",
+            "description": {},
+            "args": [
+              {
+                "name": "path",
+                "type": {
+                  "name": {},
+                  "kind": "NON_NULL"
+                }
+              }
+            ],
+            "type": {
+              "name": {},
+              "kind": "NON_NULL",
+              "ofType": {
+                "name": "ContentFragmentTabs",
+                "kind": "OBJECT"
+              }
+            }
+          },
+          {
+            "name": "scatterData",
+            "description": {},
+            "args": [
+              {
+                "name": "tournamentId",
+                "type": {
+                  "name": {},
+                  "kind": "NON_NULL"
+                }
+              },
+              {
+                "name": "course",
+                "type": {
+                  "name": {},
+                  "kind": "NON_NULL"
+                }
+              },
+              {
+                "name": "hole",
+                "type": {
+                  "name": {},
+                  "kind": "NON_NULL"
+                }
+              }
+            ],
+            "type": {
+              "name": {},
+              "kind": "NON_NULL",
+              "ofType": {
+                "name": "ScatterData",
+                "kind": "OBJECT"
+              }
+            }
+          },
+          {
+            "name": "scatterDataCompressed",
+            "description": {},
+            "args": [
+              {
+                "name": "tournamentId",
+                "type": {
+                  "name": {},
+                  "kind": "NON_NULL"
+                }
+              },
+              {
+                "name": "course",
+                "type": {
+                  "name": {},
+                  "kind": "NON_NULL"
+                }
+              },
+              {
+                "name": "hole",
+                "type": {
+                  "name": {},
+                  "kind": "NON_NULL"
+                }
+              }
+            ],
+            "type": {
+              "name": {},
+              "kind": "NON_NULL",
+              "ofType": {
+                "name": "ScatterDataCompressed",
+                "kind": "OBJECT"
+              }
+            }
+          },
+          {
+            "name": "signatureStandings",
+            "description": {},
+            "args": [
+              {
+                "name": "tourCode",
+                "type": {
+                  "name": {},
+                  "kind": "NON_NULL"
+                }
+              }
+            ],
+            "type": {
+              "name": {},
+              "kind": "NON_NULL",
+              "ofType": {
+                "name": "SignatureStandings",
+                "kind": "OBJECT"
+              }
+            }
+          },
+          {
+            "name": "franchises",
+            "description": {},
+            "args": [
+              {
+                "name": "tourCode",
+                "type": {
+                  "name": "String",
+                  "kind": "SCALAR"
+                }
+              }
+            ],
+            "type": {
+              "name": {},
+              "kind": "NON_NULL",
+              "ofType": {
+                "name": {},
+                "kind": "LIST"
+              }
+            }
+          },
+          {
+            "name": "videoFranchises",
+            "description": {},
+            "args": [
+              {
+                "name": "tourCode",
+                "type": {
+                  "name": "TourCode",
+                  "kind": "ENUM"
+                }
+              }
+            ],
+            "type": {
+              "name": "TourCategories",
+              "kind": "OBJECT",
+              "ofType": {}
+            }
+          },
+          {
+            "name": "newsFranchises",
+            "description": {},
+            "args": [
+              {
+                "name": "tourCode",
+                "type": {
+                  "name": "String",
+                  "kind": "SCALAR"
+                }
+              },
+              {
+                "name": "allFranchises",
+                "type": {
+                  "name": "Boolean",
+                  "kind": "SCALAR"
+                }
+              }
+            ],
+            "type": {
+              "name": {},
+              "kind": "NON_NULL",
+              "ofType": {
+                "name": {},
+                "kind": "LIST"
+              }
+            }
+          },
+          {
+            "name": "podcastEpisodes",
+            "description": {},
+            "args": [
+              {
+                "name": "podcastId",
+                "type": {
+                  "name": {},
+                  "kind": "NON_NULL"
+                }
+              },
+              {
+                "name": "limit",
+                "type": {
+                  "name": "Int",
+                  "kind": "SCALAR"
+                }
+              },
+              {
+                "name": "offset",
+                "type": {
+                  "name": "Int",
+                  "kind": "SCALAR"
+                }
+              }
+            ],
+            "type": {
+              "name": {},
+              "kind": "NON_NULL",
+              "ofType": {
+                "name": {},
+                "kind": "LIST"
+              }
+            }
+          },
+          {
+            "name": "podcasts",
+            "description": {},
+            "args": [],
+            "type": {
+              "name": {},
+              "kind": "NON_NULL",
+              "ofType": {
+                "name": {},
+                "kind": "LIST"
+              }
+            }
+          },
+          {
+            "name": "leaderboardV2",
+            "description": {},
+            "args": [
+              {
+                "name": "id",
+                "type": {
+                  "name": {},
+                  "kind": "NON_NULL"
+                }
+              }
+            ],
+            "type": {
+              "name": {},
+              "kind": "NON_NULL",
+              "ofType": {
+                "name": "LeaderboardV2",
+                "kind": "OBJECT"
+              }
+            }
+          },
+          {
+            "name": "leaderboardV3",
+            "description": {},
+            "args": [
+              {
+                "name": "id",
+                "type": {
+                  "name": {},
+                  "kind": "NON_NULL"
+                }
+              }
+            ],
+            "type": {
+              "name": {},
+              "kind": "NON_NULL",
+              "ofType": {
+                "name": "LeaderboardV3",
+                "kind": "OBJECT"
+              }
+            }
+          },
+          {
+            "name": "leaderboardStrokes",
+            "description": {},
+            "args": [
+              {
+                "name": "id",
+                "type": {
+                  "name": {},
+                  "kind": "NON_NULL"
+                }
+              }
+            ],
+            "type": {
+              "name": {},
+              "kind": "NON_NULL",
+              "ofType": {
+                "name": "LeaderboardStrokes",
+                "kind": "OBJECT"
+              }
+            }
+          },
+          {
+            "name": "leaderboardStrokesCompressed",
+            "description": {},
+            "args": [
+              {
+                "name": "id",
+                "type": {
+                  "name": {},
+                  "kind": "NON_NULL"
+                }
+              }
+            ],
+            "type": {
+              "name": {},
+              "kind": "NON_NULL",
+              "ofType": {
+                "name": "LeaderboardStrokesCompressed",
+                "kind": "OBJECT"
+              }
+            }
+          },
+          {
+            "name": "leaderboardStats",
+            "description": {},
+            "args": [
+              {
+                "name": "id",
+                "type": {
+                  "name": {},
+                  "kind": "NON_NULL"
+                }
+              },
+              {
+                "name": "statsType",
+                "type": {
+                  "name": "LeaderboardStatsType",
+                  "kind": "ENUM"
+                }
+              }
+            ],
+            "type": {
+              "name": {},
+              "kind": "NON_NULL",
+              "ofType": {
+                "name": "LeaderboardStats",
+                "kind": "OBJECT"
+              }
+            }
+          },
+          {
+            "name": "tournamentPastResults",
+            "description": {},
+            "args": [
+              {
+                "name": "id",
+                "type": {
+                  "name": {},
+                  "kind": "NON_NULL"
+                }
+              },
+              {
+                "name": "year",
+                "type": {
+                  "name": "Int",
+                  "kind": "SCALAR"
+                }
+              }
+            ],
+            "type": {
+              "name": {},
+              "kind": "NON_NULL",
+              "ofType": {
+                "name": "HistoricalLeaderboard",
+                "kind": "OBJECT"
+              }
+            }
+          },
+          {
+            "name": "leaderboardCompressedV2",
+            "description": {},
+            "args": [
+              {
+                "name": "id",
+                "type": {
+                  "name": {},
+                  "kind": "NON_NULL"
+                }
+              }
+            ],
+            "type": {
+              "name": {},
+              "kind": "NON_NULL",
+              "ofType": {
+                "name": "LeaderboardCompressedV2",
+                "kind": "OBJECT"
+              }
+            }
+          },
+          {
+            "name": "leaderboardCompressedV3",
+            "description": "  Get the leaderboard for a tournament by tournamentID. The data in the payload property will be Base64 encoded.",
+            "args": [
+              {
+                "name": "id",
+                "type": {
+                  "name": {},
+                  "kind": "NON_NULL"
+                }
+              }
+            ],
+            "type": {
+              "name": {},
+              "kind": "NON_NULL",
+              "ofType": {
+                "name": "LeaderboardCompressedV3",
+                "kind": "OBJECT"
+              }
+            }
+          },
+          {
+            "name": "teamStrokePlayLeaderboard",
+            "description": {},
+            "args": [
+              {
+                "name": "id",
+                "type": {
+                  "name": {},
+                  "kind": "NON_NULL"
+                }
+              }
+            ],
+            "type": {
+              "name": {},
+              "kind": "NON_NULL",
+              "ofType": {
+                "name": "TSPLeaderboard",
+                "kind": "OBJECT"
+              }
+            }
+          },
+          {
+            "name": "teamStrokePlayLeaderboardCompressed",
+            "description": {},
+            "args": [
+              {
+                "name": "id",
+                "type": {
+                  "name": {},
+                  "kind": "NON_NULL"
+                }
+              }
+            ],
+            "type": {
+              "name": {},
+              "kind": "NON_NULL",
+              "ofType": {
+                "name": "LeaderboardCompressed",
+                "kind": "OBJECT"
+              }
+            }
+          },
+          {
+            "name": "teamStrokePlayScorecard",
+            "description": {},
+            "args": [
+              {
+                "name": "tournamentId",
+                "type": {
+                  "name": {},
+                  "kind": "NON_NULL"
+                }
+              },
+              {
+                "name": "roundNum",
+                "type": {
+                  "name": {},
+                  "kind": "NON_NULL"
+                }
+              },
+              {
+                "name": "teamId",
+                "type": {
+                  "name": {},
+                  "kind": "NON_NULL"
+                }
+              }
+            ],
+            "type": {
+              "name": {},
+              "kind": "NON_NULL",
+              "ofType": {
+                "name": "TSPScorecard",
+                "kind": "OBJECT"
+              }
+            }
+          },
+          {
+            "name": "teamStrokePlayScorecardRounds",
+            "description": {},
+            "args": [
+              {
+                "name": "tournamentId",
+                "type": {
+                  "name": {},
+                  "kind": "NON_NULL"
+                }
+              },
+              {
+                "name": "teamId",
+                "type": {
+                  "name": {},
+                  "kind": "NON_NULL"
+                }
+              }
+            ],
+            "type": {
+              "name": {},
+              "kind": "NON_NULL",
+              "ofType": {
+                "name": "TSPScorecardRounds",
+                "kind": "OBJECT"
+              }
+            }
+          },
+          {
+            "name": "teamStrokePlayTeeTimes",
+            "description": {},
+            "args": [
+              {
+                "name": "tournamentId",
+                "type": {
+                  "name": {},
+                  "kind": "NON_NULL"
+                }
+              }
+            ],
+            "type": {
+              "name": {},
+              "kind": "NON_NULL",
+              "ofType": {
+                "name": "TSPTeeTimes",
+                "kind": "OBJECT"
+              }
+            }
+          },
+          {
+            "name": "teamStrokePlayTeeTimesCompressed",
+            "description": {},
+            "args": [
+              {
+                "name": "tournamentId",
+                "type": {
+                  "name": {},
+                  "kind": "NON_NULL"
+                }
+              }
+            ],
+            "type": {
+              "name": {},
+              "kind": "NON_NULL",
+              "ofType": {
+                "name": "TeeTimesCompressed",
+                "kind": "OBJECT"
+              }
+            }
+          },
+          {
+            "name": "matchPlayLeaderboard",
+            "description": {},
+            "args": [
+              {
+                "name": "id",
+                "type": {
+                  "name": {},
+                  "kind": "NON_NULL"
+                }
+              }
+            ],
+            "type": {
+              "name": {},
+              "kind": "NON_NULL",
+              "ofType": {
+                "name": "MPLeaderboard",
+                "kind": "OBJECT"
+              }
+            }
+          },
+          {
+            "name": "matchPlayLeaderboardCompressed",
+            "description": {},
+            "args": [
+              {
+                "name": "id",
+                "type": {
+                  "name": {},
+                  "kind": "NON_NULL"
+                }
+              }
+            ],
+            "type": {
+              "name": {},
+              "kind": "NON_NULL",
+              "ofType": {
+                "name": "LeaderboardCompressed",
+                "kind": "OBJECT"
+              }
+            }
+          },
+          {
+            "name": "matchPlayScorecard",
+            "description": {},
+            "args": [
+              {
+                "name": "tournamentId",
+                "type": {
+                  "name": {},
+                  "kind": "NON_NULL"
+                }
+              },
+              {
+                "name": "roundNum",
+                "type": {
+                  "name": {},
+                  "kind": "NON_NULL"
+                }
+              },
+              {
+                "name": "matchId",
+                "type": {
+                  "name": {},
+                  "kind": "NON_NULL"
+                }
+              }
+            ],
+            "type": {
+              "name": {},
+              "kind": "NON_NULL",
+              "ofType": {
+                "name": "MPScorecard",
+                "kind": "OBJECT"
+              }
+            }
+          },
+          {
+            "name": "matchPlayPlayoffScorecard",
+            "description": {},
+            "args": [
+              {
+                "name": "tournamentId",
+                "type": {
+                  "name": {},
+                  "kind": "NON_NULL"
+                }
+              },
+              {
+                "name": "roundNum",
+                "type": {
+                  "name": {},
+                  "kind": "NON_NULL"
+                }
+              },
+              {
+                "name": "matchId",
+                "type": {
+                  "name": {},
+                  "kind": "NON_NULL"
+                }
+              }
+            ],
+            "type": {
+              "name": {},
+              "kind": "NON_NULL",
+              "ofType": {
+                "name": "MPPlayoffScorecard",
+                "kind": "OBJECT"
+              }
+            }
+          },
+          {
+            "name": "matchPlayTeeTimes",
+            "description": {},
+            "args": [
+              {
+                "name": "tournamentId",
+                "type": {
+                  "name": {},
+                  "kind": "NON_NULL"
+                }
+              }
+            ],
+            "type": {
+              "name": {},
+              "kind": "NON_NULL",
+              "ofType": {
+                "name": "MPTeeTimes",
+                "kind": "OBJECT"
+              }
+            }
+          },
+          {
+            "name": "matchPlayTeeTimesCompressed",
+            "description": {},
+            "args": [
+              {
+                "name": "tournamentId",
+                "type": {
+                  "name": {},
+                  "kind": "NON_NULL"
+                }
+              }
+            ],
+            "type": {
+              "name": {},
+              "kind": "NON_NULL",
+              "ofType": {
+                "name": "TeeTimesCompressed",
+                "kind": "OBJECT"
+              }
+            }
+          },
+          {
+            "name": "matchPlayScorecardResults",
+            "description": {},
+            "args": [
+              {
+                "name": "tournamentId",
+                "type": {
+                  "name": {},
+                  "kind": "NON_NULL"
+                }
+              },
+              {
+                "name": "roundNum",
+                "type": {
+                  "name": {},
+                  "kind": "NON_NULL"
+                }
+              },
+              {
+                "name": "matchId",
+                "type": {
+                  "name": {},
+                  "kind": "NON_NULL"
+                }
+              }
+            ],
+            "type": {
+              "name": {},
+              "kind": "NON_NULL",
+              "ofType": {
+                "name": "MPScorecardResults",
+                "kind": "OBJECT"
+              }
+            }
+          },
+          {
+            "name": "groupStageRankings",
+            "description": {},
+            "args": [
+              {
+                "name": "tournamentId",
+                "type": {
+                  "name": {},
+                  "kind": "NON_NULL"
+                }
+              }
+            ],
+            "type": {
+              "name": {},
+              "kind": "NON_NULL",
+              "ofType": {
+                "name": "GroupStageRankings",
+                "kind": "OBJECT"
+              }
+            }
+          },
+          {
+            "name": "schedule",
+            "description": {},
+            "args": [
+              {
+                "name": "tourCode",
+                "type": {
+                  "name": {},
+                  "kind": "NON_NULL"
+                }
+              },
+              {
+                "name": "year",
+                "type": {
+                  "name": "String",
+                  "kind": "SCALAR"
+                }
+              },
+              {
+                "name": "filter",
+                "type": {
+                  "name": "TournamentCategory",
+                  "kind": "ENUM"
+                }
+              }
+            ],
+            "type": {
+              "name": {},
+              "kind": "NON_NULL",
+              "ofType": {
+                "name": "Schedule",
+                "kind": "OBJECT"
+              }
+            }
+          },
+          {
+            "name": "completeSchedule",
+            "description": {},
+            "args": [
+              {
+                "name": "tourCode",
+                "type": {
+                  "name": {},
+                  "kind": "NON_NULL"
+                }
+              },
+              {
+                "name": "filter",
+                "type": {
+                  "name": "TournamentCategory",
+                  "kind": "ENUM"
+                }
+              }
+            ],
+            "type": {
+              "name": {},
+              "kind": "NON_NULL",
+              "ofType": {
+                "name": {},
+                "kind": "LIST"
+              }
+            }
+          },
+          {
+            "name": "upcomingSchedule",
+            "description": {},
+            "args": [
+              {
+                "name": "tourCode",
+                "type": {
+                  "name": {},
+                  "kind": "NON_NULL"
+                }
+              },
+              {
+                "name": "year",
+                "type": {
+                  "name": "String",
+                  "kind": "SCALAR"
+                }
+              },
+              {
+                "name": "filter",
+                "type": {
+                  "name": "TournamentCategory",
+                  "kind": "ENUM"
+                }
+              }
+            ],
+            "type": {
+              "name": {},
+              "kind": "NON_NULL",
+              "ofType": {
+                "name": "ScheduleUpcoming",
+                "kind": "OBJECT"
+              }
+            }
+          },
+          {
+            "name": "scorecardV2",
+            "description": {},
+            "args": [
+              {
+                "name": "id",
+                "type": {
+                  "name": {},
+                  "kind": "NON_NULL"
+                }
+              },
+              {
+                "name": "playerId",
+                "type": {
+                  "name": {},
+                  "kind": "NON_NULL"
+                }
+              }
+            ],
+            "type": {
+              "name": {},
+              "kind": "NON_NULL",
+              "ofType": {
+                "name": "LeaderboardDrawerV2",
+                "kind": "OBJECT"
+              }
+            }
+          },
+          {
+            "name": "scorecardCompressedV3",
+            "description": {},
+            "args": [
+              {
+                "name": "tournamentId",
+                "type": {
+                  "name": {},
+                  "kind": "NON_NULL"
+                }
+              },
+              {
+                "name": "playerId",
+                "type": {
+                  "name": {},
+                  "kind": "NON_NULL"
+                }
+              },
+              {
+                "name": "officialEventData",
+                "type": {
+                  "name": "Boolean",
+                  "kind": "SCALAR"
+                }
+              }
+            ],
+            "type": {
+              "name": {},
+              "kind": "NON_NULL",
+              "ofType": {
+                "name": "ScorecardCompressedV3",
+                "kind": "OBJECT"
+              }
+            }
+          },
+          {
+            "name": "scorecardV3",
+            "description": {},
+            "args": [
+              {
+                "name": "tournamentId",
+                "type": {
+                  "name": {},
+                  "kind": "NON_NULL"
+                }
+              },
+              {
+                "name": "playerId",
+                "type": {
+                  "name": {},
+                  "kind": "NON_NULL"
+                }
+              },
+              {
+                "name": "officialEventData",
+                "type": {
+                  "name": "Boolean",
+                  "kind": "SCALAR"
+                }
+              }
+            ],
+            "type": {
+              "name": {},
+              "kind": "NON_NULL",
+              "ofType": {
+                "name": "ScorecardV3",
+                "kind": "OBJECT"
+              }
+            }
+          },
+          {
+            "name": "scorecardStats",
+            "description": {},
+            "args": [
+              {
+                "name": "id",
+                "type": {
+                  "name": {},
+                  "kind": "NON_NULL"
+                }
+              },
+              {
+                "name": "playerId",
+                "type": {
+                  "name": {},
+                  "kind": "NON_NULL"
+                }
+              }
+            ],
+            "type": {
+              "name": {},
+              "kind": "NON_NULL",
+              "ofType": {
+                "name": "PlayerScorecardStats",
+                "kind": "OBJECT"
+              }
+            }
+          },
+          {
+            "name": "scorecardStatsV3Compressed",
+            "description": {},
+            "args": [
+              {
+                "name": "id",
+                "type": {
+                  "name": {},
+                  "kind": "NON_NULL"
+                }
+              },
+              {
+                "name": "playerId",
+                "type": {
+                  "name": {},
+                  "kind": "NON_NULL"
+                }
+              }
+            ],
+            "type": {
+              "name": {},
+              "kind": "NON_NULL",
+              "ofType": {
+                "name": "PlayerScorecardStatsCompressed",
+                "kind": "OBJECT"
+              }
+            }
+          },
+          {
+            "name": "scorecardStatsV3",
+            "description": {},
+            "args": [
+              {
+                "name": "id",
+                "type": {
+                  "name": {},
+                  "kind": "NON_NULL"
+                }
+              },
+              {
+                "name": "playerId",
+                "type": {
+                  "name": {},
+                  "kind": "NON_NULL"
+                }
+              }
+            ],
+            "type": {
+              "name": {},
+              "kind": "NON_NULL",
+              "ofType": {
+                "name": "PlayerScorecardStats",
+                "kind": "OBJECT"
+              }
+            }
+          },
+          {
+            "name": "historicalScorecardStats",
+            "description": {},
+            "args": [
+              {
+                "name": "playerId",
+                "type": {
+                  "name": {},
+                  "kind": "NON_NULL"
+                }
+              }
+            ],
+            "type": {
+              "name": {},
+              "kind": "NON_NULL",
+              "ofType": {
+                "name": "HistoricalPlayerScorecards",
+                "kind": "OBJECT"
+              }
+            }
+          },
+          {
+            "name": "playoffScorecard",
+            "description": {},
+            "args": [
+              {
+                "name": "id",
+                "type": {
+                  "name": {},
+                  "kind": "NON_NULL"
+                }
+              }
+            ],
+            "type": {
+              "name": {},
+              "kind": "NON_NULL",
+              "ofType": {
+                "name": "PlayoffScorecard",
+                "kind": "OBJECT"
+              }
+            }
+          },
+          {
+            "name": "playoffScorecardV3",
+            "description": {},
+            "args": [
+              {
+                "name": "tournamentId",
+                "type": {
+                  "name": {},
+                  "kind": "NON_NULL"
+                }
+              }
+            ],
+            "type": {
+              "name": {},
+              "kind": "NON_NULL",
+              "ofType": {
+                "name": "TournamentPlayoffScorecards",
+                "kind": "OBJECT"
+              }
+            }
+          },
+          {
+            "name": "shotDetailsCompressedV3",
+            "description": {},
+            "args": [
+              {
+                "name": "tournamentId",
+                "type": {
+                  "name": {},
+                  "kind": "NON_NULL"
+                }
+              },
+              {
+                "name": "playerId",
+                "type": {
+                  "name": {},
+                  "kind": "NON_NULL"
+                }
+              },
+              {
+                "name": "round",
+                "type": {
+                  "name": {},
+                  "kind": "NON_NULL"
+                }
+              },
+              {
+                "name": "includeRadar",
+                "type": {
+                  "name": "Boolean",
+                  "kind": "SCALAR"
+                }
+              }
+            ],
+            "type": {
+              "name": {},
+              "kind": "NON_NULL",
+              "ofType": {
+                "name": "ShotDetailsCompressedV3",
+                "kind": "OBJECT"
+              }
+            }
+          },
+          {
+            "name": "shotDetailsV3",
+            "description": {},
+            "args": [
+              {
+                "name": "tournamentId",
+                "type": {
+                  "name": {},
+                  "kind": "NON_NULL"
+                }
+              },
+              {
+                "name": "playerId",
+                "type": {
+                  "name": {},
+                  "kind": "NON_NULL"
+                }
+              },
+              {
+                "name": "round",
+                "type": {
+                  "name": {},
+                  "kind": "NON_NULL"
+                }
+              },
+              {
+                "name": "includeRadar",
+                "type": {
+                  "name": "Boolean",
+                  "kind": "SCALAR"
+                }
+              }
+            ],
+            "type": {
+              "name": {},
+              "kind": "NON_NULL",
+              "ofType": {
+                "name": "ShotDetails",
+                "kind": "OBJECT"
+              }
+            }
+          },
+          {
+            "name": "playoffShotDetails",
+            "description": {},
+            "args": [
+              {
+                "name": "tournamentId",
+                "type": {
+                  "name": {},
+                  "kind": "NON_NULL"
+                }
+              },
+              {
+                "name": "includeRadar",
+                "type": {
+                  "name": "Boolean",
+                  "kind": "SCALAR"
+                }
+              }
+            ],
+            "type": {
+              "name": {},
+              "kind": "NON_NULL",
+              "ofType": {
+                "name": "GroupShotDetails",
+                "kind": "OBJECT"
+              }
+            }
+          },
+          {
+            "name": "playoffShotDetailsCompressed",
+            "description": {},
+            "args": [
+              {
+                "name": "tournamentId",
+                "type": {
+                  "name": {},
+                  "kind": "NON_NULL"
+                }
+              },
+              {
+                "name": "includeRadar",
+                "type": {
+                  "name": "Boolean",
+                  "kind": "SCALAR"
+                }
+              }
+            ],
+            "type": {
+              "name": {},
+              "kind": "NON_NULL",
+              "ofType": {
+                "name": "GroupShotDetailsCompressed",
+                "kind": "OBJECT"
+              }
+            }
+          },
+          {
+            "name": "tspPlayoffShotDetails",
+            "description": {},
+            "args": [
+              {
+                "name": "tournamentId",
+                "type": {
+                  "name": {},
+                  "kind": "NON_NULL"
+                }
+              },
+              {
+                "name": "includeRadar",
+                "type": {
+                  "name": "Boolean",
+                  "kind": "SCALAR"
+                }
+              }
+            ],
+            "type": {
+              "name": {},
+              "kind": "NON_NULL",
+              "ofType": {
+                "name": "TeamShotDetails",
+                "kind": "OBJECT"
+              }
+            }
+          },
+          {
+            "name": "tspPlayoffShotDetailsCompressed",
+            "description": {},
+            "args": [
+              {
+                "name": "tournamentId",
+                "type": {
+                  "name": {},
+                  "kind": "NON_NULL"
+                }
+              },
+              {
+                "name": "includeRadar",
+                "type": {
+                  "name": "Boolean",
+                  "kind": "SCALAR"
+                }
+              }
+            ],
+            "type": {
+              "name": {},
+              "kind": "NON_NULL",
+              "ofType": {
+                "name": "TeamShotDetailsCompressed",
+                "kind": "OBJECT"
+              }
+            }
+          },
+          {
+            "name": "teeTimes",
+            "description": {},
+            "args": [
+              {
+                "name": "id",
+                "type": {
+                  "name": {},
+                  "kind": "NON_NULL"
+                }
+              }
+            ],
+            "type": {
+              "name": {},
+              "kind": "NON_NULL",
+              "ofType": {
+                "name": "TeeTimes",
+                "kind": "OBJECT"
+              }
+            }
+          },
+          {
+            "name": "teeTimesCompressed",
+            "description": {},
+            "args": [
+              {
+                "name": "id",
+                "type": {
+                  "name": {},
+                  "kind": "NON_NULL"
+                }
+              }
+            ],
+            "type": {
+              "name": {},
+              "kind": "NON_NULL",
+              "ofType": {
+                "name": "TeeTimesCompressed",
+                "kind": "OBJECT"
+              }
+            }
+          },
+          {
+            "name": "teeTimesV2",
+            "description": {},
+            "args": [
+              {
+                "name": "id",
+                "type": {
+                  "name": {},
+                  "kind": "NON_NULL"
+                }
+              }
+            ],
+            "type": {
+              "name": {},
+              "kind": "NON_NULL",
+              "ofType": {
+                "name": "TeeTimesV2",
+                "kind": "OBJECT"
+              }
+            }
+          },
+          {
+            "name": "teeTimesCompressedV2",
+            "description": {},
+            "args": [
+              {
+                "name": "id",
+                "type": {
+                  "name": {},
+                  "kind": "NON_NULL"
+                }
+              }
+            ],
+            "type": {
+              "name": {},
+              "kind": "NON_NULL",
+              "ofType": {
+                "name": "TeeTimesCompressed",
+                "kind": "OBJECT"
+              }
+            }
+          },
+          {
+            "name": "tournaments",
+            "description": "  Get tournament information for the given tournament IDs",
+            "args": [
+              {
+                "name": "ids",
+                "type": {
+                  "name": {},
+                  "kind": "LIST"
+                }
+              }
+            ],
+            "type": {
+              "name": {},
+              "kind": "NON_NULL",
+              "ofType": {
+                "name": {},
+                "kind": "LIST"
+              }
+            }
+          },
+          {
+            "name": "field",
+            "description": {},
+            "args": [
+              {
+                "name": "id",
+                "type": {
+                  "name": {},
+                  "kind": "NON_NULL"
+                }
+              },
+              {
+                "name": "includeWithdrawn",
+                "type": {
+                  "name": "Boolean",
+                  "kind": "SCALAR"
+                }
+              },
+              {
+                "name": "changesOnly",
+                "type": {
+                  "name": "Boolean",
+                  "kind": "SCALAR"
+                }
+              }
+            ],
+            "type": {
+              "name": {},
+              "kind": "NON_NULL",
+              "ofType": {
+                "name": "Field",
+                "kind": "OBJECT"
+              }
+            }
+          },
+          {
+            "name": "groupedField",
+            "description": {},
+            "args": [
+              {
+                "name": "id",
+                "type": {
+                  "name": {},
+                  "kind": "NON_NULL"
+                }
+              },
+              {
+                "name": "includeWithdrawn",
+                "type": {
+                  "name": "Boolean",
+                  "kind": "SCALAR"
+                }
+              },
+              {
+                "name": "changesOnly",
+                "type": {
+                  "name": "Boolean",
+                  "kind": "SCALAR"
+                }
+              }
+            ],
+            "type": {
+              "name": {},
+              "kind": "NON_NULL",
+              "ofType": {
+                "name": "GroupedField",
+                "kind": "OBJECT"
+              }
+            }
+          },
+          {
+            "name": "fieldStats",
+            "description": {},
+            "args": [
+              {
+                "name": "tournamentId",
+                "type": {
+                  "name": {},
+                  "kind": "NON_NULL"
+                }
+              },
+              {
+                "name": "fieldStatType",
+                "type": {
+                  "name": "FieldStatType",
+                  "kind": "ENUM"
+                }
+              }
+            ],
+            "type": {
+              "name": {},
+              "kind": "NON_NULL",
+              "ofType": {
+                "name": "FieldStats",
+                "kind": "OBJECT"
+              }
+            }
+          },
+          {
+            "name": "videos",
+            "description": {},
+            "args": [
+              {
+                "name": "tournamentId",
+                "type": {
+                  "name": "String",
+                  "kind": "SCALAR"
+                }
+              },
+              {
+                "name": "playerId",
+                "type": {
+                  "name": "String",
+                  "kind": "SCALAR"
+                }
+              },
+              {
+                "name": "playerIds",
+                "type": {
+                  "name": {},
+                  "kind": "LIST"
+                }
+              },
+              {
+                "name": "rating",
+                "type": {
+                  "name": "Int",
+                  "kind": "SCALAR"
+                }
+              },
+              {
+                "name": "category",
+                "type": {
+                  "name": "String",
+                  "kind": "SCALAR"
+                }
+              },
+              {
+                "name": "franchise",
+                "type": {
+                  "name": "String",
+                  "kind": "SCALAR"
+                }
+              },
+              {
+                "name": "franchises",
+                "type": {
+                  "name": {},
+                  "kind": "LIST"
+                }
+              },
+              {
+                "name": "tour",
+                "type": {
+                  "name": "String",
+                  "kind": "SCALAR"
+                }
+              },
+              {
+                "name": "tourCode",
+                "type": {
+                  "name": "TourCode",
+                  "kind": "ENUM"
+                }
+              },
+              {
+                "name": "season",
+                "type": {
+                  "name": "String",
+                  "kind": "SCALAR"
+                }
+              },
+              {
+                "name": "limit",
+                "type": {
+                  "name": "Int",
+                  "kind": "SCALAR"
+                }
+              },
+              {
+                "name": "offset",
+                "type": {
+                  "name": "Int",
+                  "kind": "SCALAR"
+                }
+              },
+              {
+                "name": "holeNumber",
+                "type": {
+                  "name": "String",
+                  "kind": "SCALAR"
+                }
+              },
+              {
+                "name": "language",
+                "type": {
+                  "name": "VideoLanguage",
+                  "kind": "ENUM"
+                }
+              }
+            ],
+            "type": {
+              "name": {},
+              "kind": "NON_NULL",
+              "ofType": {
+                "name": {},
+                "kind": "LIST"
+              }
+            }
+          },
+          {
+            "name": "videoRecommendations",
+            "description": {},
+            "args": [
+              {
+                "name": "brightcoveId",
+                "type": {
+                  "name": "ID",
+                  "kind": "SCALAR"
+                }
+              },
+              {
+                "name": "tournamentId",
+                "type": {
+                  "name": "String",
+                  "kind": "SCALAR"
+                }
+              },
+              {
+                "name": "playerId",
+                "type": {
+                  "name": "String",
+                  "kind": "SCALAR"
+                }
+              },
+              {
+                "name": "franchise",
+                "type": {
+                  "name": "String",
+                  "kind": "SCALAR"
+                }
+              },
+              {
+                "name": "tour",
+                "type": {
+                  "name": "String",
+                  "kind": "SCALAR"
+                }
+              },
+              {
+                "name": "tourCode",
+                "type": {
+                  "name": "TourCode",
+                  "kind": "ENUM"
+                }
+              },
+              {
+                "name": "season",
+                "type": {
+                  "name": "String",
+                  "kind": "SCALAR"
+                }
+              },
+              {
+                "name": "limit",
+                "type": {
+                  "name": "Int",
+                  "kind": "SCALAR"
+                }
+              },
+              {
+                "name": "offset",
+                "type": {
+                  "name": "Int",
+                  "kind": "SCALAR"
+                }
+              },
+              {
+                "name": "language",
+                "type": {
+                  "name": "VideoLanguage",
+                  "kind": "ENUM"
+                }
+              }
+            ],
+            "type": {
+              "name": {},
+              "kind": "NON_NULL",
+              "ofType": {
+                "name": {},
+                "kind": "LIST"
+              }
+            }
+          },
+          {
+            "name": "player",
+            "description": {},
+            "args": [
+              {
+                "name": "id",
+                "type": {
+                  "name": {},
+                  "kind": "NON_NULL"
+                }
+              }
+            ],
+            "type": {
+              "name": {},
+              "kind": "NON_NULL",
+              "ofType": {
+                "name": "PlayerBioWrapper",
+                "kind": "OBJECT"
+              }
+            }
+          },
+          {
+            "name": "players",
+            "description": {},
+            "args": [
+              {
+                "name": "ids",
+                "type": {
+                  "name": {},
+                  "kind": "NON_NULL"
+                }
+              }
+            ],
+            "type": {
+              "name": {},
+              "kind": "NON_NULL",
+              "ofType": {
+                "name": {},
+                "kind": "LIST"
+              }
+            }
+          },
+          {
+            "name": "liveAudioStream",
+            "description": {},
+            "args": [
+              {
+                "name": "id",
+                "type": {
+                  "name": {},
+                  "kind": "NON_NULL"
+                }
+              }
+            ],
+            "type": {
+              "name": {},
+              "kind": "NON_NULL",
+              "ofType": {
+                "name": "AudioStream",
+                "kind": "OBJECT"
+              }
+            }
+          },
+          {
+            "name": "playerDirectory",
+            "description": {},
+            "args": [
+              {
+                "name": "tourCode",
+                "type": {
+                  "name": {},
+                  "kind": "NON_NULL"
+                }
+              },
+              {
+                "name": "active",
+                "type": {
+                  "name": "Boolean",
+                  "kind": "SCALAR"
+                }
+              }
+            ],
+            "type": {
+              "name": {},
+              "kind": "NON_NULL",
+              "ofType": {
+                "name": "PlayerDirectory",
+                "kind": "OBJECT"
+              }
+            }
+          },
+          {
+            "name": "coverage",
+            "description": {},
+            "args": [
+              {
+                "name": "tournamentId",
+                "type": {
+                  "name": {},
+                  "kind": "NON_NULL"
+                }
+              },
+              {
+                "name": "pastResults",
+                "type": {
+                  "name": "Boolean",
+                  "kind": "SCALAR"
+                }
+              }
+            ],
+            "type": {
+              "name": {},
+              "kind": "NON_NULL",
+              "ofType": {
+                "name": "BroadcastCoverage",
+                "kind": "OBJECT"
+              }
+            }
+          },
+          {
+            "name": "broadcastTimes",
+            "description": {},
+            "args": [
+              {
+                "name": "tournamentId",
+                "type": {
+                  "name": {},
+                  "kind": "NON_NULL"
+                }
+              },
+              {
+                "name": "pastResults",
+                "type": {
+                  "name": "Boolean",
+                  "kind": "SCALAR"
+                }
+              }
+            ],
+            "type": {
+              "name": {},
+              "kind": "NON_NULL",
+              "ofType": {
+                "name": "BroadcastCoverage",
+                "kind": "OBJECT"
+              }
+            }
+          },
+          {
+            "name": "networks",
+            "description": {},
+            "args": [
+              {
+                "name": "tournamentId",
+                "type": {
+                  "name": {},
+                  "kind": "NON_NULL"
+                }
+              }
+            ],
+            "type": {
+              "name": {},
+              "kind": "NON_NULL",
+              "ofType": {
+                "name": "BroadcastNetworks",
+                "kind": "OBJECT"
+              }
+            }
+          },
+          {
+            "name": "upcomingNetworks",
+            "description": {},
+            "args": [
+              {
+                "name": "tournamentIds",
+                "type": {
+                  "name": {},
+                  "kind": "NON_NULL"
+                }
+              },
+              {
+                "name": "tourCode",
+                "type": {
+                  "name": "TourCode",
+                  "kind": "ENUM"
+                }
+              }
+            ],
+            "type": {
+              "name": {},
+              "kind": "NON_NULL",
+              "ofType": {
+                "name": "UpcomingBroadcastNetworks",
+                "kind": "OBJECT"
+              }
+            }
+          },
+          {
+            "name": "newsArticles",
+            "description": {},
+            "args": [
+              {
+                "name": "tour",
+                "type": {
+                  "name": "TourCode",
+                  "kind": "ENUM"
+                }
+              },
+              {
+                "name": "franchise",
+                "type": {
+                  "name": "String",
+                  "kind": "SCALAR"
+                }
+              },
+              {
+                "name": "franchises",
+                "type": {
+                  "name": {},
+                  "kind": "LIST"
+                }
+              },
+              {
+                "name": "playerId",
+                "type": {
+                  "name": "ID",
+                  "kind": "SCALAR"
+                }
+              },
+              {
+                "name": "playerIds",
+                "type": {
+                  "name": {},
+                  "kind": "LIST"
+                }
+              },
+              {
+                "name": "limit",
+                "type": {
+                  "name": "Int",
+                  "kind": "SCALAR"
+                }
+              },
+              {
+                "name": "offset",
+                "type": {
+                  "name": "Int",
+                  "kind": "SCALAR"
+                }
+              },
+              {
+                "name": "tags",
+                "type": {
+                  "name": {},
+                  "kind": "LIST"
+                }
+              },
+              {
+                "name": "tournamentNum",
+                "type": {
+                  "name": "String",
+                  "kind": "SCALAR"
+                }
+              },
+              {
+                "name": "targetYear",
+                "type": {
+                  "name": "String",
+                  "kind": "SCALAR"
+                }
+              },
+              {
+                "name": "sectionName",
+                "type": {
+                  "name": "String",
+                  "kind": "SCALAR"
+                }
+              }
+            ],
+            "type": {
+              "name": {},
+              "kind": "NON_NULL",
+              "ofType": {
+                "name": "NewsArticles",
+                "kind": "OBJECT"
+              }
+            }
+          },
+          {
+            "name": "defaultTourCup",
+            "description": {},
+            "args": [
+              {
+                "name": "tour",
+                "type": {
+                  "name": {},
+                  "kind": "NON_NULL"
+                }
+              },
+              {
+                "name": "year",
+                "type": {
+                  "name": "Int",
+                  "kind": "SCALAR"
+                }
+              }
+            ],
+            "type": {
+              "name": {},
+              "kind": "NON_NULL",
+              "ofType": {
+                "name": "TourCupRankingEvent",
+                "kind": "OBJECT"
+              }
+            }
+          },
+          {
+            "name": "tourCups",
+            "description": {},
+            "args": [
+              {
+                "name": "tour",
+                "type": {
+                  "name": {},
+                  "kind": "NON_NULL"
+                }
+              },
+              {
+                "name": "year",
+                "type": {
+                  "name": {},
+                  "kind": "NON_NULL"
+                }
+              }
+            ],
+            "type": {
+              "name": {},
+              "kind": "NON_NULL",
+              "ofType": {
+                "name": {},
+                "kind": "LIST"
+              }
+            }
+          },
+          {
+            "name": "tourCup",
+            "description": {},
+            "args": [
+              {
+                "name": "id",
+                "type": {
+                  "name": {},
+                  "kind": "NON_NULL"
+                }
+              },
+              {
+                "name": "type",
+                "type": {
+                  "name": "TourCupType",
+                  "kind": "ENUM"
+                }
+              }
+            ],
+            "type": {
+              "name": {},
+              "kind": "NON_NULL",
+              "ofType": {
+                "name": "TourCupRankingEvent",
+                "kind": "OBJECT"
+              }
+            }
+          },
+          {
+            "name": "tourCupCombined",
+            "description": {},
+            "args": [
+              {
+                "name": "tourCode",
+                "type": {
+                  "name": {},
+                  "kind": "NON_NULL"
+                }
+              },
+              {
+                "name": "id",
+                "type": {
+                  "name": "String",
+                  "kind": "SCALAR"
+                }
+              },
+              {
+                "name": "year",
+                "type": {
+                  "name": "Int",
+                  "kind": "SCALAR"
+                }
+              },
+              {
+                "name": "eventQuery",
+                "type": {
+                  "name": "StatDetailEventQuery",
+                  "kind": "INPUT_OBJECT"
+                }
+              }
+            ],
+            "type": {
+              "name": {},
+              "kind": "NON_NULL",
+              "ofType": {
+                "name": "TourCupCombined",
+                "kind": "OBJECT"
+              }
+            }
+          },
+          {
+            "name": "tourCupSplit",
+            "description": {},
+            "args": [
+              {
+                "name": "tourCode",
+                "type": {
+                  "name": {},
+                  "kind": "NON_NULL"
+                }
+              },
+              {
+                "name": "id",
+                "type": {
+                  "name": "String",
+                  "kind": "SCALAR"
+                }
+              },
+              {
+                "name": "year",
+                "type": {
+                  "name": "Int",
+                  "kind": "SCALAR"
+                }
+              },
+              {
+                "name": "eventQuery",
+                "type": {
+                  "name": "StatDetailEventQuery",
+                  "kind": "INPUT_OBJECT"
+                }
+              }
+            ],
+            "type": {
+              "name": "TourCupSplit",
+              "kind": "OBJECT",
+              "ofType": {}
+            }
+          },
+          {
+            "name": "playerProfileStats",
+            "description": {},
+            "args": [
+              {
+                "name": "playerId",
+                "type": {
+                  "name": {},
+                  "kind": "NON_NULL"
+                }
+              }
+            ],
+            "type": {
+              "name": {},
+              "kind": "NON_NULL",
+              "ofType": {
+                "name": {},
+                "kind": "LIST"
+              }
+            }
+          },
+          {
+            "name": "playerProfileCourseResults",
+            "description": {},
+            "args": [
+              {
+                "name": "playerId",
+                "type": {
+                  "name": {},
+                  "kind": "NON_NULL"
+                }
+              },
+              {
+                "name": "tourCode",
+                "type": {
+                  "name": "TourCode",
+                  "kind": "ENUM"
+                }
+              }
+            ],
+            "type": {
+              "name": "PlayerProfileCourseResults",
+              "kind": "OBJECT",
+              "ofType": {}
+            }
+          },
+          {
+            "name": "playerProfileMajorResults",
+            "description": {},
+            "args": [
+              {
+                "name": "playerId",
+                "type": {
+                  "name": {},
+                  "kind": "NON_NULL"
+                }
+              }
+            ],
+            "type": {
+              "name": "PlayerProfileMajors",
+              "kind": "OBJECT",
+              "ofType": {}
+            }
+          },
+          {
+            "name": "playerProfileTournamentResults",
+            "description": {},
+            "args": [
+              {
+                "name": "playerId",
+                "type": {
+                  "name": {},
+                  "kind": "NON_NULL"
+                }
+              },
+              {
+                "name": "tourCode",
+                "type": {
+                  "name": "TourCode",
+                  "kind": "ENUM"
+                }
+              }
+            ],
+            "type": {
+              "name": {},
+              "kind": "NON_NULL",
+              "ofType": {
+                "name": "PlayerProfileTournamentResults",
+                "kind": "OBJECT"
+              }
+            }
+          },
+          {
+            "name": "playerProfileScorecards",
+            "description": {},
+            "args": [
+              {
+                "name": "playerId",
+                "type": {
+                  "name": {},
+                  "kind": "NON_NULL"
+                }
+              }
+            ],
+            "type": {
+              "name": {},
+              "kind": "NON_NULL",
+              "ofType": {
+                "name": "HistoricalPlayerScorecards",
+                "kind": "OBJECT"
+              }
+            }
+          },
+          {
+            "name": "playerTournamentStatus",
+            "description": {},
+            "args": [
+              {
+                "name": "playerId",
+                "type": {
+                  "name": {},
+                  "kind": "NON_NULL"
+                }
+              }
+            ],
+            "type": {
+              "name": "PlayerTournamentStatus",
+              "kind": "OBJECT",
+              "ofType": {}
+            }
+          },
+          {
+            "name": "courseStats",
+            "description": {},
+            "args": [
+              {
+                "name": "tournamentId",
+                "type": {
+                  "name": {},
+                  "kind": "NON_NULL"
+                }
+              }
+            ],
+            "type": {
+              "name": {},
+              "kind": "NON_NULL",
+              "ofType": {
+                "name": "TournamentHoleStats",
+                "kind": "OBJECT"
+              }
+            }
+          },
+          {
+            "name": "holeDetails",
+            "description": {},
+            "args": [
+              {
+                "name": "tournamentId",
+                "type": {
+                  "name": {},
+                  "kind": "NON_NULL"
+                }
+              },
+              {
+                "name": "courseId",
+                "type": {
+                  "name": {},
+                  "kind": "NON_NULL"
+                }
+              },
+              {
+                "name": "hole",
+                "type": {
+                  "name": {},
+                  "kind": "NON_NULL"
+                }
+              }
+            ],
+            "type": {
+              "name": {},
+              "kind": "NON_NULL",
+              "ofType": {
+                "name": "HoleDetail",
+                "kind": "OBJECT"
+              }
+            }
+          },
+          {
+            "name": "courseHolesStats",
+            "description": {},
+            "args": [
+              {
+                "name": "tournamentId",
+                "type": {
+                  "name": {},
+                  "kind": "NON_NULL"
+                }
+              },
+              {
+                "name": "courseId",
+                "type": {
+                  "name": {},
+                  "kind": "NON_NULL"
+                }
+              }
+            ],
+            "type": {
+              "name": {},
+              "kind": "NON_NULL",
+              "ofType": {
+                "name": {},
+                "kind": "LIST"
+              }
+            }
+          },
+          {
+            "name": "yourTour",
+            "description": {},
+            "args": [
+              {
+                "name": "tourCode",
+                "type": {
+                  "name": {},
+                  "kind": "NON_NULL"
+                }
+              }
+            ],
+            "type": {
+              "name": {},
+              "kind": "NON_NULL",
+              "ofType": {
+                "name": "YourTourStory",
+                "kind": "OBJECT"
+              }
+            }
+          },
+          {
+            "name": "yourTourNews",
+            "description": {},
+            "args": [
+              {
+                "name": "tourCode",
+                "type": {
+                  "name": {},
+                  "kind": "NON_NULL"
+                }
+              },
+              {
+                "name": "limit",
+                "type": {
+                  "name": "Int",
+                  "kind": "SCALAR"
+                }
+              },
+              {
+                "name": "offset",
+                "type": {
+                  "name": "Int",
+                  "kind": "SCALAR"
+                }
+              }
+            ],
+            "type": {
+              "name": {},
+              "kind": "NON_NULL",
+              "ofType": {
+                "name": {},
+                "kind": "LIST"
+              }
+            }
+          },
+          {
+            "name": "promoSection",
+            "description": {},
+            "args": [
+              {
+                "name": "section",
+                "type": {
+                  "name": {},
+                  "kind": "NON_NULL"
+                }
+              }
+            ],
+            "type": {
+              "name": {},
+              "kind": "NON_NULL",
+              "ofType": {
+                "name": "PromoSectionContainer",
+                "kind": "OBJECT"
+              }
+            }
+          },
+          {
+            "name": "statLeaders",
+            "description": {},
+            "args": [
+              {
+                "name": "tourCode",
+                "type": {
+                  "name": {},
+                  "kind": "NON_NULL"
+                }
+              },
+              {
+                "name": "category",
+                "type": {
+                  "name": {},
+                  "kind": "NON_NULL"
+                }
+              },
+              {
+                "name": "year",
+                "type": {
+                  "name": "Int",
+                  "kind": "SCALAR"
+                }
+              }
+            ],
+            "type": {
+              "name": {},
+              "kind": "NON_NULL",
+              "ofType": {
+                "name": "StatLeaderCategory",
+                "kind": "OBJECT"
+              }
+            }
+          },
+          {
+            "name": "statsLeadersMobile",
+            "description": {},
+            "args": [
+              {
+                "name": "tourCode",
+                "type": {
+                  "name": {},
+                  "kind": "NON_NULL"
+                }
+              },
+              {
+                "name": "year",
+                "type": {
+                  "name": "Int",
+                  "kind": "SCALAR"
+                }
+              }
+            ],
+            "type": {
+              "name": {},
+              "kind": "NON_NULL",
+              "ofType": {
+                "name": "MobileStatLeaders",
+                "kind": "OBJECT"
+              }
+            }
+          },
+          {
+            "name": "statOverview",
+            "description": {},
+            "args": [
+              {
+                "name": "tourCode",
+                "type": {
+                  "name": {},
+                  "kind": "NON_NULL"
+                }
+              },
+              {
+                "name": "year",
+                "type": {
+                  "name": "Int",
+                  "kind": "SCALAR"
+                }
+              }
+            ],
+            "type": {
+              "name": {},
+              "kind": "NON_NULL",
+              "ofType": {
+                "name": "OverviewStats",
+                "kind": "OBJECT"
+              }
+            }
+          },
+          {
+            "name": "statDetails",
+            "description": {},
+            "args": [
+              {
+                "name": "tourCode",
+                "type": {
+                  "name": {},
+                  "kind": "NON_NULL"
+                }
+              },
+              {
+                "name": "statId",
+                "type": {
+                  "name": {},
+                  "kind": "NON_NULL"
+                }
+              },
+              {
+                "name": "year",
+                "type": {
+                  "name": "Int",
+                  "kind": "SCALAR"
+                }
+              },
+              {
+                "name": "eventQuery",
+                "type": {
+                  "name": "StatDetailEventQuery",
+                  "kind": "INPUT_OBJECT"
+                }
+              }
+            ],
+            "type": {
+              "name": {},
+              "kind": "NON_NULL",
+              "ofType": {
+                "name": "StatDetails",
+                "kind": "OBJECT"
+              }
+            }
+          },
+          {
+            "name": "articleDetailsCompressed",
+            "description": {},
+            "args": [
+              {
+                "name": "path",
+                "type": {
+                  "name": {},
+                  "kind": "NON_NULL"
+                }
+              }
+            ],
+            "type": {
+              "name": {},
+              "kind": "NON_NULL",
+              "ofType": {
+                "name": "NewsArticleDetailsCompressed",
+                "kind": "OBJECT"
+              }
+            }
+          },
+          {
+            "name": "ryderCupArticleDetailsCompressed",
+            "description": {},
+            "args": [
+              {
+                "name": "path",
+                "type": {
+                  "name": {},
+                  "kind": "NON_NULL"
+                }
+              }
+            ],
+            "type": {
+              "name": {},
+              "kind": "NON_NULL",
+              "ofType": {
+                "name": "NewsArticleDetailsCompressed",
+                "kind": "OBJECT"
+              }
+            }
+          },
+          {
+            "name": "ryderCupMixedMedia",
+            "description": {},
+            "args": [
+              {
+                "name": "ascending",
+                "type": {
+                  "name": {},
+                  "kind": "NON_NULL"
+                }
+              },
+              {
+                "name": "type",
+                "type": {
+                  "name": "RyderCupContentType",
+                  "kind": "ENUM"
+                }
+              },
+              {
+                "name": "team",
+                "type": {
+                  "name": "RyderCupTeamType",
+                  "kind": "ENUM"
+                }
+              },
+              {
+                "name": "year",
+                "type": {
+                  "name": "Int",
+                  "kind": "SCALAR"
+                }
+              },
+              {
+                "name": "topic",
+                "type": {
+                  "name": "String",
+                  "kind": "SCALAR"
+                }
+              },
+              {
+                "name": "categories",
+                "type": {
+                  "name": {},
+                  "kind": "LIST"
+                }
+              },
+              {
+                "name": "playerIds",
+                "type": {
+                  "name": {},
+                  "kind": "LIST"
+                }
+              },
+              {
+                "name": "articleTags",
+                "type": {
+                  "name": {},
+                  "kind": "LIST"
+                }
+              },
+              {
+                "name": "videoTags",
+                "type": {
+                  "name": {},
+                  "kind": "LIST"
+                }
+              },
+              {
+                "name": "limit",
+                "type": {
+                  "name": "Int",
+                  "kind": "SCALAR"
+                }
+              },
+              {
+                "name": "offset",
+                "type": {
+                  "name": "Int",
+                  "kind": "SCALAR"
+                }
+              },
+              {
+                "name": "currentContentId",
+                "type": {
+                  "name": "String",
+                  "kind": "SCALAR"
+                }
+              }
+            ],
+            "type": {
+              "name": {},
+              "kind": "NON_NULL",
+              "ofType": {
+                "name": {},
+                "kind": "LIST"
+              }
+            }
+          },
+          {
+            "name": "ryderCupMixedMediaCompressed",
+            "description": {},
+            "args": [
+              {
+                "name": "ascending",
+                "type": {
+                  "name": {},
+                  "kind": "NON_NULL"
+                }
+              },
+              {
+                "name": "type",
+                "type": {
+                  "name": "RyderCupContentType",
+                  "kind": "ENUM"
+                }
+              },
+              {
+                "name": "team",
+                "type": {
+                  "name": "RyderCupTeamType",
+                  "kind": "ENUM"
+                }
+              },
+              {
+                "name": "year",
+                "type": {
+                  "name": "Int",
+                  "kind": "SCALAR"
+                }
+              },
+              {
+                "name": "topic",
+                "type": {
+                  "name": "String",
+                  "kind": "SCALAR"
+                }
+              },
+              {
+                "name": "categories",
+                "type": {
+                  "name": {},
+                  "kind": "LIST"
+                }
+              },
+              {
+                "name": "playerIds",
+                "type": {
+                  "name": {},
+                  "kind": "LIST"
+                }
+              },
+              {
+                "name": "articleTags",
+                "type": {
+                  "name": {},
+                  "kind": "LIST"
+                }
+              },
+              {
+                "name": "videoTags",
+                "type": {
+                  "name": {},
+                  "kind": "LIST"
+                }
+              },
+              {
+                "name": "limit",
+                "type": {
+                  "name": "Int",
+                  "kind": "SCALAR"
+                }
+              },
+              {
+                "name": "offset",
+                "type": {
+                  "name": "Int",
+                  "kind": "SCALAR"
+                }
+              },
+              {
+                "name": "currentContentId",
+                "type": {
+                  "name": "String",
+                  "kind": "SCALAR"
+                }
+              }
+            ],
+            "type": {
+              "name": {},
+              "kind": "NON_NULL",
+              "ofType": {
+                "name": "RyderCupContentCompressed",
+                "kind": "OBJECT"
+              }
+            }
+          },
+          {
+            "name": "getRCPhotoGallery",
+            "description": {},
+            "args": [
+              {
+                "name": "path",
+                "type": {
+                  "name": {},
+                  "kind": "NON_NULL"
+                }
+              }
+            ],
+            "type": {
+              "name": {},
+              "kind": "NON_NULL",
+              "ofType": {
+                "name": "RCPhotoGallery",
+                "kind": "OBJECT"
+              }
+            }
+          },
+          {
+            "name": "ryderCupContentOptions",
+            "description": {},
+            "args": [],
+            "type": {
+              "name": {},
+              "kind": "NON_NULL",
+              "ofType": {
+                "name": "RyderCupMediaSearchOptions",
+                "kind": "OBJECT"
+              }
+            }
+          },
+          {
+            "name": "ryderCupTeamRankingsV2",
+            "description": {},
+            "args": [
+              {
+                "name": "year",
+                "type": {
+                  "name": "Int",
+                  "kind": "SCALAR"
+                }
+              },
+              {
+                "name": "eventQuery",
+                "type": {
+                  "name": "RyderCupRankingsQueryInput",
+                  "kind": "INPUT_OBJECT"
+                }
+              }
+            ],
+            "type": {
+              "name": "RyderCupRankingsV2",
+              "kind": "OBJECT",
+              "ofType": {}
+            }
+          },
+          {
+            "name": "ryderCupTeamRankingsCompressedV2",
+            "description": {},
+            "args": [
+              {
+                "name": "year",
+                "type": {
+                  "name": "Int",
+                  "kind": "SCALAR"
+                }
+              },
+              {
+                "name": "eventQuery",
+                "type": {
+                  "name": "RyderCupRankingsQueryInput",
+                  "kind": "INPUT_OBJECT"
+                }
+              }
+            ],
+            "type": {
+              "name": "RyderCupTeamRankingsCompressed",
+              "kind": "OBJECT",
+              "ofType": {}
+            }
+          },
+          {
+            "name": "ryderCupBroadcastCoverage",
+            "description": {},
+            "args": [
+              {
+                "name": "eventRegion",
+                "type": {
+                  "name": "EventRegion",
+                  "kind": "ENUM"
+                }
+              }
+            ],
+            "type": {
+              "name": {},
+              "kind": "NON_NULL",
+              "ofType": {
+                "name": "RyderCupBroadcastCoverage",
+                "kind": "OBJECT"
+              }
+            }
+          },
+          {
+            "name": "ryderCupPlayerProfileCompressed",
+            "description": {},
+            "args": [
+              {
+                "name": "playerId",
+                "type": {
+                  "name": {},
+                  "kind": "NON_NULL"
+                }
+              }
+            ],
+            "type": {
+              "name": {},
+              "kind": "NON_NULL",
+              "ofType": {
+                "name": "RyderCupPlayerProfileCompressed",
+                "kind": "OBJECT"
+              }
+            }
+          },
+          {
+            "name": "matchOutcomeIq",
+            "description": {},
+            "args": [
+              {
+                "name": "tournamentId",
+                "type": {
+                  "name": {},
+                  "kind": "NON_NULL"
+                }
+              },
+              {
+                "name": "matchId",
+                "type": {
+                  "name": {},
+                  "kind": "NON_NULL"
+                }
+              },
+              {
+                "name": "roundNumber",
+                "type": {
+                  "name": "Int",
+                  "kind": "SCALAR"
+                }
+              }
+            ],
+            "type": {
+              "name": {},
+              "kind": "NON_NULL",
+              "ofType": {
+                "name": "RyderCupMatchOutcomeIQ",
+                "kind": "OBJECT"
+              }
+            }
+          },
+          {
+            "name": "getExpertPicksTable",
+            "description": {},
+            "args": [
+              {
+                "name": "path",
+                "type": {
+                  "name": {},
+                  "kind": "NON_NULL"
+                }
+              },
+              {
+                "name": "year",
+                "type": {
+                  "name": "Int",
+                  "kind": "SCALAR"
+                }
+              }
+            ],
+            "type": {
+              "name": {},
+              "kind": "NON_NULL",
+              "ofType": {
+                "name": "ExpertPicks",
+                "kind": "OBJECT"
+              }
+            }
+          },
+          {
+            "name": "getPowerRankingsTable",
+            "description": {},
+            "args": [
+              {
+                "name": "path",
+                "type": {
+                  "name": {},
+                  "kind": "NON_NULL"
+                }
+              }
+            ],
+            "type": {
+              "name": {},
+              "kind": "NON_NULL",
+              "ofType": {
+                "name": "PowerRankings",
+                "kind": "OBJECT"
+              }
+            }
+          },
+          {
+            "name": "getRelatedFact",
+            "description": {},
+            "args": [
+              {
+                "name": "path",
+                "type": {
+                  "name": {},
+                  "kind": "NON_NULL"
+                }
+              }
+            ],
+            "type": {
+              "name": {},
+              "kind": "NON_NULL",
+              "ofType": {
+                "name": "RelatedFact",
+                "kind": "OBJECT"
+              }
+            }
+          },
+          {
+            "name": "genericContent",
+            "description": {},
+            "args": [
+              {
+                "name": "path",
+                "type": {
+                  "name": {},
+                  "kind": "NON_NULL"
+                }
+              }
+            ],
+            "type": {
+              "name": {},
+              "kind": "NON_NULL",
+              "ofType": {
+                "name": "GenericContent",
+                "kind": "OBJECT"
+              }
+            }
+          },
+          {
+            "name": "genericContentCompressed",
+            "description": {},
+            "args": [
+              {
+                "name": "path",
+                "type": {
+                  "name": {},
+                  "kind": "NON_NULL"
+                }
+              }
+            ],
+            "type": {
+              "name": {},
+              "kind": "NON_NULL",
+              "ofType": {
+                "name": "GenericContentCompressed",
+                "kind": "OBJECT"
+              }
+            }
+          },
+          {
+            "name": "legalDocsCompressed",
+            "description": {},
+            "args": [
+              {
+                "name": "path",
+                "type": {
+                  "name": {},
+                  "kind": "NON_NULL"
+                }
+              }
+            ],
+            "type": {
+              "name": {},
+              "kind": "NON_NULL",
+              "ofType": {
+                "name": "GenericContentCompressed",
+                "kind": "OBJECT"
+              }
+            }
+          },
+          {
+            "name": "tourcastVideos",
+            "description": {},
+            "args": [
+              {
+                "name": "tournamentId",
+                "type": {
+                  "name": {},
+                  "kind": "NON_NULL"
+                }
+              },
+              {
+                "name": "playerId",
+                "type": {
+                  "name": {},
+                  "kind": "NON_NULL"
+                }
+              },
+              {
+                "name": "round",
+                "type": {
+                  "name": {},
+                  "kind": "NON_NULL"
+                }
+              },
+              {
+                "name": "hole",
+                "type": {
+                  "name": "Int",
+                  "kind": "SCALAR"
+                }
+              },
+              {
+                "name": "shot",
+                "type": {
+                  "name": "Int",
+                  "kind": "SCALAR"
+                }
+              }
+            ],
+            "type": {
+              "name": {},
+              "kind": "NON_NULL",
+              "ofType": {
+                "name": {},
+                "kind": "LIST"
+              }
+            }
+          },
+          {
+            "name": "weather",
+            "description": {},
+            "args": [
+              {
+                "name": "tournamentId",
+                "type": {
+                  "name": {},
+                  "kind": "NON_NULL"
+                }
+              }
+            ],
+            "type": {
+              "name": {},
+              "kind": "NON_NULL",
+              "ofType": {
+                "name": "WeatherSummary",
+                "kind": "OBJECT"
+              }
+            }
+          },
+          {
+            "name": "tournamentOverview",
+            "description": {},
+            "args": [
+              {
+                "name": "tournamentId",
+                "type": {
+                  "name": {},
+                  "kind": "NON_NULL"
+                }
+              }
+            ],
+            "type": {
+              "name": {},
+              "kind": "NON_NULL",
+              "ofType": {
+                "name": "TournamentOverview",
+                "kind": "OBJECT"
+              }
+            }
+          },
+          {
+            "name": "presentedBy",
+            "description": {},
+            "args": [],
+            "type": {
+              "name": {},
+              "kind": "NON_NULL",
+              "ofType": {
+                "name": "PresentedByConfig",
+                "kind": "OBJECT"
+              }
+            }
+          },
+          {
+            "name": "courseStatsDetails",
+            "description": {},
+            "args": [
+              {
+                "name": "tourCode",
+                "type": {
+                  "name": {},
+                  "kind": "NON_NULL"
+                }
+              },
+              {
+                "name": "round",
+                "type": {
+                  "name": "ToughestRound",
+                  "kind": "ENUM"
+                }
+              },
+              {
+                "name": "queryType",
+                "type": {
+                  "name": {},
+                  "kind": "NON_NULL"
+                }
+              },
+              {
+                "name": "year",
+                "type": {
+                  "name": "Int",
+                  "kind": "SCALAR"
+                }
+              }
+            ],
+            "type": {
+              "name": {},
+              "kind": "NON_NULL",
+              "ofType": {
+                "name": "CourseStatsDetails",
+                "kind": "OBJECT"
+              }
+            }
+          },
+          {
+            "name": "courseStatsOverview",
+            "description": {},
+            "args": [
+              {
+                "name": "tourCode",
+                "type": {
+                  "name": {},
+                  "kind": "NON_NULL"
+                }
+              },
+              {
+                "name": "year",
+                "type": {
+                  "name": "Int",
+                  "kind": "SCALAR"
+                }
+              }
+            ],
+            "type": {
+              "name": {},
+              "kind": "NON_NULL",
+              "ofType": {
+                "name": "CourseStatsOverview",
+                "kind": "OBJECT"
+              }
+            }
+          },
+          {
+            "name": "scheduleYears",
+            "description": {},
+            "args": [
+              {
+                "name": "tourCode",
+                "type": {
+                  "name": {},
+                  "kind": "NON_NULL"
+                }
+              }
+            ],
+            "type": {
+              "name": {},
+              "kind": "NON_NULL",
+              "ofType": {
+                "name": "ScheduleYears",
+                "kind": "OBJECT"
+              }
+            }
+          },
+          {
+            "name": "eventGuideConfig",
+            "description": {},
+            "args": [
+              {
+                "name": "tournamentId",
+                "type": {
+                  "name": {},
+                  "kind": "NON_NULL"
+                }
+              }
+            ],
+            "type": {
+              "name": {},
+              "kind": "NON_NULL",
+              "ofType": {
+                "name": "EventGuideConfig",
+                "kind": "OBJECT"
+              }
+            }
+          },
+          {
+            "name": "contentFragmentsCompressed",
+            "description": {},
+            "args": [
+              {
+                "name": "tourCode",
+                "type": {
+                  "name": {},
+                  "kind": "NON_NULL"
+                }
+              },
+              {
+                "name": "path",
+                "type": {
+                  "name": "String",
+                  "kind": "SCALAR"
+                }
+              },
+              {
+                "name": "limit",
+                "type": {
+                  "name": "Int",
+                  "kind": "SCALAR"
+                }
+              },
+              {
+                "name": "offset",
+                "type": {
+                  "name": "Int",
+                  "kind": "SCALAR"
+                }
+              }
+            ],
+            "type": {
+              "name": {},
+              "kind": "NON_NULL",
+              "ofType": {
+                "name": "ContentFragmentsCompressed",
+                "kind": "OBJECT"
+              }
+            }
+          },
+          {
+            "name": "ryderCupContentFragmentsCompressed",
+            "description": {},
+            "args": [
+              {
+                "name": "tourCode",
+                "type": {
+                  "name": {},
+                  "kind": "NON_NULL"
+                }
+              },
+              {
+                "name": "path",
+                "type": {
+                  "name": "String",
+                  "kind": "SCALAR"
+                }
+              },
+              {
+                "name": "limit",
+                "type": {
+                  "name": "Int",
+                  "kind": "SCALAR"
+                }
+              },
+              {
+                "name": "offset",
+                "type": {
+                  "name": "Int",
+                  "kind": "SCALAR"
+                }
+              }
+            ],
+            "type": {
+              "name": {},
+              "kind": "NON_NULL",
+              "ofType": {
+                "name": "ContentFragmentsCompressed",
+                "kind": "OBJECT"
+              }
+            }
+          },
+          {
+            "name": "ryderCupTournaments",
+            "description": {},
+            "args": [],
+            "type": {
+              "name": {},
+              "kind": "NON_NULL",
+              "ofType": {
+                "name": {},
+                "kind": "LIST"
+              }
+            }
+          },
+          {
+            "name": "ryderCupTournament",
+            "description": {},
+            "args": [
+              {
+                "name": "year",
+                "type": {
+                  "name": {},
+                  "kind": "NON_NULL"
+                }
+              }
+            ],
+            "type": {
+              "name": "RyderCupTournament",
+              "kind": "OBJECT",
+              "ofType": {}
+            }
+          },
+          {
+            "name": "tournamentHistory",
+            "description": {},
+            "args": [
+              {
+                "name": "tournamentId",
+                "type": {
+                  "name": {},
+                  "kind": "NON_NULL"
+                }
+              }
+            ],
+            "type": {
+              "name": "TournamentHistory",
+              "kind": "OBJECT",
+              "ofType": {}
+            }
+          },
+          {
+            "name": "tournamentRecap",
+            "description": {},
+            "args": [
+              {
+                "name": "tournamentId",
+                "type": {
+                  "name": {},
+                  "kind": "NON_NULL"
+                }
+              },
+              {
+                "name": "limit",
+                "type": {
+                  "name": "Int",
+                  "kind": "SCALAR"
+                }
+              },
+              {
+                "name": "offset",
+                "type": {
+                  "name": "Int",
+                  "kind": "SCALAR"
+                }
+              }
+            ],
+            "type": {
+              "name": {},
+              "kind": "NON_NULL",
+              "ofType": {
+                "name": "TournamentRecap",
+                "kind": "OBJECT"
+              }
+            }
+          },
+          {
+            "name": "videoHero",
+            "description": {},
+            "args": [
+              {
+                "name": "tourCode",
+                "type": {
+                  "name": {},
+                  "kind": "NON_NULL"
+                }
+              },
+              {
+                "name": "path",
+                "type": {
+                  "name": "String",
+                  "kind": "SCALAR"
+                }
+              }
+            ],
+            "type": {
+              "name": {},
+              "kind": "NON_NULL",
+              "ofType": {
+                "name": "VideoHero",
+                "kind": "OBJECT"
+              }
+            }
+          },
+          {
+            "name": "videoById",
+            "description": {},
+            "args": [
+              {
+                "name": "brightcoveId",
+                "type": {
+                  "name": {},
+                  "kind": "NON_NULL"
+                }
+              },
+              {
+                "name": "tourcast",
+                "type": {
+                  "name": {},
+                  "kind": "NON_NULL"
+                }
+              }
+            ],
+            "type": {
+              "name": "Video",
+              "kind": "OBJECT",
+              "ofType": {}
+            }
+          },
+          {
+            "name": "ryderCupVideoById",
+            "description": {},
+            "args": [
+              {
+                "name": "brightcoveId",
+                "type": {
+                  "name": {},
+                  "kind": "NON_NULL"
+                }
+              }
+            ],
+            "type": {
+              "name": "RCVideoPage",
+              "kind": "OBJECT",
+              "ofType": {}
+            }
+          },
+          {
+            "name": "sponsoredArticles",
+            "description": {},
+            "args": [
+              {
+                "name": "sponsor",
+                "type": {
+                  "name": {},
+                  "kind": "NON_NULL"
+                }
+              }
+            ],
+            "type": {
+              "name": {},
+              "kind": "NON_NULL",
+              "ofType": {
+                "name": {},
+                "kind": "LIST"
+              }
+            }
+          },
+          {
+            "name": "sponsoredArticlesV2",
+            "description": {},
+            "args": [
+              {
+                "name": "sponsor",
+                "type": {
+                  "name": {},
+                  "kind": "NON_NULL"
+                }
+              }
+            ],
+            "type": {
+              "name": {},
+              "kind": "NON_NULL",
+              "ofType": {
+                "name": "SponsoredArticles",
+                "kind": "OBJECT"
+              }
+            }
+          },
+          {
+            "name": "tourcastTable",
+            "description": {},
+            "args": [
+              {
+                "name": "tournamentId",
+                "type": {
+                  "name": {},
+                  "kind": "NON_NULL"
+                }
+              }
+            ],
+            "type": {
+              "name": {},
+              "kind": "NON_NULL",
+              "ofType": {
+                "name": "TourcastTable",
+                "kind": "OBJECT"
+              }
+            }
+          },
+          {
+            "name": "alltoursponsors",
+            "description": {},
+            "args": [
+              {
+                "name": "tourCode",
+                "type": {
+                  "name": {},
+                  "kind": "NON_NULL"
+                }
+              }
+            ],
+            "type": {
+              "name": {},
+              "kind": "NON_NULL",
+              "ofType": {
+                "name": {},
+                "kind": "LIST"
+              }
+            }
+          },
+          {
+            "name": "universityRankings",
+            "description": {},
+            "args": [
+              {
+                "name": "year",
+                "type": {
+                  "name": "Int",
+                  "kind": "SCALAR"
+                }
+              },
+              {
+                "name": "week",
+                "type": {
+                  "name": "Int",
+                  "kind": "SCALAR"
+                }
+              },
+              {
+                "name": "tourCode",
+                "type": {
+                  "name": "TourCode",
+                  "kind": "ENUM"
+                }
+              }
+            ],
+            "type": {
+              "name": {},
+              "kind": "NON_NULL",
+              "ofType": {
+                "name": "UniversityRankings",
+                "kind": "OBJECT"
+              }
+            }
+          },
+          {
+            "name": "priorityRankings",
+            "description": {},
+            "args": [
+              {
+                "name": "tourCode",
+                "type": {
+                  "name": {},
+                  "kind": "NON_NULL"
+                }
+              },
+              {
+                "name": "year",
+                "type": {
+                  "name": "Int",
+                  "kind": "SCALAR"
+                }
+              }
+            ],
+            "type": {
+              "name": {},
+              "kind": "NON_NULL",
+              "ofType": {
+                "name": "PriorityRankings",
+                "kind": "OBJECT"
+              }
+            }
+          },
+          {
+            "name": "aon",
+            "description": {},
+            "args": [
+              {
+                "name": "year",
+                "type": {
+                  "name": "Int",
+                  "kind": "SCALAR"
+                }
+              }
+            ],
+            "type": {
+              "name": {},
+              "kind": "NON_NULL",
+              "ofType": {
+                "name": "Aon",
+                "kind": "OBJECT"
+              }
+            }
+          },
+          {
+            "name": "rsm",
+            "description": {},
+            "args": [
+              {
+                "name": "year",
+                "type": {
+                  "name": "Int",
+                  "kind": "SCALAR"
+                }
+              }
+            ],
+            "type": {
+              "name": {},
+              "kind": "NON_NULL",
+              "ofType": {
+                "name": "RSMStandings",
+                "kind": "OBJECT"
+              }
+            }
+          },
+          {
+            "name": "rsmLeaderboard",
+            "description": {},
+            "args": [
+              {
+                "name": "tournamentId",
+                "type": {
+                  "name": "ID",
+                  "kind": "SCALAR"
+                }
+              },
+              {
+                "name": "limit",
+                "type": {
+                  "name": "Int",
+                  "kind": "SCALAR"
+                }
+              }
+            ],
+            "type": {
+              "name": {},
+              "kind": "NON_NULL",
+              "ofType": {
+                "name": "RSMLeaderboard",
+                "kind": "OBJECT"
+              }
+            }
+          },
+          {
+            "name": "oddsTable",
+            "description": {},
+            "args": [
+              {
+                "name": "tournamentId",
+                "type": {
+                  "name": {},
+                  "kind": "NON_NULL"
+                }
+              },
+              {
+                "name": "tournamentName",
+                "type": {
+                  "name": {},
+                  "kind": "NON_NULL"
+                }
+              },
+              {
+                "name": "markets",
+                "type": {
+                  "name": {},
+                  "kind": "LIST"
+                }
+              },
+              {
+                "name": "players",
+                "type": {
+                  "name": {},
+                  "kind": "LIST"
+                }
+              },
+              {
+                "name": "timeStamp",
+                "type": {
+                  "name": "String",
+                  "kind": "SCALAR"
+                }
+              }
+            ],
+            "type": {
+              "name": {},
+              "kind": "NON_NULL",
+              "ofType": {
+                "name": "OddsTable",
+                "kind": "OBJECT"
+              }
+            }
+          },
+          {
+            "name": "oddsGraph",
+            "description": {},
+            "args": [
+              {
+                "name": "tournamentId",
+                "type": {
+                  "name": {},
+                  "kind": "NON_NULL"
+                }
+              },
+              {
+                "name": "playerIds",
+                "type": {
+                  "name": {},
+                  "kind": "NON_NULL"
+                }
+              },
+              {
+                "name": "oddsTimeType",
+                "type": {
+                  "name": "OddsTimeType",
+                  "kind": "ENUM"
+                }
+              },
+              {
+                "name": "marketId",
+                "type": {
+                  "name": "HistoricalOddsId",
+                  "kind": "ENUM"
+                }
+              },
+              {
+                "name": "round",
+                "type": {
+                  "name": "Int",
+                  "kind": "SCALAR"
+                }
+              }
+            ],
+            "type": {
+              "name": {},
+              "kind": "NON_NULL",
+              "ofType": {
+                "name": "OddsTimeline",
+                "kind": "OBJECT"
+              }
+            }
+          },
+          {
+            "name": "historicalOdds",
+            "description": {},
+            "args": [
+              {
+                "name": "playerId",
+                "type": {
+                  "name": {},
+                  "kind": "NON_NULL"
+                }
+              },
+              {
+                "name": "tournamentId",
+                "type": {
+                  "name": {},
+                  "kind": "NON_NULL"
+                }
+              },
+              {
+                "name": "marketId",
+                "type": {
+                  "name": {},
+                  "kind": "NON_NULL"
+                }
+              },
+              {
+                "name": "timeStamp",
+                "type": {
+                  "name": "AWSDateTime",
+                  "kind": "SCALAR"
+                }
+              }
+            ],
+            "type": {
+              "name": "HistoricalPlayerOdds",
+              "kind": "OBJECT",
+              "ofType": {}
+            }
+          },
+          {
+            "name": "historicalTournamentsOdds",
+            "description": {},
+            "args": [
+              {
+                "name": "tournamentId",
+                "type": {
+                  "name": {},
+                  "kind": "NON_NULL"
+                }
+              },
+              {
+                "name": "marketId",
+                "type": {
+                  "name": {},
+                  "kind": "NON_NULL"
+                }
+              },
+              {
+                "name": "timeStamp",
+                "type": {
+                  "name": "AWSDateTime",
+                  "kind": "SCALAR"
+                }
+              }
+            ],
+            "type": {
+              "name": "HistoricalTournamentOdds",
+              "kind": "OBJECT",
+              "ofType": {}
+            }
+          },
+          {
+            "name": "eaglesForImpact",
+            "description": {},
+            "args": [
+              {
+                "name": "tournamentId",
+                "type": {
+                  "name": {},
+                  "kind": "NON_NULL"
+                }
+              }
+            ],
+            "type": {
+              "name": {},
+              "kind": "NON_NULL",
+              "ofType": {
+                "name": "EaglesForImpact",
+                "kind": "OBJECT"
+              }
+            }
+          },
+          {
+            "name": "leaderboardLegend",
+            "description": {},
+            "args": [
+              {
+                "name": "tournamentId",
+                "type": {
+                  "name": {},
+                  "kind": "NON_NULL"
+                }
+              },
+              {
+                "name": "odds",
+                "type": {
+                  "name": {},
+                  "kind": "NON_NULL"
+                }
+              }
+            ],
+            "type": {
+              "name": {},
+              "kind": "NON_NULL",
+              "ofType": {
+                "name": "LeaderboardInfo",
+                "kind": "OBJECT"
+              }
+            }
+          },
+          {
+            "name": "playerComparison",
+            "description": {},
+            "args": [
+              {
+                "name": "tourCode",
+                "type": {
+                  "name": {},
+                  "kind": "NON_NULL"
+                }
+              },
+              {
+                "name": "playerIds",
+                "type": {
+                  "name": {},
+                  "kind": "NON_NULL"
+                }
+              },
+              {
+                "name": "category",
+                "type": {
+                  "name": "PlayerComparisonCategory",
+                  "kind": "ENUM"
+                }
+              },
+              {
+                "name": "year",
+                "type": {
+                  "name": "Int",
+                  "kind": "SCALAR"
+                }
+              },
+              {
+                "name": "tournamentId",
+                "type": {
+                  "name": "String",
+                  "kind": "SCALAR"
+                }
+              }
+            ],
+            "type": {
+              "name": {},
+              "kind": "NON_NULL",
+              "ofType": {
+                "name": "PlayerComparison",
+                "kind": "OBJECT"
+              }
+            }
+          },
+          {
+            "name": "playersOddsComparison",
+            "description": {},
+            "args": [
+              {
+                "name": "playerIds",
+                "type": {
+                  "name": {},
+                  "kind": "NON_NULL"
+                }
+              }
+            ],
+            "type": {
+              "name": {},
+              "kind": "NON_NULL",
+              "ofType": {
+                "name": {},
+                "kind": "LIST"
+              }
+            }
+          },
+          {
+            "name": "newletterSubscriptions",
+            "description": {},
+            "args": [
+              {
+                "name": "includeTournaments",
+                "type": {
+                  "name": "Boolean",
+                  "kind": "SCALAR"
+                }
+              }
+            ],
+            "type": {
+              "name": {},
+              "kind": "NON_NULL",
+              "ofType": {
+                "name": {},
+                "kind": "LIST"
+              }
+            }
+          },
+          {
+            "name": "searchBarFeatures",
+            "description": {},
+            "args": [
+              {
+                "name": "tourCode",
+                "type": {
+                  "name": "TourCode",
+                  "kind": "ENUM"
+                }
+              }
+            ],
+            "type": {
+              "name": {},
+              "kind": "NON_NULL",
+              "ofType": {
+                "name": "SearchBarFeatures",
+                "kind": "OBJECT"
+              }
+            }
+          },
+          {
+            "name": "rankingsWinners",
+            "description": {},
+            "args": [
+              {
+                "name": "tourCode",
+                "type": {
+                  "name": "TourCode",
+                  "kind": "ENUM"
+                }
+              }
+            ],
+            "type": {
+              "name": {},
+              "kind": "NON_NULL",
+              "ofType": {
+                "name": {},
+                "kind": "LIST"
+              }
+            }
+          },
+          {
+            "name": "playerFinishStats",
+            "description": {},
+            "args": [
+              {
+                "name": "playerId",
+                "type": {
+                  "name": {},
+                  "kind": "NON_NULL"
+                }
+              },
+              {
+                "name": "statId",
+                "type": {
+                  "name": {},
+                  "kind": "NON_NULL"
+                }
+              },
+              {
+                "name": "tourCode",
+                "type": {
+                  "name": {},
+                  "kind": "NON_NULL"
+                }
+              }
+            ],
+            "type": {
+              "name": "PlayerFinishStats",
+              "kind": "OBJECT",
+              "ofType": {}
+            }
+          },
+          {
+            "name": "cupPlayOverviewLeaderboard",
+            "description": {},
+            "args": [
+              {
+                "name": "id",
+                "type": {
+                  "name": {},
+                  "kind": "NON_NULL"
+                }
+              }
+            ],
+            "type": {
+              "name": {},
+              "kind": "NON_NULL",
+              "ofType": {
+                "name": "CupTournamentStatus",
+                "kind": "OBJECT"
+              }
+            }
+          },
+          {
+            "name": "cupRoundLeaderboard",
+            "description": {},
+            "args": [
+              {
+                "name": "tournamentId",
+                "type": {
+                  "name": {},
+                  "kind": "NON_NULL"
+                }
+              },
+              {
+                "name": "round",
+                "type": {
+                  "name": "Int",
+                  "kind": "SCALAR"
+                }
+              }
+            ],
+            "type": {
+              "name": {},
+              "kind": "NON_NULL",
+              "ofType": {
+                "name": "CupTournamentLeaderboard",
+                "kind": "OBJECT"
+              }
+            }
+          },
+          {
+            "name": "cupRoundLeaderboardCompressed",
+            "description": {},
+            "args": [
+              {
+                "name": "tournamentId",
+                "type": {
+                  "name": {},
+                  "kind": "NON_NULL"
+                }
+              },
+              {
+                "name": "round",
+                "type": {
+                  "name": "Int",
+                  "kind": "SCALAR"
+                }
+              }
+            ],
+            "type": {
+              "name": {},
+              "kind": "NON_NULL",
+              "ofType": {
+                "name": "CupTournamentLeaderboardCompressed",
+                "kind": "OBJECT"
+              }
+            }
+          },
+          {
+            "name": "cupScorecard",
+            "description": {},
+            "args": [
+              {
+                "name": "tournamentId",
+                "type": {
+                  "name": {},
+                  "kind": "NON_NULL"
+                }
+              },
+              {
+                "name": "round",
+                "type": {
+                  "name": {},
+                  "kind": "NON_NULL"
+                }
+              },
+              {
+                "name": "matchId",
+                "type": {
+                  "name": {},
+                  "kind": "NON_NULL"
+                }
+              }
+            ],
+            "type": {
+              "name": {},
+              "kind": "NON_NULL",
+              "ofType": {
+                "name": "CupScorecard",
+                "kind": "OBJECT"
+              }
+            }
+          },
+          {
+            "name": "cupTeeTimes",
+            "description": {},
+            "args": [
+              {
+                "name": "tournamentId",
+                "type": {
+                  "name": {},
+                  "kind": "NON_NULL"
+                }
+              }
+            ],
+            "type": {
+              "name": {},
+              "kind": "NON_NULL",
+              "ofType": {
+                "name": "CupTeeTimes",
+                "kind": "OBJECT"
+              }
+            }
+          },
+          {
+            "name": "cupTeamRoster",
+            "description": {},
+            "args": [
+              {
+                "name": "tournamentId",
+                "type": {
+                  "name": {},
+                  "kind": "NON_NULL"
+                }
+              }
+            ],
+            "type": {
+              "name": {},
+              "kind": "NON_NULL",
+              "ofType": {
+                "name": "CupTeamRosters",
+                "kind": "OBJECT"
+              }
+            }
+          },
+          {
+            "name": "cupPastResults",
+            "description": {},
+            "args": [
+              {
+                "name": "tournamentId",
+                "type": {
+                  "name": {},
+                  "kind": "NON_NULL"
+                }
+              }
+            ],
+            "type": {
+              "name": {},
+              "kind": "NON_NULL",
+              "ofType": {
+                "name": "CupPastResults",
+                "kind": "OBJECT"
+              }
+            }
+          },
+          {
+            "name": "leaderboardHoleByHole",
+            "description": {},
+            "args": [
+              {
+                "name": "tournamentId",
+                "type": {
+                  "name": {},
+                  "kind": "NON_NULL"
+                }
+              },
+              {
+                "name": "round",
+                "type": {
+                  "name": "Int",
+                  "kind": "SCALAR"
+                }
+              }
+            ],
+            "type": {
+              "name": {},
+              "kind": "NON_NULL",
+              "ofType": {
+                "name": "LeaderboardHoleByHole",
+                "kind": "OBJECT"
+              }
+            }
+          },
+          {
+            "name": "contentFragmentType",
+            "description": {},
+            "args": [
+              {
+                "name": "path",
+                "type": {
+                  "name": {},
+                  "kind": "NON_NULL"
+                }
+              }
+            ],
+            "type": {
+              "name": "ContentFragmentType",
+              "kind": "OBJECT",
+              "ofType": {}
+            }
+          },
+          {
+            "name": "allTimeRecordStat",
+            "description": {},
+            "args": [
+              {
+                "name": "tourCode",
+                "type": {
+                  "name": {},
+                  "kind": "NON_NULL"
+                }
+              },
+              {
+                "name": "recordId",
+                "type": {
+                  "name": {},
+                  "kind": "NON_NULL"
+                }
+              }
+            ],
+            "type": {
+              "name": {},
+              "kind": "NON_NULL",
+              "ofType": {
+                "name": "AllTimeRecordStat",
+                "kind": "OBJECT"
+              }
+            }
+          },
+          {
+            "name": "allTimeRecordCategories",
+            "description": {},
+            "args": [
+              {
+                "name": "tourCode",
+                "type": {
+                  "name": {},
+                  "kind": "NON_NULL"
+                }
+              }
+            ],
+            "type": {
+              "name": {},
+              "kind": "NON_NULL",
+              "ofType": {
+                "name": "AllTimeRecordCategories",
+                "kind": "OBJECT"
+              }
+            }
+          },
+          {
+            "name": "tournamentOddsToWin",
+            "description": {},
+            "args": [
+              {
+                "name": "tournamentId",
+                "type": {
+                  "name": {},
+                  "kind": "NON_NULL"
+                }
+              }
+            ],
+            "type": {
+              "name": {},
+              "kind": "NON_NULL",
+              "ofType": {
+                "name": "TournamentOddsToWin",
+                "kind": "OBJECT"
+              }
+            }
+          },
+          {
+            "name": "currentLeadersCompressed",
+            "description": {},
+            "args": [
+              {
+                "name": "tournamentId",
+                "type": {
+                  "name": "ID",
+                  "kind": "SCALAR"
+                }
+              },
+              {
+                "name": "tourCode",
+                "type": {
+                  "name": "TourCode",
+                  "kind": "ENUM"
+                }
+              }
+            ],
+            "type": {
+              "name": "CurrentLeadersCompressed",
+              "kind": "OBJECT",
+              "ofType": {}
+            }
+          },
+          {
+            "name": "universityTotalPoints",
+            "description": {},
+            "args": [
+              {
+                "name": "season",
+                "type": {
+                  "name": "Int",
+                  "kind": "SCALAR"
+                }
+              },
+              {
+                "name": "week",
+                "type": {
+                  "name": "Int",
+                  "kind": "SCALAR"
+                }
+              }
+            ],
+            "type": {
+              "name": {},
+              "kind": "NON_NULL",
+              "ofType": {
+                "name": "UniversityTotalPoints",
+                "kind": "OBJECT"
+              }
+            }
+          },
+          {
+            "name": "scorecardStatsComparison",
+            "description": {},
+            "args": [
+              {
+                "name": "tournamentId",
+                "type": {
+                  "name": {},
+                  "kind": "NON_NULL"
+                }
+              },
+              {
+                "name": "playerIds",
+                "type": {
+                  "name": {},
+                  "kind": "NON_NULL"
+                }
+              },
+              {
+                "name": "round",
+                "type": {
+                  "name": "Int",
+                  "kind": "SCALAR"
+                }
+              },
+              {
+                "name": "category",
+                "type": {
+                  "name": {},
+                  "kind": "NON_NULL"
+                }
+              }
+            ],
+            "type": {
+              "name": "ScorecardStatsComparison",
+              "kind": "OBJECT",
+              "ofType": {}
+            }
+          },
+          {
+            "name": "tglSchedule",
+            "description": " ## TGL queries",
+            "args": [
+              {
+                "name": "year",
+                "type": {
+                  "name": "Int",
+                  "kind": "SCALAR"
+                }
+              },
+              {
+                "name": "offset",
+                "type": {
+                  "name": "Int",
+                  "kind": "SCALAR"
+                }
+              },
+              {
+                "name": "limit",
+                "type": {
+                  "name": "Int",
+                  "kind": "SCALAR"
+                }
+              }
+            ],
+            "type": {
+              "name": {},
+              "kind": "NON_NULL",
+              "ofType": {
+                "name": "TGLSchedule",
+                "kind": "OBJECT"
+              }
+            }
+          },
+          {
+            "name": "tglMatches",
+            "description": "  return a season from TGL based on supplied year, if year is ommitted current year returned, used by AEM",
+            "args": [
+              {
+                "name": "matchIds",
+                "type": {
+                  "name": {},
+                  "kind": "NON_NULL"
+                }
+              }
+            ],
+            "type": {
+              "name": {},
+              "kind": "NON_NULL",
+              "ofType": {
+                "name": {},
+                "kind": "LIST"
+              }
+            }
+          },
+          {
+            "name": "tglMatch",
+            "description": "  Returns full details for matches based on supplied matchIds",
+            "args": [
+              {
+                "name": "matchId",
+                "type": {
+                  "name": {},
+                  "kind": "NON_NULL"
+                }
+              }
+            ],
+            "type": {
+              "name": "TGLMatch",
+              "kind": "OBJECT",
+              "ofType": {}
+            }
+          },
+          {
+            "name": "groupLocations",
+            "description": "  Returns full details for a match based on supplied matchId",
+            "args": [
+              {
+                "name": "tournamentId",
+                "type": {
+                  "name": {},
+                  "kind": "NON_NULL"
+                }
+              },
+              {
+                "name": "round",
+                "type": {
+                  "name": {},
+                  "kind": "NON_NULL"
+                }
+              }
+            ],
+            "type": {
+              "name": {},
+              "kind": "NON_NULL",
+              "ofType": {
+                "name": "GroupLocation",
+                "kind": "OBJECT"
+              }
+            }
+          },
+          {
+            "name": "tournamentGroupLocations",
+            "description": {},
+            "args": [
+              {
+                "name": "tournamentId",
+                "type": {
+                  "name": {},
+                  "kind": "NON_NULL"
+                }
+              },
+              {
+                "name": "round",
+                "type": {
+                  "name": {},
+                  "kind": "NON_NULL"
+                }
+              }
+            ],
+            "type": {
+              "name": {},
+              "kind": "NON_NULL",
+              "ofType": {
+                "name": "TournamentGroupLocation",
+                "kind": "OBJECT"
+              }
+            }
+          },
+          {
+            "name": "oddsToWin",
+            "description": {},
+            "args": [
+              {
+                "name": "oddsToWinId",
+                "type": {
+                  "name": {},
+                  "kind": "NON_NULL"
+                }
+              }
+            ],
+            "type": {
+              "name": {},
+              "kind": "NON_NULL",
+              "ofType": {
+                "name": "OddsToWinMarket",
+                "kind": "OBJECT"
+              }
+            }
+          },
+          {
+            "name": "oddsToWinCompressed",
+            "description": {},
+            "args": [
+              {
+                "name": "oddsToWinId",
+                "type": {
+                  "name": {},
+                  "kind": "NON_NULL"
+                }
+              }
+            ],
+            "type": {
+              "name": {},
+              "kind": "NON_NULL",
+              "ofType": {
+                "name": "OddsToWinMarketCompressed",
+                "kind": "OBJECT"
+              }
+            }
+          },
+          {
+            "name": "getShotCommentary",
+            "description": {},
+            "args": [
+              {
+                "name": "tournamentId",
+                "type": {
+                  "name": {},
+                  "kind": "NON_NULL"
+                }
+              },
+              {
+                "name": "playerId",
+                "type": {
+                  "name": {},
+                  "kind": "NON_NULL"
+                }
+              },
+              {
+                "name": "round",
+                "type": {
+                  "name": {},
+                  "kind": "NON_NULL"
+                }
+              }
+            ],
+            "type": {
+              "name": {},
+              "kind": "NON_NULL",
+              "ofType": {
+                "name": "ShotCommentary",
+                "kind": "OBJECT"
+              }
+            }
+          },
+          {
+            "name": "bubble",
+            "description": "  Note this is optional on purpose",
+            "args": [
+              {
+                "name": "tourCode",
+                "type": {
+                  "name": {},
+                  "kind": "NON_NULL"
+                }
+              },
+              {
+                "name": "tournamentId",
+                "type": {
+                  "name": {},
+                  "kind": "NON_NULL"
+                }
+              }
+            ],
+            "type": {
+              "name": "BubbleWatch",
+              "kind": "OBJECT",
+              "ofType": {}
+            }
+          },
+          {
+            "name": "playerHub",
+            "description": {},
+            "args": [
+              {
+                "name": "playerId",
+                "type": {
+                  "name": {},
+                  "kind": "NON_NULL"
+                }
+              }
+            ],
+            "type": {
+              "name": "PlayerHubPlayerCompressed",
+              "kind": "OBJECT",
+              "ofType": {}
+            }
+          }
+        ]
+      }
+    }
+  }
+}

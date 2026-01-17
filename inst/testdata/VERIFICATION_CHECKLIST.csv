@@ -1,0 +1,4 @@
+"file","verify_against","what_to_check"
+"TEST_masters_2025_leaderboard.csv","https://www.espn.com/golf/leaderboard/_/tournamentId/401703504","Check winner, top 10 positions, scores match"
+"TEST_masters_2025_holes_top5.csv","ESPN player scorecards (click player names)","Check hole-by-hole scores for round 1, verify par/birdie/bogey"
+"TEST_pga_2025_schedule.csv","https://www.espn.com/golf/schedule/_/season/2025","Check tournament names, dates, event IDs match"

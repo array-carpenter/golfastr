@@ -1,0 +1,327 @@
+{
+  "data": {
+    "shotDetailsV3": {
+      "playerId": "54591",
+      "holes": [
+        {
+          "holeNumber": 10,
+          "par": 4,
+          "score": "3",
+          "strokes": [
+            {
+              "__typename": "HoleStroke"
+            },
+            {
+              "__typename": "HoleStroke"
+            },
+            {
+              "__typename": "HoleStroke"
+            },
+            {
+              "__typename": "HoleStroke"
+            }
+          ]
+        },
+        {
+          "holeNumber": 11,
+          "par": 3,
+          "score": "3",
+          "strokes": [
+            {
+              "__typename": "HoleStroke"
+            },
+            {
+              "__typename": "HoleStroke"
+            },
+            {
+              "__typename": "HoleStroke"
+            }
+          ]
+        },
+        {
+          "holeNumber": 12,
+          "par": 4,
+          "score": "4",
+          "strokes": [
+            {
+              "__typename": "HoleStroke"
+            },
+            {
+              "__typename": "HoleStroke"
+            },
+            {
+              "__typename": "HoleStroke"
+            },
+            {
+              "__typename": "HoleStroke"
+            }
+          ]
+        },
+        {
+          "holeNumber": 13,
+          "par": 4,
+          "score": "4",
+          "strokes": [
+            {
+              "__typename": "HoleStroke"
+            },
+            {
+              "__typename": "HoleStroke"
+            },
+            {
+              "__typename": "HoleStroke"
+            },
+            {
+              "__typename": "HoleStroke"
+            }
+          ]
+        },
+        {
+          "holeNumber": 14,
+          "par": 4,
+          "score": "3",
+          "strokes": [
+            {
+              "__typename": "HoleStroke"
+            },
+            {
+              "__typename": "HoleStroke"
+            },
+            {
+              "__typename": "HoleStroke"
+            }
+          ]
+        },
+        {
+          "holeNumber": 15,
+          "par": 4,
+          "score": "4",
+          "strokes": [
+            {
+              "__typename": "HoleStroke"
+            },
+            {
+              "__typename": "HoleStroke"
+            },
+            {
+              "__typename": "HoleStroke"
+            },
+            {
+              "__typename": "HoleStroke"
+            }
+          ]
+        },
+        {
+          "holeNumber": 16,
+          "par": 4,
+          "score": "4",
+          "strokes": [
+            {
+              "__typename": "HoleStroke"
+            },
+            {
+              "__typename": "HoleStroke"
+            },
+            {
+              "__typename": "HoleStroke"
+            },
+            {
+              "__typename": "HoleStroke"
+            }
+          ]
+        },
+        {
+          "holeNumber": 17,
+          "par": 3,
+          "score": "2",
+          "strokes": [
+            {
+              "__typename": "HoleStroke"
+            },
+            {
+              "__typename": "HoleStroke"
+            }
+          ]
+        },
+        {
+          "holeNumber": 18,
+          "par": 5,
+          "score": "4",
+          "strokes": [
+            {
+              "__typename": "HoleStroke"
+            },
+            {
+              "__typename": "HoleStroke"
+            },
+            {
+              "__typename": "HoleStroke"
+            },
+            {
+              "__typename": "HoleStroke"
+            }
+          ]
+        },
+        {
+          "holeNumber": 1,
+          "par": 4,
+          "score": "4",
+          "strokes": [
+            {
+              "__typename": "HoleStroke"
+            },
+            {
+              "__typename": "HoleStroke"
+            },
+            {
+              "__typename": "HoleStroke"
+            },
+            {
+              "__typename": "HoleStroke"
+            }
+          ]
+        },
+        {
+          "holeNumber": 2,
+          "par": 4,
+          "score": "3",
+          "strokes": [
+            {
+              "__typename": "HoleStroke"
+            },
+            {
+              "__typename": "HoleStroke"
+            },
+            {
+              "__typename": "HoleStroke"
+            }
+          ]
+        },
+        {
+          "holeNumber": 3,
+          "par": 4,
+          "score": "4",
+          "strokes": [
+            {
+              "__typename": "HoleStroke"
+            },
+            {
+              "__typename": "HoleStroke"
+            },
+            {
+              "__typename": "HoleStroke"
+            },
+            {
+              "__typename": "HoleStroke"
+            }
+          ]
+        },
+        {
+          "holeNumber": 4,
+          "par": 3,
+          "score": "3",
+          "strokes": [
+            {
+              "__typename": "HoleStroke"
+            },
+            {
+              "__typename": "HoleStroke"
+            },
+            {
+              "__typename": "HoleStroke"
+            }
+          ]
+        },
+        {
+          "holeNumber": 5,
+          "par": 4,
+          "score": "4",
+          "strokes": [
+            {
+              "__typename": "HoleStroke"
+            },
+            {
+              "__typename": "HoleStroke"
+            },
+            {
+              "__typename": "HoleStroke"
+            },
+            {
+              "__typename": "HoleStroke"
+            }
+          ]
+        },
+        {
+          "holeNumber": 6,
+          "par": 4,
+          "score": "4",
+          "strokes": [
+            {
+              "__typename": "HoleStroke"
+            },
+            {
+              "__typename": "HoleStroke"
+            },
+            {
+              "__typename": "HoleStroke"
+            },
+            {
+              "__typename": "HoleStroke"
+            }
+          ]
+        },
+        {
+          "holeNumber": 7,
+          "par": 3,
+          "score": "3",
+          "strokes": [
+            {
+              "__typename": "HoleStroke"
+            },
+            {
+              "__typename": "HoleStroke"
+            },
+            {
+              "__typename": "HoleStroke"
+            }
+          ]
+        },
+        {
+          "holeNumber": 8,
+          "par": 4,
+          "score": "3",
+          "strokes": [
+            {
+              "__typename": "HoleStroke"
+            },
+            {
+              "__typename": "HoleStroke"
+            },
+            {
+              "__typename": "HoleStroke"
+            }
+          ]
+        },
+        {
+          "holeNumber": 9,
+          "par": 5,
+          "score": "4",
+          "strokes": [
+            {
+              "__typename": "HoleStroke"
+            },
+            {
+              "__typename": "HoleStroke"
+            },
+            {
+              "__typename": "HoleStroke"
+            },
+            {
+              "__typename": "HoleStroke"
+            }
+          ]
+        }
+      ]
+    }
+  }
+}
