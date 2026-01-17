@@ -7,8 +7,7 @@
 ## Installation
 
 ```r
-# install.packages("devtools")
-devtools::install_github("raycarpenter/golfastr")
+install.packages("golfastr")
 ```
 
 ## Quick Start
