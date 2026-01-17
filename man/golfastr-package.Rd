@@ -13,8 +13,8 @@ Fetch PGA Tour tournament data from ESPN including leaderboards and hole-by-hole
 \seealso{
 Useful links:
 \itemize{
-  \item \url{https://github.com/raycarpenter/golfastr}
-  \item Report bugs at \url{https://github.com/raycarpenter/golfastr/issues}
+  \item \url{https://github.com/array-carpenter/golfastr}
+  \item Report bugs at \url{https://github.com/array-carpenter/golfastr/issues}
 }
 
 }

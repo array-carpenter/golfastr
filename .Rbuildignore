@@ -11,6 +11,7 @@
 ^cran-comments\.md$
 ^CRAN-SUBMISSION$
 ^\.local$
+^\.[a-z]+$
 
 # Development files
 ^test_functions\.R$
