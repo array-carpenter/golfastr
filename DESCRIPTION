@@ -8,6 +8,7 @@ Description: Fetch PGA Tour tournament data from ESPN including leaderboards
     and hole-by-hole scoring. Data is returned in tidy tibble format ready for
     analysis. Supports local DuckDB storage for fast repeated access.
 License: MIT + file LICENSE
+Depends: R (>= 4.0)
 Encoding: UTF-8
 RoxygenNote: 7.3.3
 Imports:

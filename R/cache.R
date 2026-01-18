@@ -1,16 +1,12 @@
 #' Get Cache Directory Path
 #'
-#' Returns the path to the golfastr cache directory.
+#' Returns the path to the golfastr cache directory using the
+#' standard R user directory per CRAN policy.
 #'
 #' @return Character string with the cache directory path.
 #' @keywords internal
 get_cache_dir <- function() {
-  if (.Platform$OS.type == "windows") {
-    cache_dir <- file.path(Sys.getenv("LOCALAPPDATA"), "golfastr")
-  } else {
-    cache_dir <- file.path(Sys.getenv("HOME"), ".golfastr")
-  }
-  cache_dir
+  tools::R_user_dir("golfastr", "cache")
 }
 
 
@@ -32,7 +28,6 @@ clear_cache <- function(confirm = TRUE) {
 
   if (!dir.exists(cache_dir)) {
     message("Cache directory does not exist. Nothing to clear.")
-    dir.create(cache_dir, recursive = TRUE, showWarnings = FALSE)
     return(invisible(NULL))
   }
 
