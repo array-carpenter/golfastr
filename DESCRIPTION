@@ -1,12 +1,13 @@
 Package: golfastr
 Type: Package
 Title: Efficiently Access Pro Golf Data
-Version: 0.1.0
+Version: 0.1.2
 Authors@R:
     person("Ray", "Carpenter", email = "raymondcarpenter1@gmail.com", role = c("aut", "cre"))
-Description: Fetch PGA Tour tournament data from ESPN including leaderboards
-    and hole-by-hole scoring. Data is returned in tidy tibble format ready for
-    analysis. Supports local DuckDB storage for fast repeated access.
+Description: Fetch PGA Tour tournament data from ESPN <https://www.espn.com/golf/>
+    including leaderboards and hole-by-hole scoring. Data is returned in tidy
+    tibble format ready for analysis. Supports local 'DuckDB' storage for fast
+    repeated access.
 License: MIT + file LICENSE
 Depends: R (>= 4.0)
 Encoding: UTF-8
