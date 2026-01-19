@@ -10,6 +10,7 @@ get_cache_dir()
 Character string with the cache directory path.
 }
 \description{
-Returns the path to the golfastr cache directory.
+Returns the path to the golfastr cache directory using the
+standard R user directory per CRAN policy.
 }
 \keyword{internal}

@@ -8,7 +8,7 @@
 \description{
 \if{html}{\figure{logo.png}{options: style='float: right' alt='logo' width='120'}}
 
-Fetch PGA Tour tournament data from ESPN including leaderboards and hole-by-hole scoring. Data is returned in tidy tibble format ready for analysis. Supports local DuckDB storage for fast repeated access.
+Fetch PGA Tour tournament data from ESPN \url{https://www.espn.com/golf/} including leaderboards and hole-by-hole scoring. Data is returned in tidy tibble format ready for analysis. Supports local 'DuckDB' storage for fast repeated access.
 }
 \seealso{
 Useful links:
