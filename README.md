@@ -1,4 +1,4 @@
-# golfastr <img src="man/figures/logo.png" align="right" height="139" alt="golfastr logo" />
+# golfastR <img src="man/figures/logo.png" align="right" height="139" alt="golfastr logo" />
 
 > Fast, tidy PGA Tour data in R
 
