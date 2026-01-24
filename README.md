@@ -1,19 +1,19 @@
-# golfastR <img src="man/figures/logo.png" align="right" height="139" alt="golfastr logo" />
+# golfastR <img src="man/figures/logo.png" align="right" height="139" alt="golfastR logo" />
 
 > Fast, tidy PGA Tour data in R
 
-`golfastr` provides easy access to PGA Tour tournament data from ESPN, delivering leaderboards and hole-by-hole scoring in tidy data formats ready for analysis.
+`golfastR` provides easy access to PGA Tour tournament data from ESPN, delivering leaderboards and hole-by-hole scoring in tidy data formats ready for analysis.
 
 ## Installation
 
 ```r
-install.packages("golfastr")
+install.packages("golfastR")
 ```
 
 ## Quick Start
 
 ```r
-library(golfastr)
+library(golfastR)
 
 # Get the tournament schedule
 schedule <- load_schedule(2026)
