@@ -4,14 +4,14 @@
 \alias{compare_players}
 \title{Compare Players}
 \usage{
-compare_players(players, year = NULL, db_path = "data/golfastr.duckdb")
+compare_players(players, year = NULL, file_path)
 }
 \arguments{
 \item{players}{Vector of player names}
 
 \item{year}{Optional year filter}
 
-\item{db_path}{Path to database}
+\item{file_path}{Path to data file (.rds or .parquet)}
 }
 \value{
 Tibble comparing player statistics
@@ -21,6 +21,6 @@ Side-by-side comparison of multiple players.
 }
 \examples{
 \dontrun{
-compare_players(c("Scheffler", "McIlroy", "Hovland"))
+compare_players(c("Scheffler", "McIlroy", "Hovland"), file_path = "golf_data.rds")
 }
 }

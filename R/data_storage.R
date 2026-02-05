@@ -1,109 +1,19 @@
-#' Save Tournament Data to Database
-#'
-#' Save tournament data to a DuckDB database for fast future loading.
-#'
-#' @param data Tibble of tournament data (from load_tournament)
-#' @param db_path Path to DuckDB database file (default: "data/golfastr.duckdb")
-#' @param table_name Table name (default: "leaderboards")
-#' @param append If TRUE, append to existing data. If FALSE, replace.
-#' @export
-#' @examples
-#' \dontrun{
-#' masters <- load_tournament(2025, "Masters")
-#' save_to_db(masters)
-#' }
-save_to_db <- function(data,
-                       db_path = "data/golfastr.duckdb",
-                       table_name = "leaderboards",
-                       append = TRUE) {
-
-  if (!requireNamespace("duckdb", quietly = TRUE)) {
-    stop("Package 'duckdb' required. Install with: install.packages('duckdb')")
-  }
-
-  # Create directory if needed
-  dir.create(dirname(db_path), showWarnings = FALSE, recursive = TRUE)
-
-  # Connect to database
-  con <- DBI::dbConnect(duckdb::duckdb(), db_path)
-  on.exit(DBI::dbDisconnect(con, shutdown = TRUE))
-
-  if (append && DBI::dbExistsTable(con, table_name)) {
-    # Append data
-    DBI::dbAppendTable(con, table_name, data)
-    message("Appended ", nrow(data), " rows to ", table_name)
-  } else {
-    # Create/replace table
-    DBI::dbWriteTable(con, table_name, data, overwrite = TRUE)
-    message("Saved ", nrow(data), " rows to ", table_name)
-  }
-}
-
-#' Load Data from Database
-#'
-#' Load tournament data from local DuckDB database (fast!).
-#'
-#' @param db_path Path to DuckDB database file
-#' @param table_name Table name (default: "leaderboards")
-#' @param year Filter by year (optional)
-#' @param tournament Filter by tournament name (optional, partial match)
-#' @return Tibble with tournament data
-#' @export
-#' @examples
-#' \dontrun{
-#' # Load all saved data
-#' all_data <- load_from_db()
-#'
-#' # Filter by year
-#' data_2025 <- load_from_db(year = 2025)
-#'
-#' # Filter by tournament
-#' masters <- load_from_db(tournament = "Masters")
-#' }
-load_from_db <- function(db_path = "data/golfastr.duckdb",
-                         table_name = "leaderboards",
-                         year = NULL,
-                         tournament = NULL) {
-
-  if (!requireNamespace("duckdb", quietly = TRUE)) {
-    stop("Package 'duckdb' required. Install with: install.packages('duckdb')")
-  }
-
-  if (!file.exists(db_path)) {
-    stop("Database not found: ", db_path,
-         "\nUse save_to_db() to save tournament data first.")
-  }
-
-  con <- DBI::dbConnect(duckdb::duckdb(), db_path, read_only = TRUE)
-  on.exit(DBI::dbDisconnect(con, shutdown = TRUE))
-
-  # Build query
-  query <- paste0("SELECT * FROM ", table_name)
-  conditions <- c()
-
-  if (!is.null(tournament)) {
-    conditions <- c(conditions,
-                    paste0("tournament_name ILIKE '%", tournament, "%'"))
-  }
-
-  if (length(conditions) > 0) {
-    query <- paste0(query, " WHERE ", paste(conditions, collapse = " AND "))
-  }
-
-  result <- DBI::dbGetQuery(con, query)
-  tibble::as_tibble(result)
-}
-
 #' Save Tournament Data to RDS
 #'
 #' Save tournament data to an RDS file.
 #'
 #' @param data Tibble of tournament data
-#' @param file_path Path to RDS file (default: "data/golfastr.rds")
+#' @param file_path Path to RDS file. Must be specified by user.
 #' @param append If TRUE, append to existing data
+#' @return Invisible NULL. Called for side effects (writes to file).
 #' @export
+#' @examples
+#' \dontrun{
+#' masters <- load_tournament(2025, "Masters")
+#' save_to_rds(masters, file_path = tempfile(fileext = ".rds"))
+#' }
 save_to_rds <- function(data,
-                        file_path = "data/golfastr.rds",
+                        file_path,
                         append = TRUE) {
 
   dir.create(dirname(file_path), showWarnings = FALSE, recursive = TRUE)
@@ -112,23 +22,126 @@ save_to_rds <- function(data,
     existing <- readRDS(file_path)
     data <- dplyr::bind_rows(existing, data)
     # Remove duplicates based on key columns
-    if ("athlete_id" %in% names(data) && "event_id" %in% names(data)) {
-      data <- dplyr::distinct(data, athlete_id, event_id, .keep_all = TRUE)
+    if ("player_id" %in% names(data) && "event_id" %in% names(data)) {
+      data <- dplyr::distinct(data, player_id, event_id, .keep_all = TRUE)
     }
   }
 
   saveRDS(data, file_path)
   message("Saved ", nrow(data), " rows to ", file_path)
+  invisible(NULL)
 }
 
 #' Load Tournament Data from RDS
 #'
-#' @param file_path Path to RDS file
-#' @return Tibble with tournament data
+#' @param file_path Path to RDS file. Must be specified by user.
+#' @return A tibble with tournament leaderboard data containing columns such as
+#'   position, player name, scores, and tournament metadata.
 #' @export
-load_from_rds <- function(file_path = "data/golfastr.rds") {
+#' @examples
+#' \dontrun{
+#' data <- load_from_rds(file_path = "my_golf_data.rds")
+#' }
+load_from_rds <- function(file_path) {
   if (!file.exists(file_path)) {
     stop("File not found: ", file_path)
   }
-  readRDS(file_path)
+  tibble::as_tibble(readRDS(file_path))
+}
+
+#' Save Tournament Data to Parquet
+#'
+#' Save tournament data to a Parquet file for cross-language compatibility.
+#' Requires the arrow package.
+#'
+#' @param data Tibble of tournament data
+#' @param file_path Path to Parquet file. Must be specified by user.
+#' @param append If TRUE, append to existing data
+#' @return Invisible NULL. Called for side effects (writes to file).
+#' @export
+#' @examples
+#' \dontrun{
+#' masters <- load_tournament(2025, "Masters")
+#' save_to_parquet(masters, file_path = tempfile(fileext = ".parquet"))
+#' }
+save_to_parquet <- function(data,
+                            file_path,
+                            append = TRUE) {
+
+  if (!requireNamespace("arrow", quietly = TRUE)) {
+    stop("Package 'arrow' required. Install with: install.packages('arrow')")
+  }
+
+  dir.create(dirname(file_path), showWarnings = FALSE, recursive = TRUE)
+
+  if (append && file.exists(file_path)) {
+    existing <- arrow::read_parquet(file_path)
+    data <- dplyr::bind_rows(existing, data)
+    # Remove duplicates based on key columns
+    if ("player_id" %in% names(data) && "event_id" %in% names(data)) {
+      data <- dplyr::distinct(data, player_id, event_id, .keep_all = TRUE)
+    }
+  }
+
+  arrow::write_parquet(data, file_path)
+  message("Saved ", nrow(data), " rows to ", file_path)
+  invisible(NULL)
+}
+
+#' Load Tournament Data from Parquet
+#'
+#' Load tournament data from a Parquet file. Requires the arrow package.
+#'
+#' @param file_path Path to Parquet file. Must be specified by user.
+#' @return A tibble with tournament leaderboard data containing columns such as
+#'   position, player name, scores, and tournament metadata.
+#' @export
+#' @examples
+#' \dontrun{
+#' data <- load_from_parquet(file_path = "my_golf_data.parquet")
+#' }
+load_from_parquet <- function(file_path) {
+  if (!requireNamespace("arrow", quietly = TRUE)) {
+    stop("Package 'arrow' required. Install with: install.packages('arrow')")
+  }
+
+  if (!file.exists(file_path)) {
+    stop("File not found: ", file_path)
+  }
+
+  tibble::as_tibble(arrow::read_parquet(file_path))
+}
+
+#' Load Tournament Data
+#'
+#' Load tournament data from a file. Auto-detects format based on extension.
+#'
+#' @param file_path Path to data file (.rds or .parquet)
+#' @param tournament Optional tournament name filter (partial match)
+#' @return A tibble with tournament leaderboard data
+#' @export
+#' @examples
+#' \dontrun{
+#' # Load all data
+#' data <- load_data("golf_data.rds")
+#'
+#' # Load and filter to Masters
+#' masters <- load_data("golf_data.rds", tournament = "Masters")
+#' }
+load_data <- function(file_path, tournament = NULL) {
+  ext <- tolower(tools::file_ext(file_path))
+
+  data <- if (ext == "parquet") {
+    load_from_parquet(file_path)
+  } else if (ext == "rds") {
+    load_from_rds(file_path)
+  } else {
+    stop("Unsupported file type: ", ext, ". Use .rds or .parquet")
+  }
+
+  if (!is.null(tournament)) {
+    data <- data[grepl(tournament, data$tournament_name, ignore.case = TRUE), ]
+  }
+
+  data
 }

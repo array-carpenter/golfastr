@@ -8,7 +8,7 @@
 \description{
 \if{html}{\figure{logo.png}{options: style='float: right' alt='logo' width='120'}}
 
-Fetch PGA Tour tournament data from ESPN \url{https://www.espn.com/golf/} including leaderboards and hole-by-hole scoring. Data is returned in tidy tibble format ready for analysis. Supports local 'DuckDB' storage for fast repeated access.
+Fetch Professional Golfers' Association (PGA) Tour tournament data from ESPN \url{https://www.espn.com/golf/} including leaderboards and hole-by-hole scoring. Data is returned in tidy tibble format ready for analysis. Supports local storage via RDS or 'Apache Arrow' Parquet files for fast repeated access. Designed for golf analytics, data journalism, and fantasy sports research.
 }
 \seealso{
 Useful links:
@@ -19,7 +19,7 @@ Useful links:
 
 }
 \author{
-\strong{Maintainer}: Ray Carpenter \email{raymondcarpenter1@gmail.com}
+\strong{Maintainer}: Ray Carpenter \email{raymondcarpenter1@gmail.com} [copyright holder]
 
 }
 \keyword{internal}

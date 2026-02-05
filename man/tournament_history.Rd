@@ -4,16 +4,21 @@
 \alias{tournament_history}
 \title{Tournament History}
 \usage{
-tournament_history(tournament, db_path = "data/golfastr.duckdb")
+tournament_history(tournament, file_path)
 }
 \arguments{
 \item{tournament}{Tournament name (partial match)}
 
-\item{db_path}{Path to database}
+\item{file_path}{Path to data file (.rds or .parquet)}
 }
 \value{
 Tibble with tournament winners by year
 }
 \description{
 Get historical results for a specific tournament.
+}
+\examples{
+\dontrun{
+tournament_history("Masters", file_path = "golf_data.rds")
+}
 }

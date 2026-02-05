@@ -4,15 +4,24 @@
 \alias{save_to_rds}
 \title{Save Tournament Data to RDS}
 \usage{
-save_to_rds(data, file_path = "data/golfastr.rds", append = TRUE)
+save_to_rds(data, file_path, append = TRUE)
 }
 \arguments{
 \item{data}{Tibble of tournament data}
 
-\item{file_path}{Path to RDS file (default: "data/golfastr.rds")}
+\item{file_path}{Path to RDS file. Must be specified by user.}
 
 \item{append}{If TRUE, append to existing data}
 }
+\value{
+Invisible NULL. Called for side effects (writes to file).
+}
 \description{
 Save tournament data to an RDS file.
+}
+\examples{
+\dontrun{
+masters <- load_tournament(2025, "Masters")
+save_to_rds(masters, file_path = tempfile(fileext = ".rds"))
+}
 }

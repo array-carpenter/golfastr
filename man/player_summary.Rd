@@ -4,14 +4,14 @@
 \alias{player_summary}
 \title{Player Season Summary}
 \usage{
-player_summary(name, year = NULL, db_path = "data/golfastr.duckdb")
+player_summary(name, year = NULL, file_path)
 }
 \arguments{
 \item{name}{Player name (partial match)}
 
 \item{year}{Optional year filter}
 
-\item{db_path}{Path to database}
+\item{file_path}{Path to data file (.rds or .parquet)}
 }
 \value{
 Tibble with season statistics
@@ -21,7 +21,7 @@ Get aggregate statistics for a player's season.
 }
 \examples{
 \dontrun{
-player_summary("Scheffler")
-player_summary("McIlroy", year = 2025)
+player_summary("Scheffler", file_path = "golf_data.rds")
+player_summary("McIlroy", year = 2025, file_path = "golf_data.rds")
 }
 }

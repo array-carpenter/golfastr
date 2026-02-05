@@ -4,12 +4,7 @@
 \alias{made_cuts_leaders}
 \title{Made Cuts Percentage}
 \usage{
-made_cuts_leaders(
-  year = NULL,
-  min_events = 5,
-  top_n = 10,
-  db_path = "data/golfastr.duckdb"
-)
+made_cuts_leaders(year = NULL, min_events = 5, top_n = 10, file_path)
 }
 \arguments{
 \item{year}{Optional year filter}
@@ -18,11 +13,16 @@ made_cuts_leaders(
 
 \item{top_n}{Number of players to show}
 
-\item{db_path}{Path to database}
+\item{file_path}{Path to data file (.rds or .parquet)}
 }
 \value{
 Tibble with made cuts leaders
 }
 \description{
 Get players by percentage of cuts made.
+}
+\examples{
+\dontrun{
+made_cuts_leaders(year = 2025, file_path = "golf_data.rds")
+}
 }

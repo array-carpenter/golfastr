@@ -4,25 +4,25 @@
 \alias{get_player}
 \title{Get Player Results}
 \usage{
-get_player(name, db_path = "data/golfastr.duckdb")
+get_player(name, file_path)
 }
 \arguments{
 \item{name}{Player name (partial match, case-insensitive)}
 
-\item{db_path}{Path to database file}
+\item{file_path}{Path to data file (.rds or .parquet)}
 }
 \value{
 Tibble with player's tournament results
 }
 \description{
-Look up a player's results across all tournaments in the database.
+Look up a player's results across all tournaments in a data file.
 }
 \examples{
 \dontrun{
 # Get Rory McIlroy's results
-get_player("McIlroy")
+get_player("McIlroy", file_path = "golf_data.rds")
 
 # Get Scottie Scheffler's results
-get_player("Scheffler")
+get_player("Scheffler", file_path = "golf_data.rds")
 }
 }

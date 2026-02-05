@@ -4,12 +4,7 @@
 \alias{scoring_avg_leaders}
 \title{Scoring Average Leaders}
 \usage{
-scoring_avg_leaders(
-  year = NULL,
-  min_events = 5,
-  top_n = 10,
-  db_path = "data/golfastr.duckdb"
-)
+scoring_avg_leaders(year = NULL, min_events = 5, top_n = 10, file_path)
 }
 \arguments{
 \item{year}{Optional year filter}
@@ -18,11 +13,16 @@ scoring_avg_leaders(
 
 \item{top_n}{Number of players to show}
 
-\item{db_path}{Path to database}
+\item{file_path}{Path to data file (.rds or .parquet)}
 }
 \value{
 Tibble with scoring average leaders
 }
 \description{
 Get players with best scoring average.
+}
+\examples{
+\dontrun{
+scoring_avg_leaders(year = 2025, file_path = "golf_data.rds")
+}
 }

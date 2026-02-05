@@ -4,18 +4,23 @@
 \alias{field_strength}
 \title{Field Strength Analysis}
 \usage{
-field_strength(tournament, year, db_path = "data/golfastr.duckdb")
+field_strength(tournament, year, file_path)
 }
 \arguments{
 \item{tournament}{Tournament name}
 
 \item{year}{Season year}
 
-\item{db_path}{Path to database}
+\item{file_path}{Path to data file (.rds or .parquet)}
 }
 \value{
 Tibble with field statistics
 }
 \description{
 Analyze the strength of a tournament field.
+}
+\examples{
+\dontrun{
+field_strength("Masters", 2025, file_path = "golf_data.rds")
+}
 }

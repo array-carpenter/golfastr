@@ -4,14 +4,14 @@
 \alias{plot_player}
 \title{Plot Player Results}
 \usage{
-plot_player(name, year = NULL, db_path = "data/golfastr.duckdb")
+plot_player(name, year = NULL, file_path)
 }
 \arguments{
 \item{name}{Player name}
 
 \item{year}{Optional year filter}
 
-\item{db_path}{Path to database}
+\item{file_path}{Path to data file (.rds or .parquet)}
 }
 \value{
 ggplot object
@@ -21,6 +21,6 @@ Visualize a player's finishes across tournaments.
 }
 \examples{
 \dontrun{
-plot_player("Scheffler")
+plot_player("Scheffler", file_path = "golf_data.rds")
 }
 }

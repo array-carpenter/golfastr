@@ -4,19 +4,19 @@
 #'
 #' @param name Player name
 #' @param year Optional year filter
-#' @param db_path Path to database
+#' @param file_path Path to data file (.rds or .parquet)
 #' @return ggplot object
 #' @export
 #' @examples
 #' \dontrun{
-#' plot_player("Scheffler")
+#' plot_player("Scheffler", file_path = "golf_data.rds")
 #' }
-plot_player <- function(name, year = NULL, db_path = "data/golfastr.duckdb") {
+plot_player <- function(name, year = NULL, file_path) {
   if (!requireNamespace("ggplot2", quietly = TRUE)) {
     stop("Package 'ggplot2' required. Install with: install.packages('ggplot2')")
   }
 
-  data <- get_player(name, db_path = db_path)
+  data <- get_player(name, file_path = file_path)
 
   if (!is.null(year)) {
     data <- data[data$year == year, ]
@@ -57,16 +57,19 @@ plot_player <- function(name, year = NULL, db_path = "data/golfastr.duckdb") {
 #' @param tournament Tournament name
 #' @param year Season year
 #' @param top_n Number of players to show
-#' @param db_path Path to database
+#' @param file_path Path to data file (.rds or .parquet)
 #' @return ggplot object
 #' @export
-plot_leaderboard <- function(tournament, year, top_n = 10,
-                             db_path = "data/golfastr.duckdb") {
+#' @examples
+#' \dontrun{
+#' plot_leaderboard("Masters", 2025, file_path = "golf_data.rds")
+#' }
+plot_leaderboard <- function(tournament, year, top_n = 10, file_path) {
   if (!requireNamespace("ggplot2", quietly = TRUE)) {
     stop("Package 'ggplot2' required")
   }
 
-  data <- load_from_db(db_path = db_path, tournament = tournament)
+  data <- load_data(file_path, tournament = tournament)
   data <- data[data$year == year, ]
   data <- data[order(data$position), ]
   data <- head(data, top_n)
@@ -96,15 +99,19 @@ plot_leaderboard <- function(tournament, year, top_n = 10,
 #'
 #' @param year Optional year filter
 #' @param top_n Number of players to show
-#' @param db_path Path to database
+#' @param file_path Path to data file (.rds or .parquet)
 #' @return ggplot object
 #' @export
-plot_wins <- function(year = NULL, top_n = 10, db_path = "data/golfastr.duckdb") {
+#' @examples
+#' \dontrun{
+#' plot_wins(year = 2025, file_path = "golf_data.rds")
+#' }
+plot_wins <- function(year = NULL, top_n = 10, file_path) {
   if (!requireNamespace("ggplot2", quietly = TRUE)) {
     stop("Package 'ggplot2' required")
   }
 
-  data <- win_leaders(year = year, top_n = top_n, db_path = db_path)
+  data <- win_leaders(year = year, top_n = top_n, file_path = file_path)
 
   data$player <- factor(data$player, levels = rev(data$player))
 
@@ -128,15 +135,19 @@ plot_wins <- function(year = NULL, top_n = 10, db_path = "data/golfastr.duckdb")
 #'
 #' @param tournament Tournament name
 #' @param year Season year
-#' @param db_path Path to database
+#' @param file_path Path to data file (.rds or .parquet)
 #' @return ggplot object
 #' @export
-plot_scoring <- function(tournament, year, db_path = "data/golfastr.duckdb") {
+#' @examples
+#' \dontrun{
+#' plot_scoring("Masters", 2025, file_path = "golf_data.rds")
+#' }
+plot_scoring <- function(tournament, year, file_path) {
   if (!requireNamespace("ggplot2", quietly = TRUE)) {
     stop("Package 'ggplot2' required")
   }
 
-  data <- load_from_db(db_path = db_path, tournament = tournament)
+  data <- load_data(file_path, tournament = tournament)
   data <- data[data$year == year, ]
 
   p <- ggplot2::ggplot(data, ggplot2::aes(x = total_score)) +
@@ -161,17 +172,21 @@ plot_scoring <- function(tournament, year, db_path = "data/golfastr.duckdb") {
 #'
 #' @param players Vector of player names
 #' @param year Optional year filter
-#' @param db_path Path to database
+#' @param file_path Path to data file (.rds or .parquet)
 #' @return ggplot object
 #' @export
-plot_head_to_head <- function(players, year = NULL, db_path = "data/golfastr.duckdb") {
+#' @examples
+#' \dontrun{
+#' plot_head_to_head(c("Scheffler", "McIlroy"), file_path = "golf_data.rds")
+#' }
+plot_head_to_head <- function(players, year = NULL, file_path) {
   if (!requireNamespace("ggplot2", quietly = TRUE)) {
     stop("Package 'ggplot2' required")
   }
 
   all_data <- lapply(players, function(p) {
     tryCatch({
-      data <- get_player(p, db_path = db_path)
+      data <- get_player(p, file_path = file_path)
       if (!is.null(year)) {
         data <- data[data$year == year, ]
       }

@@ -4,16 +4,16 @@
 #'
 #' @param name Player name (partial match)
 #' @param year Optional year filter
-#' @param db_path Path to database
+#' @param file_path Path to data file (.rds or .parquet)
 #' @return Tibble with season statistics
 #' @export
 #' @examples
 #' \dontrun{
-#' player_summary("Scheffler")
-#' player_summary("McIlroy", year = 2025)
+#' player_summary("Scheffler", file_path = "golf_data.rds")
+#' player_summary("McIlroy", year = 2025, file_path = "golf_data.rds")
 #' }
-player_summary <- function(name, year = NULL, db_path = "data/golfastr.duckdb") {
-  data <- get_player(name, db_path = db_path)
+player_summary <- function(name, year = NULL, file_path) {
+  data <- get_player(name, file_path = file_path)
 
   if (!is.null(year)) {
     data <- data[data$year == year, ]
@@ -46,17 +46,17 @@ player_summary <- function(name, year = NULL, db_path = "data/golfastr.duckdb") 
 #'
 #' @param players Vector of player names
 #' @param year Optional year filter
-#' @param db_path Path to database
+#' @param file_path Path to data file (.rds or .parquet)
 #' @return Tibble comparing player statistics
 #' @export
 #' @examples
 #' \dontrun{
-#' compare_players(c("Scheffler", "McIlroy", "Hovland"))
+#' compare_players(c("Scheffler", "McIlroy", "Hovland"), file_path = "golf_data.rds")
 #' }
-compare_players <- function(players, year = NULL, db_path = "data/golfastr.duckdb") {
+compare_players <- function(players, year = NULL, file_path) {
   results <- lapply(players, function(p) {
     tryCatch({
-      player_summary(p, year = year, db_path = db_path)
+      player_summary(p, year = year, file_path = file_path)
     }, error = function(e) NULL)
   })
 
@@ -80,11 +80,15 @@ compare_players <- function(players, year = NULL, db_path = "data/golfastr.duckd
 #' @param tournament Tournament name
 #' @param year Season year
 #' @param top_n Number of players to show (default: 10)
-#' @param db_path Path to database
+#' @param file_path Path to data file (.rds or .parquet)
 #' @return Formatted tibble for display
 #' @export
-leaderboard <- function(tournament, year, top_n = 10, db_path = "data/golfastr.duckdb") {
-  data <- load_from_db(db_path = db_path, tournament = tournament)
+#' @examples
+#' \dontrun{
+#' leaderboard("Masters", 2025, file_path = "golf_data.rds")
+#' }
+leaderboard <- function(tournament, year, top_n = 10, file_path) {
+  data <- load_data(file_path, tournament = tournament)
   data <- data[data$year == year, ]
 
   if (nrow(data) == 0) {
@@ -106,11 +110,15 @@ leaderboard <- function(tournament, year, top_n = 10, db_path = "data/golfastr.d
 #'
 #' @param tournament Tournament name
 #' @param year Season year
-#' @param db_path Path to database
+#' @param file_path Path to data file (.rds or .parquet)
 #' @return Tibble with field statistics
 #' @export
-field_strength <- function(tournament, year, db_path = "data/golfastr.duckdb") {
-  data <- load_from_db(db_path = db_path, tournament = tournament)
+#' @examples
+#' \dontrun{
+#' field_strength("Masters", 2025, file_path = "golf_data.rds")
+#' }
+field_strength <- function(tournament, year, file_path) {
+  data <- load_data(file_path, tournament = tournament)
   data <- data[data$year == year, ]
 
   if (nrow(data) == 0) {
@@ -134,11 +142,15 @@ field_strength <- function(tournament, year, db_path = "data/golfastr.duckdb") {
 #'
 #' @param year Optional year filter
 #' @param top_n Number of players to show
-#' @param db_path Path to database
+#' @param file_path Path to data file (.rds or .parquet)
 #' @return Tibble with win leaders
 #' @export
-win_leaders <- function(year = NULL, top_n = 10, db_path = "data/golfastr.duckdb") {
-  data <- load_from_db(db_path = db_path)
+#' @examples
+#' \dontrun{
+#' win_leaders(year = 2025, file_path = "golf_data.rds")
+#' }
+win_leaders <- function(year = NULL, top_n = 10, file_path) {
+  data <- load_data(file_path)
 
   if (!is.null(year)) {
     data <- data[data$year == year, ]
@@ -161,12 +173,16 @@ win_leaders <- function(year = NULL, top_n = 10, db_path = "data/golfastr.duckdb
 #' @param year Optional year filter
 #' @param min_events Minimum events played
 #' @param top_n Number of players to show
-#' @param db_path Path to database
+#' @param file_path Path to data file (.rds or .parquet)
 #' @return Tibble with top 10 leaders
 #' @export
+#' @examples
+#' \dontrun{
+#' top10_leaders(year = 2025, file_path = "golf_data.rds")
+#' }
 top10_leaders <- function(year = NULL, min_events = 5, top_n = 10,
-                          db_path = "data/golfastr.duckdb") {
-  data <- load_from_db(db_path = db_path)
+                          file_path) {
+  data <- load_data(file_path)
 
   if (!is.null(year)) {
     data <- data[data$year == year, ]
@@ -202,12 +218,16 @@ top10_leaders <- function(year = NULL, min_events = 5, top_n = 10,
 #' @param year Optional year filter
 #' @param min_events Minimum events played
 #' @param top_n Number of players to show
-#' @param db_path Path to database
+#' @param file_path Path to data file (.rds or .parquet)
 #' @return Tibble with scoring average leaders
 #' @export
+#' @examples
+#' \dontrun{
+#' scoring_avg_leaders(year = 2025, file_path = "golf_data.rds")
+#' }
 scoring_avg_leaders <- function(year = NULL, min_events = 5, top_n = 10,
-                                db_path = "data/golfastr.duckdb") {
-  data <- load_from_db(db_path = db_path)
+                                file_path) {
+  data <- load_data(file_path)
 
   if (!is.null(year)) {
     data <- data[data$year == year, ]
@@ -244,12 +264,16 @@ scoring_avg_leaders <- function(year = NULL, min_events = 5, top_n = 10,
 #' @param year Optional year filter
 #' @param min_events Minimum events played
 #' @param top_n Number of players to show
-#' @param db_path Path to database
+#' @param file_path Path to data file (.rds or .parquet)
 #' @return Tibble with made cuts leaders
 #' @export
+#' @examples
+#' \dontrun{
+#' made_cuts_leaders(year = 2025, file_path = "golf_data.rds")
+#' }
 made_cuts_leaders <- function(year = NULL, min_events = 5, top_n = 10,
-                              db_path = "data/golfastr.duckdb") {
-  data <- load_from_db(db_path = db_path)
+                              file_path) {
+  data <- load_data(file_path)
 
   if (!is.null(year)) {
     data <- data[data$year == year, ]
@@ -282,11 +306,15 @@ made_cuts_leaders <- function(year = NULL, min_events = 5, top_n = 10,
 #' Get historical results for a specific tournament.
 #'
 #' @param tournament Tournament name (partial match)
-#' @param db_path Path to database
+#' @param file_path Path to data file (.rds or .parquet)
 #' @return Tibble with tournament winners by year
 #' @export
-tournament_history <- function(tournament, db_path = "data/golfastr.duckdb") {
-  data <- load_from_db(db_path = db_path, tournament = tournament)
+#' @examples
+#' \dontrun{
+#' tournament_history("Masters", file_path = "golf_data.rds")
+#' }
+tournament_history <- function(tournament, file_path) {
+  data <- load_data(file_path, tournament = tournament)
 
   if (nrow(data) == 0) {
     stop("Tournament not found")

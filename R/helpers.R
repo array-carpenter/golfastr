@@ -1,21 +1,21 @@
 #' Get Player Results
 #'
-#' Look up a player's results across all tournaments in the database.
+#' Look up a player's results across all tournaments in a data file.
 #'
 #' @param name Player name (partial match, case-insensitive)
-#' @param db_path Path to database file
+#' @param file_path Path to data file (.rds or .parquet)
 #' @return Tibble with player's tournament results
 #' @export
 #' @examples
 #' \dontrun{
 #' # Get Rory McIlroy's results
-#' get_player("McIlroy")
+#' get_player("McIlroy", file_path = "golf_data.rds")
 #'
 #' # Get Scottie Scheffler's results
-#' get_player("Scheffler")
+#' get_player("Scheffler", file_path = "golf_data.rds")
 #' }
-get_player <- function(name, db_path = "data/golfastr.duckdb") {
-  data <- load_from_db(db_path = db_path)
+get_player <- function(name, file_path) {
+  data <- load_data(file_path)
 
   # Filter by name (case-insensitive partial match)
   matches <- data[grepl(name, data$display_name, ignore.case = TRUE), ]
@@ -42,22 +42,22 @@ get_player <- function(name, db_path = "data/golfastr.duckdb") {
 
 #' Get Tournament Winners
 #'
-#' Get all tournament winners from the database.
+#' Get all tournament winners from a data file.
 #'
 #' @param year Optional year filter
-#' @param db_path Path to database file
+#' @param file_path Path to data file (.rds or .parquet)
 #' @return Tibble with tournament winners
 #' @export
 #' @examples
 #' \dontrun{
 #' # Get all winners
-#' get_winners()
+#' get_winners(file_path = "golf_data.rds")
 #'
 #' # Get 2025 winners
-#' get_winners(2025)
+#' get_winners(2025, file_path = "golf_data.rds")
 #' }
-get_winners <- function(year = NULL, db_path = "data/golfastr.duckdb") {
-  data <- load_from_db(db_path = db_path)
+get_winners <- function(year = NULL, file_path) {
+  data <- load_data(file_path)
 
   # Filter to winners only
   winners <- data[data$position == 1, ]
@@ -82,16 +82,16 @@ get_winners <- function(year = NULL, db_path = "data/golfastr.duckdb") {
 #' Get results from the four major championships.
 #'
 #' @param year Season year
-#' @param db_path Path to database file
+#' @param file_path Path to data file (.rds or .parquet)
 #' @return Tibble with major championship results
 #' @export
 #' @examples
 #' \dontrun{
 #' # Get 2025 majors
-#' get_majors(2025)
+#' get_majors(2025, file_path = "golf_data.rds")
 #' }
-get_majors <- function(year, db_path = "data/golfastr.duckdb") {
-  data <- load_from_db(db_path = db_path)
+get_majors <- function(year, file_path) {
+  data <- load_data(file_path)
 
   # Filter by year
   data <- data[data$year == year, ]

@@ -4,12 +4,12 @@
 \alias{get_majors}
 \title{Get Major Championships}
 \usage{
-get_majors(year, db_path = "data/golfastr.duckdb")
+get_majors(year, file_path)
 }
 \arguments{
 \item{year}{Season year}
 
-\item{db_path}{Path to database file}
+\item{file_path}{Path to data file (.rds or .parquet)}
 }
 \value{
 Tibble with major championship results
@@ -20,6 +20,6 @@ Get results from the four major championships.
 \examples{
 \dontrun{
 # Get 2025 majors
-get_majors(2025)
+get_majors(2025, file_path = "golf_data.rds")
 }
 }

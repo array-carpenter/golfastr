@@ -4,12 +4,7 @@
 \alias{top10_leaders}
 \title{Top 10 Leaders}
 \usage{
-top10_leaders(
-  year = NULL,
-  min_events = 5,
-  top_n = 10,
-  db_path = "data/golfastr.duckdb"
-)
+top10_leaders(year = NULL, min_events = 5, top_n = 10, file_path)
 }
 \arguments{
 \item{year}{Optional year filter}
@@ -18,11 +13,16 @@ top10_leaders(
 
 \item{top_n}{Number of players to show}
 
-\item{db_path}{Path to database}
+\item{file_path}{Path to data file (.rds or .parquet)}
 }
 \value{
 Tibble with top 10 leaders
 }
 \description{
 Get players with most top 10 finishes.
+}
+\examples{
+\dontrun{
+top10_leaders(year = 2025, file_path = "golf_data.rds")
+}
 }

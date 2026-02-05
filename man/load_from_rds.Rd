@@ -4,14 +4,20 @@
 \alias{load_from_rds}
 \title{Load Tournament Data from RDS}
 \usage{
-load_from_rds(file_path = "data/golfastr.rds")
+load_from_rds(file_path)
 }
 \arguments{
-\item{file_path}{Path to RDS file}
+\item{file_path}{Path to RDS file. Must be specified by user.}
 }
 \value{
-Tibble with tournament data
+A tibble with tournament leaderboard data containing columns such as
+  position, player name, scores, and tournament metadata.
 }
 \description{
 Load Tournament Data from RDS
+}
+\examples{
+\dontrun{
+data <- load_from_rds(file_path = "my_golf_data.rds")
+}
 }

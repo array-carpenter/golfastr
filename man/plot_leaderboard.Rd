@@ -4,12 +4,7 @@
 \alias{plot_leaderboard}
 \title{Plot Tournament Leaderboard}
 \usage{
-plot_leaderboard(
-  tournament,
-  year,
-  top_n = 10,
-  db_path = "data/golfastr.duckdb"
-)
+plot_leaderboard(tournament, year, top_n = 10, file_path)
 }
 \arguments{
 \item{tournament}{Tournament name}
@@ -18,11 +13,16 @@ plot_leaderboard(
 
 \item{top_n}{Number of players to show}
 
-\item{db_path}{Path to database}
+\item{file_path}{Path to data file (.rds or .parquet)}
 }
 \value{
 ggplot object
 }
 \description{
 Bar chart of tournament leaderboard.
+}
+\examples{
+\dontrun{
+plot_leaderboard("Masters", 2025, file_path = "golf_data.rds")
+}
 }

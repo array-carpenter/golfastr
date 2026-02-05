@@ -4,25 +4,25 @@
 \alias{get_winners}
 \title{Get Tournament Winners}
 \usage{
-get_winners(year = NULL, db_path = "data/golfastr.duckdb")
+get_winners(year = NULL, file_path)
 }
 \arguments{
 \item{year}{Optional year filter}
 
-\item{db_path}{Path to database file}
+\item{file_path}{Path to data file (.rds or .parquet)}
 }
 \value{
 Tibble with tournament winners
 }
 \description{
-Get all tournament winners from the database.
+Get all tournament winners from a data file.
 }
 \examples{
 \dontrun{
 # Get all winners
-get_winners()
+get_winners(file_path = "golf_data.rds")
 
 # Get 2025 winners
-get_winners(2025)
+get_winners(2025, file_path = "golf_data.rds")
 }
 }

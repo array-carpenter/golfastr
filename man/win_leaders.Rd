@@ -4,18 +4,23 @@
 \alias{win_leaders}
 \title{Most Wins}
 \usage{
-win_leaders(year = NULL, top_n = 10, db_path = "data/golfastr.duckdb")
+win_leaders(year = NULL, top_n = 10, file_path)
 }
 \arguments{
 \item{year}{Optional year filter}
 
 \item{top_n}{Number of players to show}
 
-\item{db_path}{Path to database}
+\item{file_path}{Path to data file (.rds or .parquet)}
 }
 \value{
 Tibble with win leaders
 }
 \description{
 Get players with most wins.
+}
+\examples{
+\dontrun{
+win_leaders(year = 2025, file_path = "golf_data.rds")
+}
 }

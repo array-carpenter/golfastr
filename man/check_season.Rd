@@ -4,18 +4,24 @@
 \alias{check_season}
 \title{Check Season Progress}
 \usage{
-check_season(year, tour = "pga", db_path = "data/golfastr.duckdb")
+check_season(year, file_path, tour = "pga")
 }
 \arguments{
 \item{year}{Season year}
 
-\item{tour}{Tour name (default: "pga")}
+\item{file_path}{Path to data file (.rds or .parquet). Must be specified by user.}
 
-\item{db_path}{Path to database file}
+\item{tour}{Tour name (default: "pga")}
 }
 \value{
-Tibble showing status of each tournament
+A tibble showing status of each tournament with columns: event_id,
+  tournament_name, start_date, end_date, and status (either "loaded" or "missing").
 }
 \description{
 See which tournaments are loaded vs missing for a season.
+}
+\examples{
+\dontrun{
+progress <- check_season(2025, file_path = "my_golf_data.rds")
+}
 }

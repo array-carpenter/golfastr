@@ -4,18 +4,23 @@
 \alias{plot_scoring}
 \title{Plot Scoring Distribution}
 \usage{
-plot_scoring(tournament, year, db_path = "data/golfastr.duckdb")
+plot_scoring(tournament, year, file_path)
 }
 \arguments{
 \item{tournament}{Tournament name}
 
 \item{year}{Season year}
 
-\item{db_path}{Path to database}
+\item{file_path}{Path to data file (.rds or .parquet)}
 }
 \value{
 ggplot object
 }
 \description{
 Histogram of tournament scores.
+}
+\examples{
+\dontrun{
+plot_scoring("Masters", 2025, file_path = "golf_data.rds")
+}
 }

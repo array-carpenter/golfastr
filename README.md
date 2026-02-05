@@ -7,13 +7,18 @@
 ## Installation
 
 ```r
-install.packages("golfastR")
+# Install from CRAN
+install.packages("golfastr")
+
+# Or install development version from GitHub
+# install.packages("pak")
+pak::pak("array-carpenter/golfastr")
 ```
 
 ## Quick Start
 
 ```r
-library(golfastR)
+library(golfastr)
 
 # Get the tournament schedule
 schedule <- load_schedule(2026)
@@ -89,38 +94,55 @@ players <- load_players(2026)
 | score | Strokes on hole |
 | score_type | BIRDIE, PAR, BOGEY, EAGLE, etc. |
 
-## Local Caching
+## Local Storage
 
 Store data locally for faster repeated access:
 
 ```r
-# Save to local DuckDB database
-save_to_db(leaderboard_data)
+# Save to RDS (native R format)
+save_to_rds(leaderboard_data, file_path = "golf_data.rds")
 
-# Load from database
-data <- load_from_db()
-data <- load_from_db(tournament = "Masters")
+# Load from RDS
+data <- load_from_rds(file_path = "golf_data.rds")
+
+# Or use Parquet for cross-language compatibility (requires arrow)
+save_to_parquet(leaderboard_data, file_path = "golf_data.parquet")
+data <- load_from_parquet(file_path = "golf_data.parquet")
+
+# Auto-detect format with load_data()
+data <- load_data("golf_data.rds")
+data <- load_data("golf_data.parquet", tournament = "Masters")
+```
+
+### Build a Season Database
+
+```r
+# Incrementally fetch all tournaments for a season
+build_season(2025, file_path = "pga_2025.rds")
+
+# Check progress
+check_season(2025, file_path = "pga_2025.rds")
 ```
 
 ## Analysis Functions
 
 ```r
 # Player season summary
-player_summary("Scheffler", year = 2026)
+player_summary("Scheffler", file_path = "golf_data.rds")
 
 # Compare multiple players
-compare_players(c("Scheffler", "McIlroy"), year = 2026)
+compare_players(c("Scheffler", "McIlroy"), file_path = "golf_data.rds")
 
 # Win leaders
-win_leaders(year = 2026)
+win_leaders(file_path = "golf_data.rds")
 
 # Scoring average leaders
-scoring_avg_leaders(year = 2026)
+scoring_avg_leaders(file_path = "golf_data.rds")
 ```
 
 ## Data Source
 
-Data is sourced from ESPN's public API. This package is for educational and research purposes.
+Data is sourced from ESPN's Golf API (<https://www.espn.com/golf/>).
 
 ## License
 

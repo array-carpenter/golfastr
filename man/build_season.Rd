@@ -2,27 +2,27 @@
 % Please edit documentation in R/build_season.R
 \name{build_season}
 \alias{build_season}
-\title{Build Season Database}
+\title{Build Season Data File}
 \usage{
-build_season(year, tour = "pga", db_path = "data/golfastr.duckdb")
+build_season(year, file_path, tour = "pga")
 }
 \arguments{
 \item{year}{Season year}
 
-\item{tour}{Tour name (default: "pga")}
+\item{file_path}{Path to data file (.rds or .parquet). Must be specified by user.}
 
-\item{db_path}{Path to database file}
+\item{tour}{Tour name (default: "pga")}
 }
 \value{
-Invisibly returns number of tournaments added
+Invisibly returns number of tournaments added (integer).
 }
 \description{
-Incrementally load all tournaments for a season into the database.
+Incrementally load all tournaments for a season into a local file.
 Skips tournaments already saved. Safe to interrupt and resume.
 }
 \examples{
 \dontrun{
 # Build 2025 season (run multiple times if needed)
-build_season(2025)
+build_season(2025, file_path = tempfile(fileext = ".rds"))
 }
 }

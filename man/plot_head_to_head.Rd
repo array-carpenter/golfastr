@@ -4,18 +4,23 @@
 \alias{plot_head_to_head}
 \title{Plot Head-to-Head Comparison}
 \usage{
-plot_head_to_head(players, year = NULL, db_path = "data/golfastr.duckdb")
+plot_head_to_head(players, year = NULL, file_path)
 }
 \arguments{
 \item{players}{Vector of player names}
 
 \item{year}{Optional year filter}
 
-\item{db_path}{Path to database}
+\item{file_path}{Path to data file (.rds or .parquet)}
 }
 \value{
 ggplot object
 }
 \description{
 Compare two or more players' finishes across tournaments.
+}
+\examples{
+\dontrun{
+plot_head_to_head(c("Scheffler", "McIlroy"), file_path = "golf_data.rds")
+}
 }

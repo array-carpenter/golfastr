@@ -4,7 +4,7 @@
 \alias{leaderboard}
 \title{Leaderboard Snapshot}
 \usage{
-leaderboard(tournament, year, top_n = 10, db_path = "data/golfastr.duckdb")
+leaderboard(tournament, year, top_n = 10, file_path)
 }
 \arguments{
 \item{tournament}{Tournament name}
@@ -13,11 +13,16 @@ leaderboard(tournament, year, top_n = 10, db_path = "data/golfastr.duckdb")
 
 \item{top_n}{Number of players to show (default: 10)}
 
-\item{db_path}{Path to database}
+\item{file_path}{Path to data file (.rds or .parquet)}
 }
 \value{
 Formatted tibble for display
 }
 \description{
 Get formatted leaderboard for display.
+}
+\examples{
+\dontrun{
+leaderboard("Masters", 2025, file_path = "golf_data.rds")
+}
 }
