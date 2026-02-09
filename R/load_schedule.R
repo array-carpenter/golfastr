@@ -13,7 +13,7 @@
 #'   }
 #' @export
 #' @examples
-#' \dontrun{
+#' \donttest{
 #' # Get current year schedule
 #' schedule <- load_schedule()
 #'

@@ -49,7 +49,7 @@ Retrieves hole-by-hole scoring data for tournaments.
 
 }}
 \examples{
-\dontrun{
+\donttest{
 # Load hole-by-hole for top 10 at Sony Open
 holes <- load_holes(2026, "Sony", top_n = 10)
 }

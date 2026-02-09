@@ -32,7 +32,7 @@ Retrieves the tournament schedule for a given year and tour.
 
 }}
 \examples{
-\dontrun{
+\donttest{
 # Get current year schedule
 schedule <- load_schedule()
 

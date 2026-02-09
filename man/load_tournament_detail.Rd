@@ -22,7 +22,7 @@ List with 'leaderboard' and 'scorecards' tibbles
 Fetch full tournament data including hole-by-hole scorecards.
 }
 \examples{
-\dontrun{
+\donttest{
 # Get Masters with top 10 scorecards
 masters_detail <- load_tournament_detail(2025, "Masters", top_n = 10)
 }

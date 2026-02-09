@@ -7,7 +7,7 @@
 #' @return Tibble with event_id, tournament_name, start_date, end_date
 #' @export
 #' @examples
-#' \dontrun{
+#' \donttest{
 #' # See all 2025 PGA tournaments
 #' list_tournaments(2025)
 #' }
@@ -31,7 +31,7 @@ list_tournaments <- function(year, tour = "pga") {
 #' @return Tibble with tournament leaderboard
 #' @export
 #' @examples
-#' \dontrun{
+#' \donttest{
 #' # Load by name (partial match works)
 #' masters <- load_tournament(2025, "Masters")
 #' pga_champ <- load_tournament(2025, "PGA Championship")
@@ -85,7 +85,7 @@ load_tournament <- function(year, tournament, tour = "pga") {
 #' @return List with 'leaderboard' and 'scorecards' tibbles
 #' @export
 #' @examples
-#' \dontrun{
+#' \donttest{
 #' # Get Masters with top 10 scorecards
 #' masters_detail <- load_tournament_detail(2025, "Masters", top_n = 10)
 #' }

@@ -24,7 +24,7 @@ Loads tournament leaderboard data for specified year(s) and tournament(s).
 This is similar to nflfastR's data loading pattern.
 }
 \examples{
-\dontrun{
+\donttest{
 # Load specific tournament
 masters <- load_pga_leaderboards(2025, tournaments = "401703504")
 

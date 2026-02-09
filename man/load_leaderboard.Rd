@@ -45,11 +45,8 @@ or all tournaments for a year.
 
 }}
 \examples{
-\dontrun{
+\donttest{
 # Load specific tournament by name
 sony <- load_leaderboard(2026, "Sony")
-
-# Load by event ID
-lb <- load_leaderboard(2026, "401703504")
 }
 }

@@ -8,7 +8,7 @@
 #' @return A tibble with tournament schedule data.
 #' @export
 #' @examples
-#' \dontrun{
+#' \donttest{
 #' schedule <- load_pga_schedule(2025)
 #' }
 load_pga_schedule <- function(year, tour = "pga") {
@@ -29,7 +29,7 @@ load_pga_schedule <- function(year, tour = "pga") {
 #' @return A tibble with leaderboard data.
 #' @export
 #' @examples
-#' \dontrun{
+#' \donttest{
 #' # Load specific tournament
 #' masters <- load_pga_leaderboards(2025, tournaments = "401703504")
 #'
@@ -105,7 +105,7 @@ load_pga_leaderboards <- function(years,
 #' @return A tibble with hole-by-hole scoring data.
 #' @export
 #' @examples
-#' \dontrun{
+#' \donttest{
 #' # Load Masters hole-by-hole for top 10
 #' masters_hbh <- load_pga_hbh(2025, tournaments = "401703504")
 #'

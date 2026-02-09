@@ -24,7 +24,7 @@ a dedicated player directory endpoint, this aggregates players from
 recent tournament leaderboards.
 }
 \examples{
-\dontrun{
+\donttest{
 # Get player directory
 players <- load_players()
 }

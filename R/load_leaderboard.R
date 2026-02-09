@@ -19,12 +19,9 @@
 #'   }
 #' @export
 #' @examples
-#' \dontrun{
+#' \donttest{
 #' # Load specific tournament by name
 #' sony <- load_leaderboard(2026, "Sony")
-#'
-#' # Load by event ID
-#' lb <- load_leaderboard(2026, "401703504")
 #' }
 load_leaderboard <- function(year = as.integer(format(Sys.Date(), "%Y")),
                              tournament = NULL,

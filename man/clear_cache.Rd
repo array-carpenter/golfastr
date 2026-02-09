@@ -17,7 +17,7 @@ Invisible NULL. Called for side effects.
 Removes all cached data files from the local cache directory.
 }
 \examples{
-\dontrun{
+\donttest{
 clear_cache()
 clear_cache(confirm = FALSE)
 }

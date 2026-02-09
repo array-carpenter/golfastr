@@ -26,7 +26,7 @@ A tibble with hole-by-hole scoring data.
 Loads detailed hole-by-hole scoring data for specified tournaments.
 }
 \examples{
-\dontrun{
+\donttest{
 # Load Masters hole-by-hole for top 10
 masters_hbh <- load_pga_hbh(2025, tournaments = "401703504")
 

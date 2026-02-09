@@ -18,7 +18,7 @@ Tibble with event_id, tournament_name, start_date, end_date
 Get a list of all available tournaments for a given year.
 }
 \examples{
-\dontrun{
+\donttest{
 # See all 2025 PGA tournaments
 list_tournaments(2025)
 }

@@ -19,7 +19,7 @@ get_cache_dir <- function() {
 #' @return Invisible NULL. Called for side effects.
 #' @export
 #' @examples
-#' \dontrun{
+#' \donttest{
 #' clear_cache()
 #' clear_cache(confirm = FALSE)
 #' }

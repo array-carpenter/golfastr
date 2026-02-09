@@ -19,7 +19,7 @@ Loads the PGA Tour tournament schedule for a given year.
 Similar to nflfastR's schedule loading functions.
 }
 \examples{
-\dontrun{
+\donttest{
 schedule <- load_pga_schedule(2025)
 }
 }

@@ -21,7 +21,7 @@ Fetch leaderboard data for a tournament. You can specify either the
 event_id or search by tournament name.
 }
 \examples{
-\dontrun{
+\donttest{
 # Load by name (partial match works)
 masters <- load_tournament(2025, "Masters")
 pga_champ <- load_tournament(2025, "PGA Championship")
