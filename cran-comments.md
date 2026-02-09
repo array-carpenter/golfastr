@@ -21,10 +21,14 @@ This is a resubmission. In this version I have:
 
 * Replaced DuckDB storage with simpler RDS/Parquet file storage, removing DBI dependency.
 
-* Changed all examples requiring network access to use `\dontrun{}`.
+* Changed API-calling examples to use `\donttest{}` per CRAN policy.
 
 * Added `\value` tags to all exported function documentation.
 
-## Note on examples
+## Note on \dontrun{} usage
 
-All examples that require network access or pre-existing data files use `\dontrun{}` as they cannot be executed during CRAN checks without internet connectivity.
+Examples using `\dontrun{}` require a **user-created data file** (e.g., `file_path = "golf_data.rds"`). These files are created by the user after calling API functions like `load_leaderboard()` and saving results with `save_to_rds()`.
+
+Since no pre-built data file ships with the package and the user must create their own, these examples cannot execute during CRAN checks. This is distinct from network-dependent examples (which use `\donttest{}`).
+
+Affected functions: `load_data()`, `load_from_rds()`, `load_from_parquet()`, `save_to_rds()`, `save_to_parquet()`, `get_player()`, `get_winners()`, `get_majors()`, all `plot_*()` functions, and all analysis functions that operate on saved data files.
