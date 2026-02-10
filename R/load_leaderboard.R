@@ -134,6 +134,7 @@ fetch_leaderboard_fast <- function(event_id, year, tour = "pga") {
 
 #' @describeIn load_leaderboard Legacy function for backwards compatibility
 #' @param event_id ESPN event identifier (for legacy function)
+#' @return A tibble with leaderboard data
 #' @export
 get_tournament_leaderboard <- function(event_id) {
   fetch_leaderboard_fast(event_id, as.integer(format(Sys.Date(), "%Y")), "pga")

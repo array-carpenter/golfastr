@@ -39,7 +39,7 @@ get_espn_tour_code <- function(tour = "pga") {
 #' @importFrom httr2 request req_url_query req_perform resp_body_json
 espn_core_request <- function(endpoint, tour = "pga", query_params = NULL) {
  tour_code <- get_espn_tour_code(tour)
- base_url <- sprintf("http://sports.core.api.espn.com/v2/sports/golf/leagues/%s/", tour_code)
+ base_url <- sprintf("https://sports.core.api.espn.com/v2/sports/golf/leagues/%s/", tour_code)
  full_url <- paste0(base_url, endpoint)
 
  req <- httr2::request(full_url)
@@ -67,7 +67,7 @@ espn_core_request <- function(endpoint, tour = "pga", query_params = NULL) {
 #' @importFrom httr2 request req_url_query req_perform resp_body_json
 espn_site_request <- function(endpoint, tour = "pga", query_params = NULL) {
  tour_code <- get_espn_tour_code(tour)
- base_url <- sprintf("http://site.api.espn.com/apis/site/v2/sports/golf/%s/", tour_code)
+ base_url <- sprintf("https://site.api.espn.com/apis/site/v2/sports/golf/%s/", tour_code)
  full_url <- paste0(base_url, endpoint)
 
  req <- httr2::request(full_url)

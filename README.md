@@ -1,4 +1,4 @@
-# golfastR <img src="man/figures/logo.png" align="right" height="139" alt="golfastR logo" />
+# golfastR <img src="https://raw.githubusercontent.com/array-carpenter/golfastr/main/man/figures/logo.png" align="right" height="139" alt="golfastR logo" />
 
 > Fast, tidy PGA Tour data in R
 

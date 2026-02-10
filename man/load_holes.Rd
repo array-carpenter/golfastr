@@ -39,6 +39,8 @@ A tibble with hole-by-hole data including:
     \item \code{score_type}: BIRDIE, PAR, BOGEY, EAGLE, etc.
     \item \code{tournament_id}: Event ID
   }
+
+A tibble with hole-by-hole scoring data
 }
 \description{
 Retrieves hole-by-hole scoring data for tournaments.

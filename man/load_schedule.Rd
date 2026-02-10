@@ -22,6 +22,8 @@ A tibble with columns:
     \item \code{start_date}: Tournament start date
     \item \code{end_date}: Tournament end date
   }
+
+A tibble with tournament schedule data
 }
 \description{
 Retrieves the tournament schedule for a given year and tour.

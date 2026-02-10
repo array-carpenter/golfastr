@@ -34,6 +34,8 @@ A tibble with leaderboard data including:
     \item \code{tournament_id}: Event ID
     \item \code{tournament_name}: Tournament name
   }
+
+A tibble with leaderboard data
 }
 \description{
 Retrieves leaderboard data for tournaments. Can load a single tournament
