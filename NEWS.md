@@ -1,5 +1,14 @@
 # golfastr (development version)
 
+# golfastr 0.1.5
+
+CRAN resubmission with documentation fixes.
+
+* Changed ESPN API URLs from HTTP to HTTPS
+* Added missing `@return` tags to legacy functions
+* Fixed README logo to use absolute URL instead of relative path
+* Clarified `\dontrun{}` vs `\donttest{}` usage in examples
+
 # golfastr 0.1.4
 
 This release focuses on CRAN compliance and simplifying the storage backend.

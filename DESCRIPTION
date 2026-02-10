@@ -1,7 +1,7 @@
 Package: golfastr
 Type: Package
 Title: Efficiently Access Pro Golf Data
-Version: 0.1.4
+Version: 0.1.5
 Authors@R:
     person("Ray", "Carpenter", email = "raymondcarpenter1@gmail.com", role = c("aut", "cre", "cph"))
 Description: Fetch Professional Golfers' Association (PGA) Tour tournament data
