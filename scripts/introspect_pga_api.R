@@ -41,7 +41,7 @@ introspection_query <- '
 req <- request(url) |>
   req_headers(
     "Content-Type" = "application/json",
-    "x-api-key" = "da2-gsrx5bibzbb4njvhl7t37wqyl4"
+    "x-api-key" = Sys.getenv("PGA_TOUR_API_KEY")
   ) |>
   req_body_json(list(query = introspection_query))
 

@@ -11,7 +11,7 @@ load_tournament(year, tournament, tour = "pga")
 
 \item{tournament}{Tournament name (partial match) or event_id}
 
-\item{tour}{Tour name: "pga" (default)}
+\item{tour}{Tour name: "pga" (default), "liv", "lpga", "euro", or "champions".}
 }
 \value{
 Tibble with tournament leaderboard
@@ -26,7 +26,7 @@ event_id or search by tournament name.
 masters <- load_tournament(2025, "Masters")
 pga_champ <- load_tournament(2025, "PGA Championship")
 
-# Load by event_id
-masters <- load_tournament(2025, "401703504")
+# Load LIV Golf tournament
+adelaide <- load_tournament(2026, "Adelaide", tour = "liv")
 }
 }

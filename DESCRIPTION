@@ -25,3 +25,4 @@ Suggests:
 Config/testthat/edition: 3
 URL: https://github.com/array-carpenter/golfastr
 BugReports: https://github.com/array-carpenter/golfastr/issues
+LazyData: true

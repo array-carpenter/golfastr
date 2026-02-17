@@ -8,7 +8,7 @@ test_that("load_pga_hbh works", {
   expect_s3_class(data, "data.frame")
   expect_gt(nrow(data), 0)
   expect_true("tournament_name" %in% names(data))
-  expect_true("hole_num" %in% names(data))
+  expect_true("hole" %in% names(data))
 })
 
 test_that("load_pga_leaderboards works", {
@@ -19,8 +19,8 @@ test_that("load_pga_leaderboards works", {
 
   expect_s3_class(data, "data.frame")
   expect_gt(nrow(data), 0)
-  expect_true("full_name" %in% names(data))
-  expect_true("score_display" %in% names(data))
+  expect_true("player_name" %in% names(data))
+  expect_true("score_to_par" %in% names(data))
 })
 
 test_that("load_pga_schedule works", {

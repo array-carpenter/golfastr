@@ -16,6 +16,7 @@ get_espn_tour_code <- function(tour = "pga") {
  tour <- tolower(tour)
  codes <- list(
    pga = "pga",
+   liv = "liv",
    lpga = "lpga",
    euro = "euro",
    dp = "euro",

@@ -4,7 +4,7 @@ library(httr2)
 library(jsonlite)
 
 url <- "https://orchestrator.pgatour.com/graphql"
-api_key <- "da2-gsrx5bibzbb4njvhl7t37wqyl4"
+api_key <- Sys.getenv("PGA_TOUR_API_KEY")
 
 # Search for types containing "Stroke" in name
 query <- '

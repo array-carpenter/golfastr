@@ -3,21 +3,19 @@
 #' Get a list of all available tournaments for a given year.
 #'
 #' @param year Season year (e.g., 2025)
-#' @param tour Tour name: "pga" (default)
+#' @param tour Tour name: "pga" (default), "liv", "lpga", "euro", or "champions".
 #' @return Tibble with event_id, tournament_name, start_date, end_date
 #' @export
 #' @examples
 #' \donttest{
 #' # See all 2025 PGA tournaments
 #' list_tournaments(2025)
+#'
+#' # See LIV Golf schedule
+#' list_tournaments(2026, tour = "liv")
 #' }
 list_tournaments <- function(year, tour = "pga") {
-
-  tour <- match.arg(tour, choices = c("pga"))
-
-  if (tour == "pga") {
-    get_pga_schedule(year)
-  }
+  load_schedule(year, tour)
 }
 
 #' Load Tournament Data
@@ -27,7 +25,7 @@ list_tournaments <- function(year, tour = "pga") {
 #'
 #' @param year Season year (e.g., 2025)
 #' @param tournament Tournament name (partial match) or event_id
-#' @param tour Tour name: "pga" (default)
+#' @param tour Tour name: "pga" (default), "liv", "lpga", "euro", or "champions".
 #' @return Tibble with tournament leaderboard
 #' @export
 #' @examples
@@ -36,11 +34,10 @@ list_tournaments <- function(year, tour = "pga") {
 #' masters <- load_tournament(2025, "Masters")
 #' pga_champ <- load_tournament(2025, "PGA Championship")
 #'
-#' # Load by event_id
-#' masters <- load_tournament(2025, "401703504")
+#' # Load LIV Golf tournament
+#' adelaide <- load_tournament(2026, "Adelaide", tour = "liv")
 #' }
 load_tournament <- function(year, tournament, tour = "pga") {
-  tour <- match.arg(tour, choices = c("pga"))
 
   # Get schedule to find event_id
 
@@ -71,7 +68,7 @@ load_tournament <- function(year, tournament, tour = "pga") {
   }
 
   message("Loading: ", tournament_name, " (", event_id, ")")
-  get_tournament_leaderboard(event_id)
+  fetch_leaderboard_fast(event_id, year, tour)
 }
 
 #' Load Tournament with Hole-by-Hole Scores
@@ -81,7 +78,7 @@ load_tournament <- function(year, tournament, tour = "pga") {
 #' @param year Season year (e.g., 2025)
 #' @param tournament Tournament name (partial match) or event_id
 #' @param top_n Only fetch scorecards for top N finishers (default: 10)
-#' @param tour Tour name: "pga" (default)
+#' @param tour Tour name: "pga" (default), "liv", "lpga", "euro", or "champions".
 #' @return List with 'leaderboard' and 'scorecards' tibbles
 #' @export
 #' @examples
@@ -90,7 +87,6 @@ load_tournament <- function(year, tournament, tour = "pga") {
 #' masters_detail <- load_tournament_detail(2025, "Masters", top_n = 10)
 #' }
 load_tournament_detail <- function(year, tournament, top_n = 10, tour = "pga") {
-  tour <- match.arg(tour, choices = c("pga"))
 
   # Get schedule to find event_id
   schedule <- list_tournaments(year, tour)

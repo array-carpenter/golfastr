@@ -13,7 +13,7 @@ load_tournament_detail(year, tournament, top_n = 10, tour = "pga")
 
 \item{top_n}{Only fetch scorecards for top N finishers (default: 10)}
 
-\item{tour}{Tour name: "pga" (default)}
+\item{tour}{Tour name: "pga" (default), "liv", "lpga", "euro", or "champions".}
 }
 \value{
 List with 'leaderboard' and 'scorecards' tibbles

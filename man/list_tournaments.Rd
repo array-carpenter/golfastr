@@ -9,7 +9,7 @@ list_tournaments(year, tour = "pga")
 \arguments{
 \item{year}{Season year (e.g., 2025)}
 
-\item{tour}{Tour name: "pga" (default)}
+\item{tour}{Tour name: "pga" (default), "liv", "lpga", "euro", or "champions".}
 }
 \value{
 Tibble with event_id, tournament_name, start_date, end_date
@@ -21,5 +21,8 @@ Get a list of all available tournaments for a given year.
 \donttest{
 # See all 2025 PGA tournaments
 list_tournaments(2025)
+
+# See LIV Golf schedule
+list_tournaments(2026, tour = "liv")
 }
 }
