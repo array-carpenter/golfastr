@@ -1,8 +1,6 @@
 ## R CMD check results
 
-0 errors | 0 warnings | 1 note
-
-* This is a new submission.
+0 errors | 0 warnings | 0 notes
 
 ## Test environments
 
@@ -12,6 +10,14 @@
 ## Resubmission
 
 This is a resubmission. In this version I have:
+
+* Added `load_strokes_gained()` function with pre-built PGA Tour strokes gained dataset (putting, around the green, approach, off the tee, tee to green, total). Data is shipped with the package via `data/strokes_gained.rda` so no API calls are made at runtime.
+
+* Added LIV Golf support. All existing functions (`load_schedule()`, `load_leaderboard()`, `load_tournament()`, `list_tournaments()`, etc.) now accept `tour = "liv"` in addition to `"pga"`, `"lpga"`, `"euro"`, and `"champions"`.
+
+* Removed hardcoded API keys from development scripts. Keys are now read from environment variables.
+
+* Fixed outdated test assertions to match current column names returned by ESPN API.
 
 * Changed cache directory from `~/.golfastr` to `tools::R_user_dir("golfastr", "cache")` to comply with CRAN policy on not writing to user's home directory.
 

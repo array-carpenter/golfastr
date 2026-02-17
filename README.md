@@ -1,8 +1,8 @@
 # golfastR <img src="https://raw.githubusercontent.com/array-carpenter/golfastr/main/man/figures/logo.png" align="right" height="139" alt="golfastR logo" />
 
-> Fast, tidy PGA Tour data in R
+> Fast, tidy golf data in R
 
-`golfastR` provides easy access to PGA Tour tournament data from ESPN, delivering leaderboards and hole-by-hole scoring in tidy data formats ready for analysis.
+`golfastR` provides easy access to professional golf tournament data from ESPN, delivering leaderboards and hole-by-hole scoring in tidy data formats ready for analysis. Supports **PGA Tour**, **LIV Golf**, **LPGA**, **DP World Tour**, and **Champions Tour**.
 
 ## Installation
 
@@ -15,12 +15,24 @@ install.packages("golfastr")
 pak::pak("array-carpenter/golfastr")
 ```
 
+## Supported Tours
+
+| Tour | Code | Example |
+|------|------|---------|
+| PGA Tour | `"pga"` | `load_schedule(2026, tour = "pga")` |
+| LIV Golf | `"liv"` | `load_schedule(2026, tour = "liv")` |
+| LPGA | `"lpga"` | `load_schedule(2026, tour = "lpga")` |
+| DP World Tour | `"euro"` | `load_schedule(2026, tour = "euro")` |
+| Champions Tour | `"champions"` | `load_schedule(2026, tour = "champions")` |
+
+All functions accept the `tour` parameter. Default is `"pga"`.
+
 ## Quick Start
 
 ```r
 library(golfastr)
 
-# Get the tournament schedule
+# Get the PGA tournament schedule
 schedule <- load_schedule(2026)
 
 # Load a tournament leaderboard
@@ -28,7 +40,34 @@ sony <- load_leaderboard(2026, "Sony")
 
 # Get hole-by-hole scoring for top 10
 holes <- load_holes(2026, "Sony", top_n = 10)
+
+# LIV Golf works the same way
+liv_schedule <- load_schedule(2026, tour = "liv")
+adelaide <- load_leaderboard(2026, "Adelaide", tour = "liv")
 ```
+
+## Strokes Gained
+
+Pre-built PGA Tour strokes gained data ships with the package:
+
+```r
+# Get all strokes gained data
+sg <- load_strokes_gained()
+
+# Look up a specific player
+load_strokes_gained("Scheffler")
+```
+
+Returns per-round averages for all six SG categories:
+
+| Field | Description |
+|-------|-------------|
+| sg_putt | Strokes Gained: Putting |
+| sg_arg | Strokes Gained: Around the Green |
+| sg_app | Strokes Gained: Approach the Green |
+| sg_ott | Strokes Gained: Off the Tee |
+| sg_t2g | Strokes Gained: Tee to Green |
+| sg_total | Strokes Gained: Total |
 
 ## Core Functions
 
@@ -37,6 +76,9 @@ holes <- load_holes(2026, "Sony", top_n = 10)
 ```r
 # Get schedule for a season
 schedule <- load_schedule(2026)
+
+# LIV Golf schedule
+liv <- load_schedule(2026, tour = "liv")
 
 # Returns: event_id, tournament_name, start_date, end_date
 ```
@@ -53,6 +95,9 @@ lb <- load_leaderboard(2026, "401703504")
 
 # Load all tournaments for the year
 all_lb <- load_leaderboard(2026)
+
+# LIV Golf leaderboard
+liv_lb <- load_leaderboard(2026, "Adelaide", tour = "liv")
 ```
 
 ### Hole-by-Hole Scoring
@@ -142,7 +187,7 @@ scoring_avg_leaders(file_path = "golf_data.rds")
 
 ## Data Source
 
-Data is sourced from ESPN's Golf API (<https://www.espn.com/golf/>).
+Tournament data is sourced from ESPN's Golf API (<https://www.espn.com/golf/>). Strokes gained data is sourced from the PGA Tour (<https://www.pgatour.com/stats>).
 
 ## License
 
