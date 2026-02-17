@@ -1,8 +1,8 @@
 # golfastR <img src="https://raw.githubusercontent.com/array-carpenter/golfastr/main/man/figures/logo.png" align="right" height="139" alt="golfastR logo" />
 
-> Fast, tidy golf data in R
+> Fast, tidy Pro Golf data in R
 
-`golfastR` provides easy access to professional golf tournament data from ESPN, delivering leaderboards and hole-by-hole scoring in tidy data formats ready for analysis. Supports **PGA Tour**, **LIV Golf**, **LPGA**, **DP World Tour**, and **Champions Tour**.
+`golfastR` provides easy access to professional golf data from ESPN with functions to get leaderboards and hole-by-hole scores in tidy data formats ready for analysis. Supports **PGA Tour**, **LIV Golf**, **LPGA**, **DP World Tour**, and **Champions Tour**.
 
 ## Installation
 
@@ -116,7 +116,7 @@ holes <- load_holes(2026, "Sony", top_n = 10)
 players <- load_players(2026)
 ```
 
-## Data Fields
+## Data Schema
 
 ### Leaderboard
 
