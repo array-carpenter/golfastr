@@ -1,85 +1,77 @@
 ## Update Strokes Gained Data
-## Scrapes pgatour.com stats pages — no API key needed.
+## Uses PGA Tour's public GraphQL API (no private key needed).
 ## Run with: source("data-raw/update_strokes_gained.R")
 
 library(httr2)
 library(tibble)
 
-# --- Scrape __NEXT_DATA__ from pgatour.com/stats/detail/{stat_id} ---
+# --- PGA Tour GraphQL API (public key from pgatour.com JS bundle) ---
 
-fetch_sg_stat <- function(stat_id) {
-  url <- paste0("https://www.pgatour.com/stats/detail/", stat_id)
-  message("  Fetching ", url)
-
-  resp <- httr2::request(url) |>
+pga_graphql_request <- function(query) {
+  api_key <- "da2-gsrx5bibzbb4njvhl7t37wqyl4"
+  resp <- httr2::request("https://orchestrator.pgatour.com/graphql") |>
     httr2::req_headers(
-      "User-Agent" = "golfastr R package (https://github.com/array-carpenter/golfastr)"
+      "Content-Type" = "application/json",
+      "x-api-key" = api_key
     ) |>
+    httr2::req_body_json(list(query = query)) |>
     httr2::req_perform()
-
-  html <- httr2::resp_body_string(resp)
-
-  # Extract __NEXT_DATA__ JSON from between script tags
-  start <- regexpr("__NEXT_DATA__.*?type=.application/json.>", html)
-  if (start == -1) stop("Could not find __NEXT_DATA__ in page")
-  json_start <- start + attr(start, "match.length")
-  rest <- substring(html, json_start)
-  json_end <- regexpr("</script>", rest) - 1
-  json_str <- substring(rest, 1, json_end)
-
-  page_data <- jsonlite::fromJSON(json_str, simplifyVector = FALSE)
-
-  # Find the statDetails query with year set
-  queries <- page_data$props$pageProps$dehydratedState$queries
-  stat_data <- NULL
-  for (i in seq_along(queries)) {
-    key <- queries[[i]]$queryKey
-    if (is.list(key) && length(key) >= 2 &&
-        identical(key[[1]], "statDetails") &&
-        !is.null(key[[2]]$year)) {
-      stat_data <- queries[[i]]$state$data
-      break
-    }
+  result <- httr2::resp_body_json(resp, simplifyVector = TRUE)
+  if (!is.null(result$errors)) {
+    stop("PGA Tour API error: ", result$errors$message[1])
   }
-
-  if (is.null(stat_data)) stop("No statDetails data found for stat ", stat_id)
-
-  rows <- stat_data$rows
-  if (is.null(rows) || length(rows) == 0) return(tibble::tibble())
-
-  year <- stat_data$year
-
-  # Extract player data from nested list
-  player_ids   <- vapply(rows, function(r) as.character(r$playerId %||% NA), character(1))
-  player_names <- vapply(rows, function(r) r$playerName %||% NA_character_, character(1))
-  countries    <- vapply(rows, function(r) r$countryFlag %||% NA_character_, character(1))
-
-  avg_values <- vapply(rows, function(r) {
-    for (s in r$stats) {
-      if (identical(s$statName, "Avg")) return(as.numeric(s$statValue))
-    }
-    NA_real_
-  }, numeric(1))
-
-  rounds_values <- vapply(rows, function(r) {
-    for (s in r$stats) {
-      if (identical(s$statName, "Measured Rounds")) return(as.integer(s$statValue))
-    }
-    NA_integer_
-  }, integer(1))
-
-  out <- tibble::tibble(
-    player_id   = player_ids,
-    player_name = player_names,
-    country     = countries,
-    avg         = avg_values,
-    rounds      = rounds_values,
-    year        = as.integer(year)
-  )
-  out[!is.na(out$player_id), ]
+  result$data
 }
 
-# --- Fetch and build the dataset ---
+fetch_sg_stat <- function(stat_id, year) {
+  query <- sprintf(
+    '{ statDetails(tourCode: R, statId: "%s", year: %d) {
+      statTitle year
+      rows {
+        ... on StatDetailsPlayer {
+          playerId playerName countryFlag
+          stats { statName statValue }
+        }
+      }
+    } }',
+    stat_id, year
+  )
+  data <- pga_graphql_request(query)
+  details <- data$statDetails
+  if (is.null(details) || is.null(details$rows) || length(details$rows) == 0) {
+    return(tibble::tibble())
+  }
+  rows <- details$rows
+  if (is.null(rows$playerId)) return(tibble::tibble())
+  rows <- rows[!is.na(rows$playerId), ]
+  if (nrow(rows) == 0) return(tibble::tibble())
+
+  avg_values <- vapply(seq_len(nrow(rows)), function(i) {
+    stats <- rows$stats[[i]]
+    if (is.null(stats) || nrow(stats) == 0) return(NA_real_)
+    avg_row <- stats[stats$statName == "Avg", ]
+    if (nrow(avg_row) == 0) return(NA_real_)
+    as.numeric(avg_row$statValue[1])
+  }, numeric(1))
+
+  rounds_values <- vapply(seq_len(nrow(rows)), function(i) {
+    stats <- rows$stats[[i]]
+    if (is.null(stats) || nrow(stats) == 0) return(NA_integer_)
+    rounds_row <- stats[stats$statName == "Measured Rounds", ]
+    if (nrow(rounds_row) == 0) return(NA_integer_)
+    as.integer(rounds_row$statValue[1])
+  }, integer(1))
+
+  tibble::tibble(
+    player_id   = as.character(rows$playerId),
+    player_name = rows$playerName,
+    country     = rows$countryFlag,
+    avg         = avg_values,
+    rounds      = rounds_values
+  )
+}
+
+# --- Config ---
 
 sg_stat_ids <- list(
   putting      = "02564",
@@ -91,61 +83,86 @@ sg_stat_ids <- list(
 )
 
 col_names <- c("sg_putt", "sg_arg", "sg_app", "sg_ott", "sg_t2g", "sg_total")
+years <- 2019:as.integer(format(Sys.Date(), "%Y"))
 
-message("Fetching strokes gained data from pgatour.com...")
+# --- Fetch all years ---
 
-results <- list()
-for (i in seq_along(sg_stat_ids)) {
-  stat_name <- names(sg_stat_ids)[i]
-  col_name <- col_names[i]
-  message("  SG: ", stat_name, " (", sg_stat_ids[[i]], ")...")
-  data <- fetch_sg_stat(sg_stat_ids[[i]])
-  if (nrow(data) > 0) {
-    results[[col_name]] <- data
-    names(results[[col_name]])[names(results[[col_name]]) == "avg"] <- col_name
-    names(results[[col_name]])[names(results[[col_name]]) == "rounds"] <-
-      paste0("rounds_", col_name)
+all_seasons <- list()
+
+for (year in years) {
+  message("Fetching ", year, " season...")
+
+  results <- list()
+  for (i in seq_along(sg_stat_ids)) {
+    stat_name <- names(sg_stat_ids)[i]
+    col_name <- col_names[i]
+    message("  SG: ", stat_name)
+    data <- tryCatch(
+      fetch_sg_stat(sg_stat_ids[[i]], year),
+      error = function(e) {
+        message("    Error: ", e$message)
+        tibble::tibble()
+      }
+    )
+    if (nrow(data) > 0) {
+      results[[col_name]] <- data
+      names(results[[col_name]])[names(results[[col_name]]) == "avg"] <- col_name
+      names(results[[col_name]])[names(results[[col_name]]) == "rounds"] <-
+        paste0("rounds_", col_name)
+    }
+    Sys.sleep(0.5)
   }
-  Sys.sleep(1)  # be polite
-}
 
-# Merge all stats by player_id
-merged <- results[[1]]
-season_year <- merged$year[1]
-for (i in 2:length(results)) {
-  merged <- merge(
-    merged,
-    results[[i]][, c("player_id", names(results[[i]])[4:5])],
-    by = "player_id",
-    all = TRUE
+  if (length(results) == 0) {
+    message("  No data for ", year, ", skipping.")
+    next
+  }
+
+  # Merge all stats by player_id
+  merged <- results[[1]]
+  for (i in 2:length(results)) {
+    merged <- merge(
+      merged,
+      results[[i]][, c("player_id", names(results[[i]])[4:5])],
+      by = "player_id",
+      all = TRUE
+    )
+  }
+
+  rounds_col <- if ("rounds_sg_total" %in% names(merged)) {
+    merged$rounds_sg_total
+  } else {
+    rounds_cols <- grep("^rounds_", names(merged), value = TRUE)
+    if (length(rounds_cols) > 0) merged[[rounds_cols[1]]] else NA_integer_
+  }
+
+  season_df <- tibble::tibble(
+    player_id   = merged$player_id,
+    player_name = merged$player_name,
+    country     = merged$country,
+    sg_putt     = if ("sg_putt" %in% names(merged)) merged$sg_putt else NA_real_,
+    sg_arg      = if ("sg_arg" %in% names(merged)) merged$sg_arg else NA_real_,
+    sg_app      = if ("sg_app" %in% names(merged)) merged$sg_app else NA_real_,
+    sg_ott      = if ("sg_ott" %in% names(merged)) merged$sg_ott else NA_real_,
+    sg_t2g      = if ("sg_t2g" %in% names(merged)) merged$sg_t2g else NA_real_,
+    sg_total    = if ("sg_total" %in% names(merged)) merged$sg_total else NA_real_,
+    rounds      = as.integer(rounds_col),
+    season      = as.integer(year)
   )
+
+  all_seasons[[as.character(year)]] <- season_df
+  message("  ", nrow(season_df), " players")
 }
 
-rounds_col <- if ("rounds_sg_total" %in% names(merged)) {
-  merged$rounds_sg_total
-} else {
-  rounds_cols <- grep("^rounds_", names(merged), value = TRUE)
-  if (length(rounds_cols) > 0) merged[[rounds_cols[1]]] else NA_integer_
-}
+strokes_gained <- do.call(rbind, all_seasons)
+strokes_gained <- strokes_gained[order(strokes_gained$season,
+                                       strokes_gained$sg_total,
+                                       decreasing = c(FALSE, TRUE),
+                                       method = "radix"), ]
+rownames(strokes_gained) <- NULL
 
-strokes_gained <- tibble::tibble(
-  player_id   = merged$player_id,
-  player_name = merged$player_name,
-  country     = merged$country,
-  sg_putt     = if ("sg_putt" %in% names(merged)) merged$sg_putt else NA_real_,
-  sg_arg      = if ("sg_arg" %in% names(merged)) merged$sg_arg else NA_real_,
-  sg_app      = if ("sg_app" %in% names(merged)) merged$sg_app else NA_real_,
-  sg_ott      = if ("sg_ott" %in% names(merged)) merged$sg_ott else NA_real_,
-  sg_t2g      = if ("sg_t2g" %in% names(merged)) merged$sg_t2g else NA_real_,
-  sg_total    = if ("sg_total" %in% names(merged)) merged$sg_total else NA_real_,
-  rounds      = as.integer(rounds_col),
-  season      = as.integer(season_year)
-)
-
-strokes_gained <- strokes_gained[order(strokes_gained$sg_total,
-                                       decreasing = TRUE, na.last = TRUE), ]
-
-message("Built strokes_gained: ", nrow(strokes_gained), " players")
+message("\nBuilt strokes_gained: ", nrow(strokes_gained), " rows across ",
+        length(unique(strokes_gained$season)), " seasons")
 print(head(strokes_gained, 10))
 
 # Save as package data (bundled fallback)

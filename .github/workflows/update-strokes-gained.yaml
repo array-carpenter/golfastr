@@ -25,7 +25,6 @@ jobs:
           extra-packages: |
             any::httr2
             any::tibble
-            any::jsonlite
             any::usethis
             any::piggyback
 
