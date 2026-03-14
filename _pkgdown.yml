@@ -1,0 +1,13 @@
+url: https://array-carpenter.github.io/golfastr/
+
+template:
+  bootstrap: 5
+
+navbar:
+  structure:
+    left: []
+    right: [github]
+  components:
+    github:
+      icon: fa-github
+      href: https://github.com/array-carpenter/golfastr
