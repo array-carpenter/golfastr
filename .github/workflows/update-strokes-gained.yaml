@@ -1,0 +1,48 @@
+name: Update Strokes Gained Data
+
+on:
+  schedule:
+    # Every Monday at 8am UTC (3am ET) during PGA Tour season
+    - cron: '0 8 * * 1'
+  workflow_dispatch:
+
+jobs:
+  update-data:
+    runs-on: ubuntu-latest
+
+    env:
+      GITHUB_PAT: ${{ secrets.GITHUB_TOKEN }}
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: r-lib/actions/setup-r@v2
+        with:
+          use-public-rspm: true
+
+      - uses: r-lib/actions/setup-r-dependencies@v2
+        with:
+          extra-packages: |
+            any::httr2
+            any::tibble
+            any::jsonlite
+            any::usethis
+            any::piggyback
+
+      - name: Create release tag if needed
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          if ! gh release view strokes_gained --repo ${{ github.repository }} > /dev/null 2>&1; then
+            gh release create strokes_gained \
+              --repo ${{ github.repository }} \
+              --title "Strokes Gained Data" \
+              --notes "Auto-updated strokes gained statistics from PGA Tour." \
+              --latest=false
+          fi
+
+      - name: Update strokes gained data
+        run: |
+          Rscript -e '
+            source("data-raw/update_strokes_gained.R")
+          '
