@@ -1,5 +1,20 @@
 # golfastr (development version)
 
+### Hosted Season Data
+
+* `load_leaderboard()` and `load_holes()` now load completed PGA Tour
+  tournaments from pre-built files hosted on GitHub releases (updated daily)
+  instead of querying ESPN tournament by tournament. Loading a full season of
+  leaderboards drops from minutes to seconds, and hole-by-hole data now covers
+  the full field rather than requiring one API request per player.
+* Both functions gain a `live` argument to bypass the hosted data and fetch
+  directly from ESPN (e.g., for in-progress tournaments). The live API is
+  also used automatically as a fallback when hosted data is unavailable.
+* `load_holes()` output now includes `position` (final leaderboard standing)
+  and `year` columns.
+* New `data-raw/update_season_data.R` pipeline builds and uploads the hosted
+  files; runs daily via GitHub Actions.
+
 # golfastr 0.1.5
 
 CRAN resubmission with documentation fixes.

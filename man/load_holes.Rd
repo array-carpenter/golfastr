@@ -9,7 +9,8 @@ load_holes(
   year = as.integer(format(Sys.Date(), "\%Y")),
   tournament = NULL,
   top_n = NULL,
-  tour = "pga"
+  tour = "pga",
+  live = FALSE
 )
 
 get_player_scorecards(event_id, athlete_id)
@@ -23,6 +24,9 @@ get_player_scorecards(event_id, athlete_id)
 
 \item{tour}{Tour identifier. Currently supports "pga" (default).}
 
+\item{live}{If TRUE, skip the hosted data and fetch directly from the
+ESPN API. Defaults to FALSE.}
+
 \item{event_id}{ESPN event identifier (for legacy function)}
 
 \item{athlete_id}{ESPN athlete identifier (for legacy function)}
@@ -32,6 +36,7 @@ A tibble with hole-by-hole data including:
   \itemize{
     \item \code{player_id}: ESPN athlete ID
     \item \code{player_name}: Player display name
+    \item \code{position}: Final leaderboard standing
     \item \code{round}: Round number (1-4)
     \item \code{hole}: Hole number (1-18)
     \item \code{par}: Par for the hole
@@ -44,6 +49,13 @@ A tibble with hole-by-hole scoring data
 }
 \description{
 Retrieves hole-by-hole scoring data for tournaments.
+}
+\details{
+For PGA Tour data, completed tournaments are served from pre-built
+full-field files hosted on GitHub releases (updated daily), avoiding
+the one-request-per-player cost of the live ESPN API. The live API is
+used as a fallback for in-progress tournaments, other tours, or when
+the hosted data is unavailable.
 }
 \section{Functions}{
 \itemize{

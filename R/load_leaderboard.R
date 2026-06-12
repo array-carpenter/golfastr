@@ -3,10 +3,18 @@
 #' Retrieves leaderboard data for tournaments. Can load a single tournament
 #' or all tournaments for a year.
 #'
+#' For PGA Tour data, completed tournaments are served from pre-built files
+#' hosted on GitHub releases (updated daily), which is much faster than
+#' querying ESPN tournament by tournament. The live ESPN API is used as a
+#' fallback for in-progress tournaments, other tours, or when the hosted
+#' data is unavailable.
+#'
 #' @param year Season year (e.g., 2026). Defaults to current year.
 #' @param tournament Tournament identifier - either event_id or partial name match.
 #'   If NULL, returns all tournaments for the year.
 #' @param tour Tour identifier. Currently supports "pga" (default).
+#' @param live If TRUE, skip the hosted data and fetch directly from the
+#'   ESPN API. Defaults to FALSE.
 #' @return A tibble with leaderboard data including:
 #'   \itemize{
 #'     \item \code{position}: Final standing
@@ -25,7 +33,30 @@
 #' }
 load_leaderboard <- function(year = as.integer(format(Sys.Date(), "%Y")),
                              tournament = NULL,
-                             tour = "pga") {
+                             tour = "pga",
+                             live = FALSE) {
+
+  # Try pre-built data from GitHub releases first
+  if (!live && tolower(tour) == "pga") {
+    hosted <- release_load("leaderboards", sprintf("leaderboards_%d.rds", year))
+    if (!is.null(hosted)) {
+      if (!is.null(tournament)) {
+        if (tournament %in% hosted$tournament_id) {
+          hosted <- hosted[hosted$tournament_id == tournament, ]
+        } else {
+          matches <- grepl(tournament, hosted$tournament_name, ignore.case = TRUE)
+          hosted <- hosted[matches, ]
+        }
+      }
+      if (nrow(hosted) > 0) {
+        return(hosted)
+      }
+      if (!is.null(tournament)) {
+        message("Tournament not in hosted data (may be in progress); ",
+                "fetching from ESPN...")
+      }
+    }
+  }
 
   # Get schedule to find tournament(s)
   schedule <- load_schedule(year, tour)

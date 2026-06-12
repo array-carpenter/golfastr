@@ -2,14 +2,23 @@
 #'
 #' Retrieves hole-by-hole scoring data for tournaments.
 #'
+#' For PGA Tour data, completed tournaments are served from pre-built
+#' full-field files hosted on GitHub releases (updated daily), avoiding
+#' the one-request-per-player cost of the live ESPN API. The live API is
+#' used as a fallback for in-progress tournaments, other tours, or when
+#' the hosted data is unavailable.
+#'
 #' @param year Season year (e.g., 2026). Defaults to current year.
 #' @param tournament Tournament identifier - either event_id or partial name match.
 #' @param top_n Number of top finishers to include. Default NULL returns all.
 #' @param tour Tour identifier. Currently supports "pga" (default).
+#' @param live If TRUE, skip the hosted data and fetch directly from the
+#'   ESPN API. Defaults to FALSE.
 #' @return A tibble with hole-by-hole data including:
 #'   \itemize{
 #'     \item \code{player_id}: ESPN athlete ID
 #'     \item \code{player_name}: Player display name
+#'     \item \code{position}: Final leaderboard standing
 #'     \item \code{round}: Round number (1-4)
 #'     \item \code{hole}: Hole number (1-18)
 #'     \item \code{par}: Par for the hole
@@ -26,10 +35,36 @@
 load_holes <- function(year = as.integer(format(Sys.Date(), "%Y")),
                        tournament = NULL,
                        top_n = NULL,
-                       tour = "pga") {
+                       tour = "pga",
+                       live = FALSE) {
 
   if (is.null(tournament)) {
     stop("tournament parameter is required for load_holes()")
+  }
+
+  # Try pre-built data from GitHub releases first
+  if (!live && tolower(tour) == "pga") {
+    hosted <- release_load("holes", sprintf("holes_%d.rds", year))
+    if (!is.null(hosted)) {
+      if (tournament %in% hosted$tournament_id) {
+        result <- hosted[hosted$tournament_id == tournament, ]
+      } else {
+        matches <- grepl(tournament, hosted$tournament_name, ignore.case = TRUE)
+        result <- hosted[matches, ]
+      }
+      if (nrow(result) > 0) {
+        if (!is.null(top_n)) {
+          players <- result[!duplicated(result$player_id),
+                            c("player_id", "position")]
+          players <- players[order(players$position), ]
+          keep <- players$player_id[seq_len(min(top_n, nrow(players)))]
+          result <- result[result$player_id %in% keep, ]
+        }
+        return(result)
+      }
+      message("Tournament not in hosted data (may be in progress); ",
+              "fetching from ESPN...")
+    }
   }
 
   # Get schedule to find tournament
@@ -74,8 +109,10 @@ load_holes <- function(year = as.integer(format(Sys.Date(), "%Y")),
       if (nrow(scorecard) > 0) {
         scorecard$player_id <- player_id
         scorecard$player_name <- player_name
+        scorecard$position <- leaderboard$position[i]
         scorecard$tournament_id <- event_id
         scorecard$tournament_name <- tourn_name
+        scorecard$year <- year
         all_holes[[length(all_holes) + 1]] <- scorecard
       }
     }, error = function(e) {
@@ -91,7 +128,7 @@ load_holes <- function(year = as.integer(format(Sys.Date(), "%Y")),
 
   # Reorder columns
   dplyr::select(result,
-    player_id, player_name, tournament_id, tournament_name,
+    player_id, player_name, position, tournament_id, tournament_name,
     round, hole, par, score, score_type, dplyr::everything()
   )
 }

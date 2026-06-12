@@ -1,0 +1,57 @@
+name: Update Season Data
+
+on:
+  schedule:
+    # Daily at 10am UTC (5am ET) - catches Sunday/Monday tournament finishes
+    - cron: '0 10 * * *'
+  workflow_dispatch:
+    inputs:
+      years:
+        description: 'Years to build (space-separated, e.g. "2024 2025"). Defaults to current year.'
+        required: false
+        default: ''
+
+permissions:
+  contents: write
+
+jobs:
+  update-data:
+    runs-on: ubuntu-latest
+
+    env:
+      GITHUB_PAT: ${{ secrets.GITHUB_TOKEN }}
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: r-lib/actions/setup-r@v2
+        with:
+          use-public-rspm: true
+
+      - uses: r-lib/actions/setup-r-dependencies@v2
+        with:
+          extra-packages: |
+            local::.
+            any::piggyback
+
+      - name: Create release tags if needed
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          declare -A titles=(
+            [schedules]="Schedule Data"
+            [leaderboards]="Leaderboard Data"
+            [holes]="Hole-by-Hole Data"
+          )
+          for tag in schedules leaderboards holes; do
+            if ! gh release view "$tag" --repo ${{ github.repository }} > /dev/null 2>&1; then
+              gh release create "$tag" \
+                --repo ${{ github.repository }} \
+                --title "${titles[$tag]}" \
+                --notes "Auto-updated season data from ESPN." \
+                --latest=false
+            fi
+          done
+
+      - name: Update season data
+        run: Rscript data-raw/update_season_data.R ${{ inputs.years }}

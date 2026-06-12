@@ -46,6 +46,27 @@ liv_schedule <- load_schedule(2026, tour = "liv")
 adelaide <- load_leaderboard(2026, "Adelaide", tour = "liv")
 ```
 
+## Hosted Data
+
+Completed PGA Tour tournaments are served from pre-built data files hosted
+on [GitHub releases](https://github.com/array-carpenter/golfastr/releases),
+updated daily. This makes loading a full season near-instant and provides
+hole-by-hole data for the full field, not just the top finishers:
+
+```r
+# Loads from hosted data - seconds, not minutes
+season <- load_leaderboard(2025)
+
+# Full-field hole-by-hole scoring
+holes <- load_holes(2025, "Masters")
+
+# Bypass hosted data for in-progress tournaments
+live_lb <- load_leaderboard(2026, "Travelers", live = TRUE)
+```
+
+If the hosted data is unavailable (or a tournament is still in progress),
+both functions automatically fall back to the live ESPN API.
+
 ## Strokes Gained
 
 Pre-built PGA Tour strokes gained data ships with the package:
@@ -133,6 +154,7 @@ players <- load_players(2026)
 
 | Field | Description |
 |-------|-------------|
+| position | Final leaderboard standing |
 | round | Round number (1-4) |
 | hole | Hole number (1-18) |
 | par | Par for hole |
