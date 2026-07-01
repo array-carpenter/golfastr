@@ -1,5 +1,11 @@
 # golfastR <img src="https://raw.githubusercontent.com/array-carpenter/golfastr/main/man/figures/logo.png" align="right" height="139" alt="golfastR logo" />
 
+<!-- badges: start -->
+[![CRAN status](https://www.r-pkg.org/badges/version/golfastr)](https://CRAN.R-project.org/package=golfastr)
+[![CRAN downloads](https://cranlogs.r-pkg.org/badges/grand-total/golfastr)](https://CRAN.R-project.org/package=golfastr)
+[![R-CMD-check](https://github.com/array-carpenter/golfastr/actions/workflows/R-CMD-check.yaml/badge.svg)](https://github.com/array-carpenter/golfastr/actions/workflows/R-CMD-check.yaml)
+<!-- badges: end -->
+
 > Fast, tidy Pro Golf data in R
 
 `golfastR` provides easy access to professional golf data from ESPN with functions to get leaderboards and hole-by-hole scores in tidy data formats ready for analysis. Supports **PGA Tour**, **LIV Golf**, **LPGA**, **DP World Tour**, and **Champions Tour**.
