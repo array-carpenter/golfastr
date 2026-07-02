@@ -1,0 +1,47 @@
+---
+title: "Field descriptions"
+---
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(echo = FALSE)
+library(golfastr)
+```
+
+Column-level documentation for the main golfastr datasets. The same tables
+are available in R via `pga_field_descriptions()`.
+
+## Leaderboard
+
+Returned by `load_leaderboard()` and `leaderboard()`.
+
+```{r}
+knitr::kable(pga_field_descriptions("leaderboard"))
+```
+
+## Hole-by-hole
+
+Returned by `load_holes()`.
+
+```{r}
+knitr::kable(pga_field_descriptions("holes"))
+```
+
+## Strokes gained
+
+Returned by `load_strokes_gained()` and available as the packaged
+`strokes_gained` dataset. Values are per-round averages from
+ShotLink-measured rounds.
+
+| Field | Description |
+|-------|-------------|
+| player_id | PGA Tour player ID |
+| player_name | Player display name |
+| country | Three-letter country code (e.g., "USA", "ENG") |
+| sg_putt | Strokes Gained: Putting |
+| sg_arg | Strokes Gained: Around the Green |
+| sg_app | Strokes Gained: Approach the Green |
+| sg_ott | Strokes Gained: Off the Tee |
+| sg_t2g | Strokes Gained: Tee to Green |
+| sg_total | Strokes Gained: Total |
+| rounds | Number of ShotLink-measured rounds |
+| season | PGA Tour season year |

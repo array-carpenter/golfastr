@@ -1,0 +1,117 @@
+---
+title: "Getting started with golfastr"
+---
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>",
+  fig.width = 8,
+  fig.height = 5
+)
+```
+
+golfastr provides tidy professional golf data in R: tournament schedules,
+leaderboards, hole-by-hole scoring, and strokes gained. Completed PGA Tour
+seasons are served from pre-built files hosted on GitHub releases (updated
+daily), so loading a full season takes seconds. Everything else falls back
+to the live ESPN API.
+
+```{r setup, message = FALSE}
+library(golfastr)
+library(dplyr)
+```
+
+## The season schedule
+
+```{r}
+sched <- load_schedule(2025)
+head(sched)
+```
+
+## Leaderboards
+
+`load_leaderboard()` takes a year and an optional tournament, matched by
+event ID or partial name:
+
+```{r}
+masters <- load_leaderboard(2025, "Masters")
+head(masters)
+```
+
+Leave the tournament out to get every completed event in the season in one
+tibble:
+
+```{r}
+season <- load_leaderboard(2025)
+nrow(season)
+```
+
+## Hole-by-hole scoring
+
+Hosted seasons include full-field scorecards, one row per player per hole:
+
+```{r}
+holes <- load_holes(2025, "Masters")
+head(holes)
+```
+
+That granularity is enough to rebuild the tournament story. For example,
+the cumulative score to par of the top five finishers:
+
+```{r masters-race, message = FALSE}
+library(ggplot2)
+
+top5 <- masters |>
+  slice_head(n = 5) |>
+  pull(player_id)
+
+race <- holes |>
+  filter(player_id %in% top5) |>
+  arrange(player_id, round, hole) |>
+  group_by(player_id, player_name) |>
+  mutate(
+    hole_index = row_number(),
+    to_par = cumsum(score - par)
+  ) |>
+  ungroup()
+
+ggplot(race, aes(hole_index, to_par, color = player_name)) +
+  geom_hline(yintercept = 0, linetype = "dashed", color = "grey60") +
+  geom_step(linewidth = 0.8) +
+  scale_y_reverse() +
+  labs(
+    title = "2025 Masters, top five finishers",
+    x = "Holes played", y = "Score to par", color = NULL
+  ) +
+  theme_minimal()
+```
+
+## Strokes gained
+
+Per-round strokes gained averages for the current season ship with the
+package:
+
+```{r}
+load_strokes_gained("Scheffler")
+```
+
+## Live data and other tours
+
+Hosted data covers completed PGA Tour events. For tournaments in progress,
+pass `live = TRUE` to query ESPN directly:
+
+```{r, eval = FALSE}
+load_leaderboard(2026, "Travelers", live = TRUE)
+```
+
+LIV Golf, the LPGA, the DP World Tour, and the Champions Tour are available
+through the same functions via the `tour` argument:
+
+```{r, eval = FALSE}
+load_schedule(2026, tour = "lpga")
+load_leaderboard(2026, "Adelaide", tour = "liv")
+```
+
+Field-level documentation for every column lives in
+`vignette("field-descriptions")` and in `pga_field_descriptions()`.

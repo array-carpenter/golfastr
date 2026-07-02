@@ -31,3 +31,6 @@
 # Data preparation
 ^data-raw$
 ^scripts$
+
+# pkgdown articles (not shipped to CRAN)
+^vignettes/articles$
