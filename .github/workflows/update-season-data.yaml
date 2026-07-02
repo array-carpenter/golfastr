@@ -33,6 +33,7 @@ jobs:
           extra-packages: |
             local::.
             any::piggyback
+            any::arrow
 
       - name: Create release tags if needed
         env:

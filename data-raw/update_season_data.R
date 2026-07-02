@@ -22,6 +22,36 @@ repo <- "array-carpenter/golfastr"
 release_dir <- file.path(tempdir(), "golfastr_season_data")
 dir.create(release_dir, showWarnings = FALSE)
 
+## Every asset is published as rds (fast for R users), parquet, and csv
+## (so the releases are usable from Python etc. without R).
+save_asset <- function(x, name) {
+  saveRDS(x, file.path(release_dir, paste0(name, ".rds")))
+  utils::write.csv(x, file.path(release_dir, paste0(name, ".csv")),
+                   row.names = FALSE)
+  if (requireNamespace("arrow", quietly = TRUE)) {
+    arrow::write_parquet(x, file.path(release_dir, paste0(name, ".parquet")))
+  }
+}
+
+## Per-hole context computed at build time: score relative to par, the field
+## average on that hole in that round, strokes vs the field, and each
+## player's running score to par through the tournament. Recomputed from raw
+## scores on every run so incremental updates stay consistent.
+add_hole_stats <- function(holes) {
+  holes |>
+    arrange(tournament_id, player_id, round, hole) |>
+    group_by(tournament_id, round, hole) |>
+    mutate(field_avg = round(mean(score, na.rm = TRUE), 3)) |>
+    ungroup() |>
+    mutate(
+      to_par = score - par,
+      vs_field = round(score - field_avg, 3)
+    ) |>
+    group_by(tournament_id, player_id) |>
+    mutate(cume_to_par = cumsum(coalesce(to_par, 0L))) |>
+    ungroup()
+}
+
 download_existing <- function(tag, filename) {
   asset_url <- sprintf("https://github.com/%s/releases/download/%s/%s",
                        repo, tag, filename)
@@ -45,7 +75,7 @@ for (year in years) {
   message(nrow(completed), " completed tournaments")
 
   ## Schedule
-  saveRDS(schedule, file.path(release_dir, sprintf("schedule_%d.rds", year)))
+  save_asset(schedule, sprintf("schedule_%d", year))
 
   ## Leaderboards (full rebuild)
   lb_all <- list()
@@ -64,8 +94,7 @@ for (year in years) {
     Sys.sleep(0.2)
   }
   leaderboards <- dplyr::bind_rows(lb_all)
-  saveRDS(leaderboards,
-          file.path(release_dir, sprintf("leaderboards_%d.rds", year)))
+  save_asset(leaderboards, sprintf("leaderboards_%d", year))
   message("Leaderboards: ", nrow(leaderboards), " rows")
 
   ## Hole-by-hole (incremental)
@@ -103,25 +132,28 @@ for (year in years) {
     holes <- holes[, c("player_id", "player_name", "position",
                        "tournament_id", "tournament_name",
                        "round", "hole", "par", "score", "score_type", "year")]
+    holes <- add_hole_stats(holes)
   }
-  saveRDS(holes, file.path(release_dir, holes_file))
+  save_asset(holes, sprintf("holes_%d", year))
   message("Holes: ", nrow(holes), " rows")
 }
 
 ## Upload to GitHub releases
 uploads <- list(
-  schedules    = sprintf("schedule_%d.rds", years),
-  leaderboards = sprintf("leaderboards_%d.rds", years),
-  holes        = sprintf("holes_%d.rds", years)
+  schedules    = sprintf("schedule_%d", years),
+  leaderboards = sprintf("leaderboards_%d", years),
+  holes        = sprintf("holes_%d", years)
 )
 
 if (requireNamespace("piggyback", quietly = TRUE)) {
   for (tag in names(uploads)) {
     for (f in uploads[[tag]]) {
-      path <- file.path(release_dir, f)
-      if (!file.exists(path)) next
-      message("Uploading ", f, " to release '", tag, "'...")
-      piggyback::pb_upload(path, repo = repo, tag = tag, overwrite = TRUE)
+      for (ext in c(".rds", ".csv", ".parquet")) {
+        path <- file.path(release_dir, paste0(f, ext))
+        if (!file.exists(path)) next
+        message("Uploading ", basename(path), " to release '", tag, "'...")
+        piggyback::pb_upload(path, repo = repo, tag = tag, overwrite = TRUE)
+      }
     }
   }
   message("Done! Release assets updated.")
