@@ -31,6 +31,3 @@
 # Data preparation
 ^data-raw$
 ^scripts$
-
-# pkgdown
-^index\.md$

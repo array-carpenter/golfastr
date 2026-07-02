@@ -2,12 +2,80 @@ url: https://golfastr.com/
 
 template:
   bootstrap: 5
+  bslib:
+    primary: "#2d6a4f"
 
 navbar:
   structure:
-    left: []
-    right: [github]
+    left: [intro, reference, articles, news]
+    right: [search, github]
   components:
     github:
       icon: fa-github
       href: https://github.com/array-carpenter/golfastr
+      aria-label: GitHub
+
+reference:
+- title: Load data
+  desc: >
+    Tournament data served from pre-built files on GitHub releases (updated
+    daily), with automatic fallback to the live ESPN API.
+  contents:
+  - load_schedule
+  - load_leaderboard
+  - load_holes
+  - load_players
+  - load_strokes_gained
+
+- title: Live ESPN API
+  desc: Query tournaments directly from ESPN.
+  contents:
+  - list_tournaments
+  - load_tournament
+  - load_tournament_detail
+  - leaderboard
+  - get_player
+  - get_majors
+  - get_winners
+
+- title: Analysis
+  desc: Summaries and leaders computed from locally stored season data.
+  contents:
+  - player_summary
+  - compare_players
+  - tournament_history
+  - field_strength
+  - win_leaders
+  - top10_leaders
+  - made_cuts_leaders
+  - scoring_avg_leaders
+
+- title: Plotting
+  contents:
+  - starts_with("plot_")
+
+- title: Local storage and cache
+  contents:
+  - build_season
+  - check_season
+  - load_data
+  - save_to_rds
+  - load_from_rds
+  - save_to_parquet
+  - load_from_parquet
+  - cache_info
+  - clear_cache
+
+- title: Reference data
+  contents:
+  - strokes_gained
+  - pga_field_descriptions
+  - pga_majors
+  - pga_score_types
+
+- title: Legacy
+  desc: Older entry points kept for backwards compatibility.
+  contents:
+  - load_pga_schedule
+  - load_pga_leaderboards
+  - load_pga_hbh
