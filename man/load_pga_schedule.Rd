@@ -15,11 +15,6 @@ load_pga_schedule(year, tour = "pga")
 A tibble with tournament schedule data.
 }
 \description{
-Loads the PGA Tour tournament schedule for a given year.
-Similar to nflfastR's schedule loading functions.
-}
-\examples{
-\donttest{
-schedule <- load_pga_schedule(2025)
-}
+Deprecated. Use [load_schedule()] instead, which supports all tours and
+shares its output format with the rest of the package.
 }

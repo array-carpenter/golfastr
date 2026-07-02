@@ -30,7 +30,7 @@ Retrieves the tournament schedule for a given year and tour.
 }
 \section{Functions}{
 \itemize{
-\item \code{get_pga_schedule()}: Legacy function for backwards compatibility
+\item \code{get_pga_schedule()}: Deprecated, use `load_schedule()` instead
 
 }}
 \examples{

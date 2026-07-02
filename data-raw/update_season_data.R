@@ -82,7 +82,8 @@ for (year in years) {
   for (i in seq_len(nrow(completed))) {
     eid <- completed$event_id[i]
     nm <- completed$tournament_name[i]
-    lb <- tryCatch(get_tournament_leaderboard(eid), error = function(e) NULL)
+    lb <- tryCatch(golfastr:::fetch_leaderboard_fast(eid, year, "pga"),
+                   error = function(e) NULL)
     if (is.null(lb) || nrow(lb) == 0) {
       message("  no leaderboard for ", nm, ", skipping")
       next
@@ -113,7 +114,7 @@ for (year in years) {
     message(sprintf("[%d/%d] %s (%d players)", i, nrow(todo), nm, nrow(lb)))
 
     for (j in seq_len(nrow(lb))) {
-      sc <- tryCatch(get_player_scorecards(eid, lb$player_id[j]),
+      sc <- tryCatch(golfastr:::fetch_player_holes(eid, lb$player_id[j], "pga"),
                      error = function(e) NULL)
       if (is.null(sc) || nrow(sc) == 0) next
       sc$player_id <- lb$player_id[j]

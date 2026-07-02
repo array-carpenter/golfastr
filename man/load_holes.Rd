@@ -59,7 +59,7 @@ the hosted data is unavailable.
 }
 \section{Functions}{
 \itemize{
-\item \code{get_player_scorecards()}: Legacy function for backwards compatibility
+\item \code{get_player_scorecards()}: Deprecated, use `load_holes()` instead
 
 }}
 \examples{

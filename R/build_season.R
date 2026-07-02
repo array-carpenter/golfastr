@@ -54,7 +54,7 @@ build_season <- function(year, file_path, tour = "pga") {
 
     tryCatch({
       # Fetch leaderboard
-      data <- get_tournament_leaderboard(event_id)
+      data <- fetch_leaderboard_fast(event_id, as.integer(year), tour)
 
       # Add metadata
       data$tournament_name <- tournament_name

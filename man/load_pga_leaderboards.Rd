@@ -20,15 +20,7 @@ to filter. If NULL, loads all tournaments.}
 A tibble with leaderboard data.
 }
 \description{
-Loads tournament leaderboard data for specified year(s) and tournament(s).
-This is similar to nflfastR's data loading pattern.
-}
-\examples{
-\donttest{
-# Load specific tournament
-masters <- load_pga_leaderboards(2025, tournaments = "401703504")
-
-# Load all 2025 tournaments
-all_2025 <- load_pga_leaderboards(2025)
-}
+Deprecated. Use [load_leaderboard()] instead, which serves completed
+tournaments from pre-built hosted files rather than one live request
+per event.
 }

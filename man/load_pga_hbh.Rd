@@ -23,14 +23,6 @@ Default is 10. Set to NULL for all players.}
 A tibble with hole-by-hole scoring data.
 }
 \description{
-Loads detailed hole-by-hole scoring data for specified tournaments.
-}
-\examples{
-\donttest{
-# Load Masters hole-by-hole for top 10
-masters_hbh <- load_pga_hbh(2025, tournaments = "401703504")
-
-# Load with more players
-masters_hbh <- load_pga_hbh(2025, tournaments = "401703504", top_n = 50)
-}
+Deprecated. Use [load_holes()] instead, which serves full-field
+scorecards for completed tournaments from pre-built hosted files.
 }

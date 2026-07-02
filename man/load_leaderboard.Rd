@@ -54,7 +54,7 @@ data is unavailable.
 }
 \section{Functions}{
 \itemize{
-\item \code{get_tournament_leaderboard()}: Legacy function for backwards compatibility
+\item \code{get_tournament_leaderboard()}: Deprecated, use `load_leaderboard()` instead
 
 }}
 \examples{

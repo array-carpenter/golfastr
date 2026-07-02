@@ -39,9 +39,10 @@ load_schedule <- function(year = as.integer(format(Sys.Date(), "%Y")),
   )
 }
 
-#' @describeIn load_schedule Legacy function for backwards compatibility
+#' @describeIn load_schedule Deprecated, use `load_schedule()` instead
 #' @return A tibble with tournament schedule data
 #' @export
 get_pga_schedule <- function(year = format(Sys.Date(), "%Y")) {
+  deprecate_warn("0.2.0", "get_pga_schedule()", "load_schedule()")
   load_schedule(year = as.integer(year), tour = "pga")
 }

@@ -171,11 +171,12 @@ fetch_player_holes <- function(event_id, player_id, tour = "pga") {
   dplyr::bind_rows(all_rounds)
 }
 
-#' @describeIn load_holes Legacy function for backwards compatibility
+#' @describeIn load_holes Deprecated, use `load_holes()` instead
 #' @param event_id ESPN event identifier (for legacy function)
 #' @param athlete_id ESPN athlete identifier (for legacy function)
 #' @return A tibble with hole-by-hole scoring data
 #' @export
 get_player_scorecards <- function(event_id, athlete_id) {
+  deprecate_warn("0.2.0", "get_player_scorecards()", "load_holes()")
   fetch_player_holes(event_id, athlete_id, "pga")
 }

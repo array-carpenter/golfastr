@@ -13,6 +13,7 @@ Fetch Professional Golfers' Association (PGA) Tour tournament data from ESPN \ur
 \seealso{
 Useful links:
 \itemize{
+  \item \url{https://golfastr.com/}
   \item \url{https://github.com/array-carpenter/golfastr}
   \item Report bugs at \url{https://github.com/array-carpenter/golfastr/issues}
 }

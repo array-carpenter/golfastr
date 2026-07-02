@@ -33,22 +33,22 @@ reference:
   - list_tournaments
   - load_tournament
   - load_tournament_detail
-  - leaderboard
-  - get_player
-  - get_majors
-  - get_winners
 
 - title: Analysis
   desc: Summaries and leaders computed from locally stored season data.
   contents:
   - player_summary
   - compare_players
+  - leaderboard
   - tournament_history
   - field_strength
   - win_leaders
   - top10_leaders
   - made_cuts_leaders
   - scoring_avg_leaders
+  - get_player
+  - get_majors
+  - get_winners
 
 - title: Plotting
   contents:
