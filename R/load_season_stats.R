@@ -53,21 +53,23 @@ load_tournament <- function(year, tournament, tour = "pga") {
     matches <- schedule[grepl(tournament, schedule$tournament_name, ignore.case = TRUE), ]
 
     if (nrow(matches) == 0) {
-      stop("No tournament found matching '", tournament, "'. Use list_tournaments(",
-           year, ") to see available tournaments.")
+      cli::cli_abort(c(
+        "No tournament found matching {.val {tournament}}.",
+        "i" = "Use {.code list_tournaments({year})} to see available tournaments."
+      ))
     }
 
     if (nrow(matches) > 1) {
-      message("Multiple matches found:")
+      cli::cli_inform("Multiple matches found:")
       print(matches[, c("event_id", "tournament_name")])
-      stop("Please be more specific or use the event_id.")
+      cli::cli_abort("Please be more specific or use the {.field event_id}.")
     }
 
     event_id <- matches$event_id
     tournament_name <- matches$tournament_name
   }
 
-  message("Loading: ", tournament_name, " (", event_id, ")")
+  cli::cli_inform("Loading: {tournament_name} ({event_id})")
   fetch_leaderboard_fast(event_id, year, tour)
 }
 
@@ -99,20 +101,23 @@ load_tournament_detail <- function(year, tournament, top_n = 10, tour = "pga") {
     matches <- schedule[grepl(tournament, schedule$tournament_name, ignore.case = TRUE), ]
 
     if (nrow(matches) == 0) {
-      stop("No tournament found matching '", tournament, "'")
+      cli::cli_abort(c(
+        "No tournament found matching {.val {tournament}}.",
+        "i" = "Use {.code list_tournaments({year})} to see available tournaments."
+      ))
     }
 
     if (nrow(matches) > 1) {
-      message("Multiple matches found:")
+      cli::cli_inform("Multiple matches found:")
       print(matches[, c("event_id", "tournament_name")])
-      stop("Please be more specific or use the event_id.")
+      cli::cli_abort("Please be more specific or use the {.field event_id}.")
     }
 
     event_id <- matches$event_id
     tournament_name <- matches$tournament_name
   }
 
-  message("Loading: ", tournament_name, " (", event_id, ") with top ", top_n, " scorecards")
+  cli::cli_inform("Loading: {tournament_name} ({event_id}) with top {top_n} scorecards")
 
   # Get leaderboard
   leaderboard <- fetch_leaderboard_fast(event_id, year, tour)

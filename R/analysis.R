@@ -20,7 +20,7 @@ player_summary <- function(name, year = NULL, file_path) {
   }
 
   if (nrow(data) == 0) {
-    stop("No data found for player")
+    cli::cli_abort("No data found for player {.val {name}}.")
   }
 
   player_name <- data$display_name[1]
@@ -64,7 +64,7 @@ compare_players <- function(players, year = NULL, file_path) {
   results <- results[!sapply(results, is.null)]
 
   if (length(results) == 0) {
-    stop("No players found")
+    cli::cli_abort("No players found.")
   }
 
   comparison <- dplyr::bind_rows(results)
@@ -92,7 +92,7 @@ leaderboard <- function(tournament, year, top_n = 10, file_path) {
   data <- data[data$year == year, ]
 
   if (nrow(data) == 0) {
-    stop("Tournament not found")
+    cli::cli_abort("Tournament {.val {tournament}} not found.")
   }
 
   data <- data[order(data$position), ]
@@ -122,7 +122,7 @@ field_strength <- function(tournament, year, file_path) {
   data <- data[data$year == year, ]
 
   if (nrow(data) == 0) {
-    stop("Tournament not found")
+    cli::cli_abort("Tournament {.val {tournament}} not found.")
   }
 
   tibble::tibble(
@@ -317,7 +317,7 @@ tournament_history <- function(tournament, file_path) {
   data <- load_data(file_path, tournament = tournament)
 
   if (nrow(data) == 0) {
-    stop("Tournament not found")
+    cli::cli_abort("Tournament {.val {tournament}} not found.")
   }
 
   # Get winners for each year

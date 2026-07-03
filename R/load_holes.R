@@ -39,7 +39,7 @@ load_holes <- function(year = as.integer(format(Sys.Date(), "%Y")),
                        live = FALSE) {
 
   if (is.null(tournament)) {
-    stop("tournament parameter is required for load_holes()")
+    cli::cli_abort("{.arg tournament} is required for {.fn load_holes}.")
   }
 
   # Try pre-built data from GitHub releases first
@@ -62,8 +62,7 @@ load_holes <- function(year = as.integer(format(Sys.Date(), "%Y")),
         }
         return(result)
       }
-      message("Tournament not in hosted data (may be in progress); ",
-              "fetching from ESPN...")
+      cli::cli_inform("Tournament not in hosted data (may be in progress); fetching from ESPN...")
     }
   }
 
@@ -77,7 +76,10 @@ load_holes <- function(year = as.integer(format(Sys.Date(), "%Y")),
   } else {
     matches <- grepl(tournament, schedule$tournament_name, ignore.case = TRUE)
     if (!any(matches)) {
-      stop("Tournament not found: ", tournament)
+      cli::cli_abort(c(
+        "Tournament not found: {.val {tournament}}.",
+        "i" = "Use {.code load_schedule({year})} to see the season schedule."
+      ))
     }
     event_id <- schedule$event_id[matches][1]
     tourn_name <- schedule$tournament_name[matches][1]
@@ -96,7 +98,7 @@ load_holes <- function(year = as.integer(format(Sys.Date(), "%Y")),
   }
 
   # Fetch scorecards for each player
-  message(sprintf("Fetching scorecards for %d players...", nrow(leaderboard)))
+  cli::cli_inform("Fetching scorecards for {nrow(leaderboard)} players...")
 
   all_holes <- list()
 

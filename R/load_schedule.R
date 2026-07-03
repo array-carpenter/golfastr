@@ -26,7 +26,7 @@ load_schedule <- function(year = as.integer(format(Sys.Date(), "%Y")),
                                 query_params = list(dates = year))
 
   if (is.null(response$leagues) || length(response$leagues) == 0) {
-    stop("No schedule data available for year: ", year, ", tour: ", tour)
+    cli::cli_abort("No schedule data available for year {.val {year}} and tour {.val {tour}}.")
   }
 
   calendar <- response$leagues$calendar[[1]]

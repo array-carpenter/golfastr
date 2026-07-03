@@ -18,12 +18,12 @@ build_season <- function(year, file_path, tour = "pga") {
   # Determine format from extension
   ext <- tolower(tools::file_ext(file_path))
   if (!ext %in% c("rds", "parquet")) {
-    stop("file_path must end in .rds or .parquet")
+    cli::cli_abort("{.arg file_path} must end in {.val .rds} or {.val .parquet}.")
   }
 
   # Get all tournaments for the year
   schedule <- list_tournaments(year, tour)
-  message("Found ", nrow(schedule), " tournaments for ", year)
+  cli::cli_inform("Found {nrow(schedule)} tournaments for {year}.")
 
   # Check what's already in file
   existing_events <- character(0)
@@ -31,16 +31,16 @@ build_season <- function(year, file_path, tour = "pga") {
     tryCatch({
       existing <- if (ext == "rds") load_from_rds(file_path) else load_from_parquet(file_path)
       existing_events <- unique(existing$event_id)
-      message("Already saved: ", length(existing_events), " tournaments")
+      cli::cli_inform("Already saved: {length(existing_events)} tournaments.")
     }, error = function(e) NULL)
   }
 
   # Find missing tournaments
   missing <- schedule[!schedule$event_id %in% existing_events, ]
-  message("Remaining to fetch: ", nrow(missing), " tournaments")
+  cli::cli_inform("Remaining to fetch: {nrow(missing)} tournaments.")
 
   if (nrow(missing) == 0) {
-    message("All tournaments already loaded!")
+    cli::cli_inform("All tournaments already loaded.")
     return(invisible(0))
   }
 
@@ -50,7 +50,7 @@ build_season <- function(year, file_path, tour = "pga") {
     event_id <- missing$event_id[i]
     tournament_name <- missing$tournament_name[i]
 
-    message(sprintf("[%d/%d] %s", i, nrow(missing), tournament_name))
+    cli::cli_inform("[{i}/{nrow(missing)}] {tournament_name}")
 
     tryCatch({
       # Fetch leaderboard
@@ -68,18 +68,18 @@ build_season <- function(year, file_path, tour = "pga") {
         save_to_parquet(data, file_path = file_path, append = TRUE)
       }
       added <- added + 1
-      message("  Saved!")
+      cli::cli_inform("  Saved.")
 
     }, error = function(e) {
-      message("  ERROR: ", e$message)
+      cli::cli_inform("  ERROR: {conditionMessage(e)}")
     })
 
     # Small delay to be nice to the API
     Sys.sleep(0.5)
   }
 
-  message("=== Done ===")
-  message("Added ", added, " tournaments")
+  cli::cli_inform("Done.")
+  cli::cli_inform("Added {added} tournaments.")
 
   invisible(added)
 }
@@ -103,7 +103,7 @@ check_season <- function(year, file_path, tour = "pga") {
   # Determine format from extension
   ext <- tolower(tools::file_ext(file_path))
   if (!ext %in% c("rds", "parquet")) {
-    stop("file_path must end in .rds or .parquet")
+    cli::cli_abort("{.arg file_path} must end in {.val .rds} or {.val .parquet}.")
   }
 
   schedule <- list_tournaments(year, tour)
@@ -120,9 +120,9 @@ check_season <- function(year, file_path, tour = "pga") {
   schedule$status <- ifelse(schedule$event_id %in% existing_events,
                             "loaded", "missing")
 
-  message("Season ", year, " progress:")
-  message("  Loaded: ", sum(schedule$status == "loaded"))
-  message("  Missing: ", sum(schedule$status == "missing"))
+  cli::cli_inform("Season {year} progress:")
+  cli::cli_inform("  Loaded: {sum(schedule$status == 'loaded')}")
+  cli::cli_inform("  Missing: {sum(schedule$status == 'missing')}")
 
   schedule
 }

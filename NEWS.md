@@ -1,5 +1,37 @@
 # golfastr (development version)
 
+### Website
+
+* golfastr.com is now a full pkgdown site: the README front page, a grouped
+  function reference, a getting-started guide, and a field-descriptions
+  article replace the old placeholder page.
+
+### Data releases
+
+* Season assets are now published in three formats — rds, parquet, and csv —
+  so the hosted data can be used directly from Python and other tools.
+* Hole-by-hole files gain derived columns computed at build time: `to_par`,
+  `field_avg` (field scoring average on that hole in that round), `vs_field`
+  (strokes vs the field average), and `cume_to_par` (running tournament score
+  through each hole, playoff holes included).
+
+### Deprecations
+
+* `get_pga_schedule()`, `get_tournament_leaderboard()`,
+  `get_player_scorecards()`, `load_pga_schedule()`, `load_pga_leaderboards()`,
+  and `load_pga_hbh()` are deprecated in favor of `load_schedule()`,
+  `load_leaderboard()`, and `load_holes()`. They keep working but now warn
+  once per session.
+
+### Other improvements
+
+* Errors and messages are formatted with the cli package.
+* Hosted-data downloads can be cached across R sessions: set
+  `options(golfastr.cache = "filesystem")` to keep downloads for 24 hours in
+  the package cache directory, or `"off"` to disable caching. The default
+  (`"memory"`) caches for the current session as before.
+* R CMD check now runs on GitHub Actions for every push and pull request.
+
 ### Hosted Season Data
 
 * `load_leaderboard()` and `load_holes()` now load completed PGA Tour

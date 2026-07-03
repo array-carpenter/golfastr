@@ -21,13 +21,13 @@ get_player <- function(name, file_path) {
   matches <- data[grepl(name, data$display_name, ignore.case = TRUE), ]
 
   if (nrow(matches) == 0) {
-    stop("No player found matching '", name, "'")
+    cli::cli_abort("No player found matching {.val {name}}.")
   }
 
   # Check if multiple players matched
   unique_players <- unique(matches$display_name)
   if (length(unique_players) > 1) {
-    message("Multiple players found: ", paste(unique_players, collapse = ", "))
+    cli::cli_inform("Multiple players found: {unique_players}")
   }
 
   # Sort by tournament date (using event_id as proxy)
@@ -110,8 +110,7 @@ get_majors <- function(year, file_path) {
   majors <- data[is_major, ]
 
   if (nrow(majors) == 0) {
-    message("No major championships found for ", year,
-            ". They may not be loaded yet.")
+    cli::cli_inform("No major championships found for {year}. They may not be loaded yet.")
     return(tibble::tibble())
   }
 

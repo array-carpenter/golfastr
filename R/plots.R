@@ -13,7 +13,10 @@
 #' }
 plot_player <- function(name, year = NULL, file_path) {
   if (!requireNamespace("ggplot2", quietly = TRUE)) {
-    stop("Package 'ggplot2' required. Install with: install.packages('ggplot2')")
+    cli::cli_abort(c(
+      "Package {.pkg ggplot2} is required.",
+      "i" = "Install it with {.code install.packages(\"ggplot2\")}."
+    ))
   }
 
   data <- get_player(name, file_path = file_path)
@@ -66,7 +69,10 @@ plot_player <- function(name, year = NULL, file_path) {
 #' }
 plot_leaderboard <- function(tournament, year, top_n = 10, file_path) {
   if (!requireNamespace("ggplot2", quietly = TRUE)) {
-    stop("Package 'ggplot2' required")
+    cli::cli_abort(c(
+      "Package {.pkg ggplot2} is required.",
+      "i" = "Install it with {.code install.packages(\"ggplot2\")}."
+    ))
   }
 
   data <- load_data(file_path, tournament = tournament)
@@ -108,7 +114,10 @@ plot_leaderboard <- function(tournament, year, top_n = 10, file_path) {
 #' }
 plot_wins <- function(year = NULL, top_n = 10, file_path) {
   if (!requireNamespace("ggplot2", quietly = TRUE)) {
-    stop("Package 'ggplot2' required")
+    cli::cli_abort(c(
+      "Package {.pkg ggplot2} is required.",
+      "i" = "Install it with {.code install.packages(\"ggplot2\")}."
+    ))
   }
 
   data <- win_leaders(year = year, top_n = top_n, file_path = file_path)
@@ -144,7 +153,10 @@ plot_wins <- function(year = NULL, top_n = 10, file_path) {
 #' }
 plot_scoring <- function(tournament, year, file_path) {
   if (!requireNamespace("ggplot2", quietly = TRUE)) {
-    stop("Package 'ggplot2' required")
+    cli::cli_abort(c(
+      "Package {.pkg ggplot2} is required.",
+      "i" = "Install it with {.code install.packages(\"ggplot2\")}."
+    ))
   }
 
   data <- load_data(file_path, tournament = tournament)
@@ -181,7 +193,10 @@ plot_scoring <- function(tournament, year, file_path) {
 #' }
 plot_head_to_head <- function(players, year = NULL, file_path) {
   if (!requireNamespace("ggplot2", quietly = TRUE)) {
-    stop("Package 'ggplot2' required")
+    cli::cli_abort(c(
+      "Package {.pkg ggplot2} is required.",
+      "i" = "Install it with {.code install.packages(\"ggplot2\")}."
+    ))
   }
 
   all_data <- lapply(players, function(p) {
@@ -196,7 +211,7 @@ plot_head_to_head <- function(players, year = NULL, file_path) {
 
   all_data <- all_data[!sapply(all_data, is.null)]
   if (length(all_data) == 0) {
-    stop("No players found")
+    cli::cli_abort("No players found.")
   }
 
   combined <- dplyr::bind_rows(all_data)

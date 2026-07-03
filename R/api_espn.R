@@ -23,7 +23,10 @@ get_espn_tour_code <- function(tour = "pga") {
    champions = "champions"
  )
  if (!tour %in% names(codes)) {
-   stop("Unknown tour: ", tour, ". Supported: ", paste(names(codes), collapse = ", "))
+   cli::cli_abort(c(
+     "Unknown tour {.val {tour}}.",
+     "i" = "Supported tours: {.val {names(codes)}}."
+   ))
  }
  codes[[tour]]
 }

@@ -52,8 +52,7 @@ load_leaderboard <- function(year = as.integer(format(Sys.Date(), "%Y")),
         return(hosted)
       }
       if (!is.null(tournament)) {
-        message("Tournament not in hosted data (may be in progress); ",
-                "fetching from ESPN...")
+        cli::cli_inform("Tournament not in hosted data (may be in progress); fetching from ESPN...")
       }
     }
   }
@@ -69,7 +68,10 @@ load_leaderboard <- function(year = as.integer(format(Sys.Date(), "%Y")),
       # Try name match
       matches <- grepl(tournament, schedule$tournament_name, ignore.case = TRUE)
       if (!any(matches)) {
-        stop("Tournament not found: ", tournament)
+        cli::cli_abort(c(
+          "Tournament not found: {.val {tournament}}.",
+          "i" = "Use {.code load_schedule({year})} to see the season schedule."
+        ))
       }
       schedule <- schedule[matches, ]
     }
@@ -95,7 +97,7 @@ load_leaderboard <- function(year = as.integer(format(Sys.Date(), "%Y")),
         all_data[[length(all_data) + 1]] <- lb
       }
     }, error = function(e) {
-      message(sprintf("Failed to load %s: %s", tourn_name, e$message))
+      cli::cli_inform("Failed to load {tourn_name}: {conditionMessage(e)}")
     })
   }
 

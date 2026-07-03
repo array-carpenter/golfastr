@@ -55,7 +55,7 @@ load_pga_leaderboards <- function(years,
           all_data[[length(all_data) + 1]] <- lb
         }
       }, error = function(e) {
-        message(sprintf("Failed to load event %s: %s", event_id, e$message))
+        cli::cli_inform("Failed to load event {event_id}: {conditionMessage(e)}")
       })
     }
   }
@@ -128,7 +128,7 @@ load_pga_hbh <- function(years,
           all_data[[length(all_data) + 1]] <- summary$scorecards
         }
       }, error = function(e) {
-        message(sprintf("Failed to load event %s: %s", event_id, e$message))
+        cli::cli_inform("Failed to load event {event_id}: {conditionMessage(e)}")
       })
     }
   }

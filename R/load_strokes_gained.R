@@ -41,7 +41,7 @@ load_strokes_gained <- function(player = NULL, use_bundled = FALSE) {
   } else {
     data <- sg_from_release()
     if (is.null(data)) {
-      message("Using bundled strokes gained data (may not be latest).")
+      cli::cli_inform("Using bundled strokes gained data (may not be latest).")
       data <- strokes_gained
     }
   }
@@ -49,7 +49,7 @@ load_strokes_gained <- function(player = NULL, use_bundled = FALSE) {
   if (!is.null(player)) {
     matches <- grepl(player, data$player_name, ignore.case = TRUE)
     if (!any(matches)) {
-      stop("No player found matching '", player, "'")
+      cli::cli_abort("No player found matching {.val {player}}.")
     }
     data <- data[matches, ]
   }

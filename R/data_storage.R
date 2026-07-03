@@ -28,7 +28,7 @@ save_to_rds <- function(data,
   }
 
   saveRDS(data, file_path)
-  message("Saved ", nrow(data), " rows to ", file_path)
+  cli::cli_inform("Saved {nrow(data)} rows to {.path {file_path}}")
   invisible(NULL)
 }
 
@@ -44,7 +44,7 @@ save_to_rds <- function(data,
 #' }
 load_from_rds <- function(file_path) {
   if (!file.exists(file_path)) {
-    stop("File not found: ", file_path)
+    cli::cli_abort("File not found: {.path {file_path}}")
   }
   tibble::as_tibble(readRDS(file_path))
 }
@@ -69,7 +69,10 @@ save_to_parquet <- function(data,
                             append = TRUE) {
 
   if (!requireNamespace("arrow", quietly = TRUE)) {
-    stop("Package 'arrow' required. Install with: install.packages('arrow')")
+    cli::cli_abort(c(
+      "Package {.pkg arrow} is required.",
+      "i" = "Install it with {.code install.packages(\"arrow\")}."
+    ))
   }
 
   dir.create(dirname(file_path), showWarnings = FALSE, recursive = TRUE)
@@ -84,7 +87,7 @@ save_to_parquet <- function(data,
   }
 
   arrow::write_parquet(data, file_path)
-  message("Saved ", nrow(data), " rows to ", file_path)
+  cli::cli_inform("Saved {nrow(data)} rows to {.path {file_path}}")
   invisible(NULL)
 }
 
@@ -102,11 +105,14 @@ save_to_parquet <- function(data,
 #' }
 load_from_parquet <- function(file_path) {
   if (!requireNamespace("arrow", quietly = TRUE)) {
-    stop("Package 'arrow' required. Install with: install.packages('arrow')")
+    cli::cli_abort(c(
+      "Package {.pkg arrow} is required.",
+      "i" = "Install it with {.code install.packages(\"arrow\")}."
+    ))
   }
 
   if (!file.exists(file_path)) {
-    stop("File not found: ", file_path)
+    cli::cli_abort("File not found: {.path {file_path}}")
   }
 
   tibble::as_tibble(arrow::read_parquet(file_path))
@@ -136,7 +142,10 @@ load_data <- function(file_path, tournament = NULL) {
   } else if (ext == "rds") {
     load_from_rds(file_path)
   } else {
-    stop("Unsupported file type: ", ext, ". Use .rds or .parquet")
+    cli::cli_abort(c(
+      "Unsupported file type {.val {ext}}.",
+      "i" = "Use {.val .rds} or {.val .parquet}."
+    ))
   }
 
   if (!is.null(tournament)) {
