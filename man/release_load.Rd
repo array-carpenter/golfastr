@@ -17,7 +17,13 @@ A tibble, or NULL if the download fails (e.g., no internet
 }
 \description{
 Internal helper that downloads pre-built season data files from the
-package's GitHub releases. Downloads are cached for the session so
-repeated calls don't re-fetch the same file.
+package's GitHub releases. Caching behavior is controlled by
+`options(golfastr.cache = ...)`:
+}
+\details{
+* `"memory"` (default): downloads are kept for the current session.
+* `"filesystem"`: downloads are stored under the package cache directory
+  (see [cache_info()]) and reused for 24 hours across sessions.
+* `"off"`: every call downloads fresh.
 }
 \keyword{internal}

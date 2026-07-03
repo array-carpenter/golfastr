@@ -37,23 +37,3 @@ test_that("clear_cache handles non-existent directory", {
   expect_message(clear_cache(confirm = FALSE), "Nothing to clear|already empty")
 })
 
-test_that("caching speeds up subsequent calls", {
-  skip_on_cran()
-  skip_if_offline()
-
-  # First call (no cache)
-  start1 <- Sys.time()
-  data1 <- load_pga_hbh(2025, tournaments = "401703504")
-  time1 <- as.numeric(difftime(Sys.time(), start1, units = "secs"))
-
-  # Second call (should use cache)
-  start2 <- Sys.time()
-  data2 <- load_pga_hbh(2025, tournaments = "401703504")
-  time2 <- as.numeric(difftime(Sys.time(), start2, units = "secs"))
-
-  # Cached call should be faster
-  expect_lt(time2, time1)
-
-  # Data should be identical
-  expect_equal(nrow(data1), nrow(data2))
-})

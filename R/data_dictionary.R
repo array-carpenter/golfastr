@@ -15,77 +15,63 @@ pga_field_descriptions <- function(data_type = c("leaderboard", "holes")) {
   if (data_type == "leaderboard") {
     tibble::tibble(
       field = c(
-        "athlete_id",
-        "athlete_uid",
         "position",
-        "movement",
-        "amateur",
-        "full_name",
-        "display_name",
+        "player_id",
+        "player_name",
         "total_score",
-        "score_display",
+        "score_to_par",
+        "status",
+        "tournament_id",
         "tournament_name",
-        "event_id",
-        "year",
-        "round1",
-        "round2",
-        "round3",
-        "round4",
-        "total",
-        "thru",
-        "today"
+        "year"
       ),
       description = c(
+        "Final tournament standing",
         "ESPN athlete ID",
-        "ESPN unique identifier for athlete",
-        "Current tournament position (1, 2, T3, etc.)",
-        "Position change from previous round (numeric)",
-        "Whether player is an amateur (TRUE/FALSE)",
-        "Player's full name",
-        "Player's display name",
-        "Total score relative to par (numeric)",
-        "Displayed score string (e.g., '-10', 'E', '+5')",
-        "Name of the tournament",
+        "Player display name",
+        "Total strokes across completed rounds",
+        "Score relative to par (e.g., '-11', 'E', '+5')",
+        "Player status (live API only)",
         "ESPN event ID",
-        "Tournament year",
-        "Round 1 score",
-        "Round 2 score",
-        "Round 3 score",
-        "Round 4 score",
-        "Total strokes",
-        "Holes completed in current round",
-        "Today's score relative to par"
+        "Name of the tournament",
+        "Tournament year"
       )
     )
   } else {
     tibble::tibble(
       field = c(
-        "athlete_id",
-        "athlete_name",
-        "event_id",
+        "player_id",
+        "player_name",
+        "position",
+        "tournament_id",
         "tournament_name",
-        "round_num",
-        "hole_num",
+        "round",
+        "hole",
         "par",
         "score",
         "score_type",
-        "score_display",
-        "cumulative",
-        "year"
+        "year",
+        "field_avg",
+        "to_par",
+        "vs_field",
+        "cume_to_par"
       ),
       description = c(
         "ESPN athlete ID",
-        "Player's name",
+        "Player display name",
+        "Final leaderboard standing",
         "ESPN event ID",
         "Name of the tournament",
-        "Round number (1-4)",
+        "Round number (5 = playoff)",
         "Hole number (1-18)",
         "Par for the hole",
         "Strokes taken on the hole",
         "Score classification (EAGLE, BIRDIE, PAR, BOGEY, etc.)",
-        "Display string for the score",
-        "Cumulative score through the hole",
-        "Tournament year"
+        "Tournament year",
+        "Field scoring average on the hole in that round (hosted data only)",
+        "Score relative to par on the hole (hosted data only)",
+        "Strokes vs the field average on the hole (hosted data only)",
+        "Running tournament score to par through the hole, playoff holes included (hosted data only)"
       )
     )
   }

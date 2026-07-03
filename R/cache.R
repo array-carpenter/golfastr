@@ -31,7 +31,7 @@ clear_cache <- function(confirm = TRUE) {
     return(invisible(NULL))
   }
 
-  files <- list.files(cache_dir, full.names = TRUE)
+  files <- list.files(cache_dir, full.names = TRUE, recursive = TRUE)
 
   if (length(files) == 0) {
     cli::cli_inform("Cache is already empty.")
@@ -47,7 +47,7 @@ clear_cache <- function(confirm = TRUE) {
     }
   }
 
-  unlink(files)
+  unlink(list.files(cache_dir, full.names = TRUE), recursive = TRUE)
   cli::cli_inform("Cleared {length(files)} file{?s} from cache.")
   invisible(NULL)
 }
@@ -71,7 +71,7 @@ cache_info <- function() {
     return(invisible(NULL))
   }
 
-  files <- list.files(cache_dir, full.names = TRUE)
+  files <- list.files(cache_dir, full.names = TRUE, recursive = TRUE)
   n_files <- length(files)
 
   if (n_files == 0) {
@@ -96,7 +96,7 @@ cache_info <- function() {
 
   if (n_files > 0) {
     cli::cli_inform("Cached files:")
-    for (f in basename(files)) {
+    for (f in list.files(cache_dir, recursive = TRUE)) {
       cli::cli_inform("  - {f}")
     }
   }
