@@ -113,5 +113,6 @@ load_schedule(2026, tour = "lpga")
 load_leaderboard(2026, "Adelaide", tour = "liv")
 ```
 
-Field-level documentation for every column lives in
-`vignette("field-descriptions")` and in `pga_field_descriptions()`.
+Field-level documentation for every column lives in the
+[Field descriptions](https://golfastr.com/articles/field-descriptions.html)
+article and in `pga_field_descriptions()`.
