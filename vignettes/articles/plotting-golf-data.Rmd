@@ -1,0 +1,83 @@
+---
+title: "Plot Golf Data with ggplot2"
+description: >
+  Load a tournament leaderboard and make a simple scoring chart.
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{Plot Golf Data with ggplot2}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>",
+  fig.width = 8,
+  fig.height = 5
+)
+```
+
+This example shows the leading scores from the 2025 Masters Tournament.
+The chart uses hosted data from `golfastr`.
+
+## Load the data
+
+Load `golfastr`, `dplyr`, and `ggplot2`.
+Then request the leaderboard by year and tournament name.
+
+```{r load-data}
+library(golfastr)
+library(dplyr)
+library(ggplot2)
+
+masters <- load_leaderboard(2025, "Masters")
+
+leaders <- masters |>
+  mutate(score_to_par = as.numeric(score_to_par)) |>
+  arrange(score_to_par, total_score) |>
+  slice_head(n = 15)
+
+leaders |>
+  select(position, player_name, score_to_par) |>
+  head()
+```
+
+`score_to_par` is the number of strokes above or below par.
+A negative value is below par.
+
+## Make the chart
+
+Use `reorder()` to sort the players by score.
+Use `coord_flip()` to make the names easy to read.
+
+```{r plot-leaders, fig.alt="Horizontal bar chart of the 15 leading scores at the 2025 Masters Tournament."}
+ggplot(
+  leaders,
+  aes(
+    x = reorder(player_name, score_to_par),
+    y = score_to_par
+  )
+) +
+  geom_col(fill = "#2d6a4f", width = 0.72) +
+  geom_text(
+    aes(label = score_to_par),
+    hjust = 1.2,
+    color = "white",
+    size = 3.5
+  ) +
+  coord_flip() +
+  labs(
+    title = "2025 Masters Tournament leaders",
+    subtitle = "Final score relative to par",
+    x = NULL,
+    y = "Score relative to par",
+    caption = "Data: golfastr"
+  ) +
+  theme_minimal(base_size = 12) +
+  theme(panel.grid.major.y = element_blank())
+```
+
+You can use the same code for another tournament.
+Change the year and tournament name in `load_leaderboard()`.
+

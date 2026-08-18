@@ -66,6 +66,27 @@ download_existing <- function(tag, filename) {
   )
 }
 
+upload_with_retry <- function(path, tag, attempts = 3L) {
+  for (attempt in seq_len(attempts)) {
+    error <- tryCatch(
+      {
+        piggyback::pb_upload(path, repo = repo, tag = tag, overwrite = TRUE)
+        NULL
+      },
+      error = identity
+    )
+    if (is.null(error)) return(invisible(TRUE))
+    if (attempt == attempts) stop(error)
+
+    wait <- 2^attempt
+    message(
+      "Upload failed (attempt ", attempt, "/", attempts, "): ",
+      conditionMessage(error), ". Retrying in ", wait, " seconds..."
+    )
+    Sys.sleep(wait)
+  }
+}
+
 for (year in years) {
   message("=== Season ", year, " ===")
 
@@ -95,6 +116,9 @@ for (year in years) {
     Sys.sleep(0.2)
   }
   leaderboards <- dplyr::bind_rows(lb_all)
+  if (nrow(leaderboards) == 0) {
+    stop("No leaderboard data was fetched. Existing assets were not changed.")
+  }
   save_asset(leaderboards, sprintf("leaderboards_%d", year))
   message("Leaderboards: ", nrow(leaderboards), " rows")
 
@@ -102,7 +126,10 @@ for (year in years) {
   holes_file <- sprintf("holes_%d.rds", year)
   existing <- download_existing("holes", holes_file)
   have_ids <- if (!is.null(existing)) unique(existing$tournament_id) else character(0)
-  todo <- completed[!completed$event_id %in% have_ids, ]
+  todo <- completed[
+    !completed$event_id %in% have_ids &
+      completed$event_id %in% unique(leaderboards$tournament_id),
+  ]
   message(nrow(todo), " tournaments need hole-by-hole data")
 
   holes_new <- list()
@@ -115,7 +142,11 @@ for (year in years) {
 
     for (j in seq_len(nrow(lb))) {
       sc <- tryCatch(golfastr:::fetch_player_holes(eid, lb$player_id[j], "pga"),
-                     error = function(e) NULL)
+                     error = function(e) {
+                       message("    failed for ", lb$player_name[j], ": ",
+                               conditionMessage(e))
+                       NULL
+                     })
       if (is.null(sc) || nrow(sc) == 0) next
       sc$player_id <- lb$player_id[j]
       sc$player_name <- lb$player_name[j]
@@ -153,7 +184,7 @@ if (requireNamespace("piggyback", quietly = TRUE)) {
         path <- file.path(release_dir, paste0(f, ext))
         if (!file.exists(path)) next
         message("Uploading ", basename(path), " to release '", tag, "'...")
-        piggyback::pb_upload(path, repo = repo, tag = tag, overwrite = TRUE)
+        upload_with_retry(path, tag)
       }
     }
   }

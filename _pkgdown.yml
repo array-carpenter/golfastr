@@ -15,6 +15,14 @@ navbar:
       href: https://github.com/array-carpenter/golfastr
       aria-label: GitHub
 
+articles:
+- title: Get started
+  navbar: ~
+  contents:
+  - articles/golfastr
+  - articles/plotting-golf-data
+  - articles/field-descriptions
+
 reference:
 - title: Load data
   desc: >
