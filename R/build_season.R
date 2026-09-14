@@ -30,7 +30,7 @@ build_season <- function(year, file_path, tour = "pga") {
   if (file.exists(file_path)) {
     tryCatch({
       existing <- if (ext == "rds") load_from_rds(file_path) else load_from_parquet(file_path)
-      existing_events <- unique(existing$event_id)
+      existing_events <- existing_event_ids(existing)
       cli::cli_inform("Already saved: {length(existing_events)} tournaments.")
     }, error = function(e) NULL)
   }
@@ -59,6 +59,7 @@ build_season <- function(year, file_path, tour = "pga") {
       # Add metadata
       data$tournament_name <- tournament_name
       data$event_id <- event_id
+      data$tournament_id <- event_id
       data$year <- year
 
       # Save to file
@@ -113,7 +114,7 @@ check_season <- function(year, file_path, tour = "pga") {
   if (file.exists(file_path)) {
     tryCatch({
       existing <- if (ext == "rds") load_from_rds(file_path) else load_from_parquet(file_path)
-      existing_events <- unique(existing$event_id)
+      existing_events <- existing_event_ids(existing)
     }, error = function(e) NULL)
   }
 

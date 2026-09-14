@@ -87,13 +87,23 @@ ggplot(race, aes(hole_index, to_par, color = player_name)) +
   theme_minimal()
 ```
 
-## Strokes gained
+## Analysis
 
-Per-round strokes gained averages for the current season ship with the
-package:
+`load_leaderboard()` returns a tibble you can pass straight into the
+summary helpers:
 
 ```{r}
-load_strokes_gained("Scheffler")
+player_summary("Scheffler", data = season)
+win_leaders(data = season, top_n = 5)
+```
+
+## Strokes gained
+
+Per-round strokes gained averages ship with the package. Filter by player
+and season. `"E"` in `score_to_par` means even par.
+
+```{r}
+load_strokes_gained("Scheffler", use_bundled = TRUE, year = 2026)
 ```
 
 ## Live data and other tours

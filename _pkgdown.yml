@@ -1,5 +1,9 @@
 url: https://golfastr.com/
 
+home:
+  title: golfastr
+  description: Fast, tidy professional golf data in R
+
 template:
   bootstrap: 5
   bslib:
@@ -43,7 +47,9 @@ reference:
   - load_tournament_detail
 
 - title: Analysis
-  desc: Summaries and leaders computed from locally stored season data.
+  desc: >
+    Summaries and leaders. Pass a tibble from load_leaderboard() via
+    the data argument, or a local file via file_path.
   contents:
   - player_summary
   - compare_players

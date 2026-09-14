@@ -12,7 +12,12 @@ are available in R via `pga_field_descriptions()`.
 
 ## Leaderboard
 
-Returned by `load_leaderboard()` and `leaderboard()`.
+Returned by `load_leaderboard()`. `score_to_par` is text from ESPN:
+`"-11"`, `"+3"`, or `"E"` for even par. Convert `"E"` to `0` before you
+treat the column as numeric.
+
+`leaderboard()` is a compact display helper. It returns `Pos`, `Player`,
+`Score`, and `Total` from the same underlying data.
 
 ```{r}
 knitr::kable(pga_field_descriptions("leaderboard"))

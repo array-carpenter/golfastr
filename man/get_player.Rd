@@ -4,25 +4,27 @@
 \alias{get_player}
 \title{Get Player Results}
 \usage{
-get_player(name, file_path)
+get_player(name, file_path = NULL, data = NULL)
 }
 \arguments{
 \item{name}{Player name (partial match, case-insensitive)}
 
 \item{file_path}{Path to data file (.rds or .parquet)}
+
+\item{data}{Optional leaderboard data frame. Use this instead of
+`file_path` when the data is already in memory.}
 }
 \value{
 Tibble with player's tournament results
 }
 \description{
-Look up a player's results across all tournaments in a data file.
+Look up a player's results across tournaments. Pass a data frame from
+[load_leaderboard()] or a local file created with [save_to_rds()].
 }
 \examples{
 \dontrun{
-# Get Rory McIlroy's results
-get_player("McIlroy", file_path = "golf_data.rds")
-
-# Get Scottie Scheffler's results
+season <- load_leaderboard(2025)
+get_player("McIlroy", data = season)
 get_player("Scheffler", file_path = "golf_data.rds")
 }
 }

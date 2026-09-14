@@ -11,7 +11,8 @@
 #' @param year Season year (e.g., 2026). Defaults to current year.
 #' @param tournament Tournament identifier - either event_id or partial name match.
 #' @param top_n Number of top finishers to include. Default NULL returns all.
-#' @param tour Tour identifier. Currently supports "pga" (default).
+#' @param tour Tour identifier: `"pga"` (default), `"liv"`, `"lpga"`,
+#'   `"euro"`, or `"champions"`.
 #' @param live If TRUE, skip the hosted data and fetch directly from the
 #'   ESPN API. Defaults to FALSE.
 #' @return A tibble with hole-by-hole data including:
@@ -136,7 +137,7 @@ load_holes <- function(year = as.integer(format(Sys.Date(), "%Y")),
 }
 
 #' Fetch hole-by-hole for a single player
-#' @keywords internal
+#' @noRd
 fetch_player_holes <- function(event_id, player_id, tour = "pga") {
   endpoint <- paste0("events/", event_id, "/competitions/", event_id,
                      "/competitors/", player_id, "/linescores")

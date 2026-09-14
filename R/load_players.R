@@ -5,7 +5,8 @@
 #' recent tournament leaderboards.
 #'
 #' @param year Season year to pull players from. Defaults to current year.
-#' @param tour Tour identifier. Currently supports "pga" (default).
+#' @param tour Tour identifier: `"pga"` (default), `"liv"`, `"lpga"`,
+#'   `"euro"`, or `"champions"`.
 #' @return A tibble with player data including:
 #'   \itemize{
 #'     \item \code{player_id}: ESPN athlete ID

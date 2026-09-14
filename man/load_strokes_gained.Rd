@@ -4,13 +4,15 @@
 \alias{load_strokes_gained}
 \title{Load Strokes Gained Statistics}
 \usage{
-load_strokes_gained(player = NULL, use_bundled = FALSE)
+load_strokes_gained(player = NULL, use_bundled = FALSE, year = NULL)
 }
 \arguments{
 \item{player}{Optional player name filter (partial match, case-insensitive).}
 
 \item{use_bundled}{If \code{TRUE}, skip the download and use the dataset
 bundled with the package. Defaults to \code{FALSE}.}
+
+\item{year}{Optional season year filter (e.g., 2026).}
 }
 \value{
 A tibble with one row per player and columns:
@@ -39,12 +41,9 @@ Falls back to the bundled dataset shipped with the package if the download
 fails (e.g., no internet connection).
 }
 \examples{
-# Get all strokes gained data (downloads latest)
-sg <- load_strokes_gained()
-
-# Use bundled data (no internet needed)
 sg <- load_strokes_gained(use_bundled = TRUE)
-
-# Look up a specific player
-load_strokes_gained("Scheffler")
+load_strokes_gained("Scheffler", use_bundled = TRUE, year = 2026)
+\donttest{
+load_strokes_gained()
+}
 }

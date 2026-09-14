@@ -4,25 +4,26 @@
 \alias{get_winners}
 \title{Get Tournament Winners}
 \usage{
-get_winners(year = NULL, file_path)
+get_winners(year = NULL, file_path = NULL, data = NULL)
 }
 \arguments{
 \item{year}{Optional year filter}
 
 \item{file_path}{Path to data file (.rds or .parquet)}
+
+\item{data}{Optional leaderboard data frame. Use this instead of
+`file_path` when the data is already in memory.}
 }
 \value{
 Tibble with tournament winners
 }
 \description{
-Get all tournament winners from a data file.
+Get all tournament winners from leaderboard data.
 }
 \examples{
 \dontrun{
-# Get all winners
-get_winners(file_path = "golf_data.rds")
-
-# Get 2025 winners
+season <- load_leaderboard(2025)
+get_winners(data = season)
 get_winners(2025, file_path = "golf_data.rds")
 }
 }

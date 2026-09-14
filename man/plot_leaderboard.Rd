@@ -4,7 +4,7 @@
 \alias{plot_leaderboard}
 \title{Plot Tournament Leaderboard}
 \usage{
-plot_leaderboard(tournament, year, top_n = 10, file_path)
+plot_leaderboard(tournament, year, top_n = 10, file_path = NULL, data = NULL)
 }
 \arguments{
 \item{tournament}{Tournament name}
@@ -14,6 +14,9 @@ plot_leaderboard(tournament, year, top_n = 10, file_path)
 \item{top_n}{Number of players to show}
 
 \item{file_path}{Path to data file (.rds or .parquet)}
+
+\item{data}{Optional leaderboard data frame. Use this instead of
+`file_path` when the data is already in memory.}
 }
 \value{
 ggplot object
@@ -23,6 +26,7 @@ Bar chart of tournament leaderboard.
 }
 \examples{
 \dontrun{
-plot_leaderboard("Masters", 2025, file_path = "golf_data.rds")
+season <- load_leaderboard(2025)
+plot_leaderboard("Masters", 2025, data = season)
 }
 }

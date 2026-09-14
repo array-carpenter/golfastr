@@ -4,12 +4,15 @@
 \alias{tournament_history}
 \title{Tournament History}
 \usage{
-tournament_history(tournament, file_path)
+tournament_history(tournament, file_path = NULL, data = NULL)
 }
 \arguments{
 \item{tournament}{Tournament name (partial match)}
 
 \item{file_path}{Path to data file (.rds or .parquet)}
+
+\item{data}{Optional leaderboard data frame. Use this instead of
+`file_path` when the data is already in memory.}
 }
 \value{
 Tibble with tournament winners by year
@@ -19,6 +22,7 @@ Get historical results for a specific tournament.
 }
 \examples{
 \dontrun{
-tournament_history("Masters", file_path = "golf_data.rds")
+season <- load_leaderboard(2025)
+tournament_history("Masters", data = season)
 }
 }

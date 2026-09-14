@@ -5,15 +5,18 @@
 #' @param name Player name (partial match)
 #' @param year Optional year filter
 #' @param file_path Path to data file (.rds or .parquet)
+#' @param data Optional leaderboard data frame. Use this instead of
+#'   `file_path` when the data is already in memory.
 #' @return Tibble with season statistics
 #' @export
 #' @examples
 #' \dontrun{
-#' player_summary("Scheffler", file_path = "golf_data.rds")
+#' season <- load_leaderboard(2025)
+#' player_summary("Scheffler", data = season)
 #' player_summary("McIlroy", year = 2025, file_path = "golf_data.rds")
 #' }
-player_summary <- function(name, year = NULL, file_path) {
-  data <- get_player(name, file_path = file_path)
+player_summary <- function(name, year = NULL, file_path = NULL, data = NULL) {
+  data <- get_player(name, file_path = file_path, data = data)
 
   if (!is.null(year)) {
     data <- data[data$year == year, ]
@@ -25,7 +28,7 @@ player_summary <- function(name, year = NULL, file_path) {
 
   player_name <- data$display_name[1]
 
-  summary_stats <- tibble::tibble(
+  tibble::tibble(
     player = player_name,
     tournaments = nrow(data),
     wins = sum(data$position == 1, na.rm = TRUE),
@@ -36,8 +39,6 @@ player_summary <- function(name, year = NULL, file_path) {
     best_finish = min(data$position, na.rm = TRUE),
     worst_finish = max(data$position, na.rm = TRUE)
   )
-
-  return(summary_stats)
 }
 
 #' Compare Players
@@ -47,48 +48,54 @@ player_summary <- function(name, year = NULL, file_path) {
 #' @param players Vector of player names
 #' @param year Optional year filter
 #' @param file_path Path to data file (.rds or .parquet)
+#' @param data Optional leaderboard data frame. Use this instead of
+#'   `file_path` when the data is already in memory.
 #' @return Tibble comparing player statistics
 #' @export
 #' @examples
 #' \dontrun{
-#' compare_players(c("Scheffler", "McIlroy", "Hovland"), file_path = "golf_data.rds")
+#' season <- load_leaderboard(2025)
+#' compare_players(c("Scheffler", "McIlroy"), data = season)
 #' }
-compare_players <- function(players, year = NULL, file_path) {
+compare_players <- function(players, year = NULL, file_path = NULL,
+                            data = NULL) {
   results <- lapply(players, function(p) {
     tryCatch({
-      player_summary(p, year = year, file_path = file_path)
+      player_summary(p, year = year, file_path = file_path, data = data)
     }, error = function(e) NULL)
   })
 
-  # Remove NULLs
-  results <- results[!sapply(results, is.null)]
+  results <- results[!vapply(results, is.null, logical(1))]
 
   if (length(results) == 0) {
     cli::cli_abort("No players found.")
   }
 
   comparison <- dplyr::bind_rows(results)
-  comparison <- comparison[order(comparison$avg_finish), ]
-
-  return(comparison)
+  comparison[order(comparison$avg_finish), ]
 }
 
 #' Leaderboard Snapshot
 #'
-#' Get formatted leaderboard for display.
+#' Get a compact leaderboard for display.
 #'
 #' @param tournament Tournament name
 #' @param year Season year
 #' @param top_n Number of players to show (default: 10)
 #' @param file_path Path to data file (.rds or .parquet)
+#' @param data Optional leaderboard data frame. Use this instead of
+#'   `file_path` when the data is already in memory.
 #' @return Formatted tibble for display
 #' @export
 #' @examples
 #' \dontrun{
-#' leaderboard("Masters", 2025, file_path = "golf_data.rds")
+#' season <- load_leaderboard(2025)
+#' leaderboard("Masters", 2025, data = season)
 #' }
-leaderboard <- function(tournament, year, top_n = 10, file_path) {
-  data <- load_data(file_path, tournament = tournament)
+leaderboard <- function(tournament, year, top_n = 10, file_path = NULL,
+                        data = NULL) {
+  data <- resolve_leaderboard_data(data = data, file_path = file_path,
+                                   tournament = tournament)
   data <- data[data$year == year, ]
 
   if (nrow(data) == 0) {
@@ -96,12 +103,12 @@ leaderboard <- function(tournament, year, top_n = 10, file_path) {
   }
 
   data <- data[order(data$position), ]
-  data <- head(data, top_n)
+  data <- utils::head(data, top_n)
 
   result <- data[, c("position", "display_name", "score_display", "total_score")]
   names(result) <- c("Pos", "Player", "Score", "Total")
 
-  return(result)
+  result
 }
 
 #' Field Strength Analysis
@@ -111,14 +118,18 @@ leaderboard <- function(tournament, year, top_n = 10, file_path) {
 #' @param tournament Tournament name
 #' @param year Season year
 #' @param file_path Path to data file (.rds or .parquet)
+#' @param data Optional leaderboard data frame. Use this instead of
+#'   `file_path` when the data is already in memory.
 #' @return Tibble with field statistics
 #' @export
 #' @examples
 #' \dontrun{
-#' field_strength("Masters", 2025, file_path = "golf_data.rds")
+#' season <- load_leaderboard(2025)
+#' field_strength("Masters", 2025, data = season)
 #' }
-field_strength <- function(tournament, year, file_path) {
-  data <- load_data(file_path, tournament = tournament)
+field_strength <- function(tournament, year, file_path = NULL, data = NULL) {
+  data <- resolve_leaderboard_data(data = data, file_path = file_path,
+                                   tournament = tournament)
   data <- data[data$year == year, ]
 
   if (nrow(data) == 0) {
@@ -143,14 +154,18 @@ field_strength <- function(tournament, year, file_path) {
 #' @param year Optional year filter
 #' @param top_n Number of players to show
 #' @param file_path Path to data file (.rds or .parquet)
+#' @param data Optional leaderboard data frame. Use this instead of
+#'   `file_path` when the data is already in memory.
 #' @return Tibble with win leaders
 #' @export
 #' @examples
 #' \dontrun{
-#' win_leaders(year = 2025, file_path = "golf_data.rds")
+#' season <- load_leaderboard(2025)
+#' win_leaders(data = season)
 #' }
-win_leaders <- function(year = NULL, top_n = 10, file_path) {
-  data <- load_data(file_path)
+win_leaders <- function(year = NULL, top_n = 10, file_path = NULL,
+                        data = NULL) {
+  data <- resolve_leaderboard_data(data = data, file_path = file_path)
 
   if (!is.null(year)) {
     data <- data[data$year == year, ]
@@ -158,10 +173,12 @@ win_leaders <- function(year = NULL, top_n = 10, file_path) {
 
   winners <- data[data$position == 1, ]
 
-  win_counts <- as.data.frame(table(winners$display_name))
+  win_counts <- as.data.frame(table(winners$display_name),
+                              stringsAsFactors = FALSE)
   names(win_counts) <- c("player", "wins")
+  win_counts$wins <- as.integer(win_counts$wins)
   win_counts <- win_counts[order(-win_counts$wins), ]
-  win_counts <- head(win_counts, top_n)
+  win_counts <- utils::head(win_counts, top_n)
 
   tibble::as_tibble(win_counts)
 }
@@ -174,21 +191,23 @@ win_leaders <- function(year = NULL, top_n = 10, file_path) {
 #' @param min_events Minimum events played
 #' @param top_n Number of players to show
 #' @param file_path Path to data file (.rds or .parquet)
+#' @param data Optional leaderboard data frame. Use this instead of
+#'   `file_path` when the data is already in memory.
 #' @return Tibble with top 10 leaders
 #' @export
 #' @examples
 #' \dontrun{
-#' top10_leaders(year = 2025, file_path = "golf_data.rds")
+#' season <- load_leaderboard(2025)
+#' top10_leaders(data = season)
 #' }
 top10_leaders <- function(year = NULL, min_events = 5, top_n = 10,
-                          file_path) {
-  data <- load_data(file_path)
+                          file_path = NULL, data = NULL) {
+  data <- resolve_leaderboard_data(data = data, file_path = file_path)
 
   if (!is.null(year)) {
     data <- data[data$year == year, ]
   }
 
-  # Calculate stats per player using base R
   players <- unique(data$display_name)
 
   player_stats <- lapply(players, function(p) {
@@ -201,14 +220,13 @@ top10_leaders <- function(year = NULL, min_events = 5, top_n = 10,
   })
 
   player_stats <- dplyr::bind_rows(player_stats)
-  player_stats$top_10_pct <- round(player_stats$top_10s / player_stats$events * 100, 1)
+  player_stats$top_10_pct <- round(
+    player_stats$top_10s / player_stats$events * 100, 1
+  )
 
-  # Filter and sort
   player_stats <- player_stats[player_stats$events >= min_events, ]
   player_stats <- player_stats[order(-player_stats$top_10s), ]
-  player_stats <- head(player_stats, top_n)
-
-  return(player_stats)
+  utils::head(player_stats, top_n)
 }
 
 #' Scoring Average Leaders
@@ -219,21 +237,23 @@ top10_leaders <- function(year = NULL, min_events = 5, top_n = 10,
 #' @param min_events Minimum events played
 #' @param top_n Number of players to show
 #' @param file_path Path to data file (.rds or .parquet)
+#' @param data Optional leaderboard data frame. Use this instead of
+#'   `file_path` when the data is already in memory.
 #' @return Tibble with scoring average leaders
 #' @export
 #' @examples
 #' \dontrun{
-#' scoring_avg_leaders(year = 2025, file_path = "golf_data.rds")
+#' season <- load_leaderboard(2025)
+#' scoring_avg_leaders(data = season)
 #' }
 scoring_avg_leaders <- function(year = NULL, min_events = 5, top_n = 10,
-                                file_path) {
-  data <- load_data(file_path)
+                                file_path = NULL, data = NULL) {
+  data <- resolve_leaderboard_data(data = data, file_path = file_path)
 
   if (!is.null(year)) {
     data <- data[data$year == year, ]
   }
 
-  # Filter to valid scores only
   data <- data[!is.na(data$total_score), ]
 
   players <- unique(data$display_name)
@@ -252,9 +272,7 @@ scoring_avg_leaders <- function(year = NULL, min_events = 5, top_n = 10,
   player_stats <- dplyr::bind_rows(player_stats)
   player_stats <- player_stats[player_stats$events >= min_events, ]
   player_stats <- player_stats[order(player_stats$scoring_avg), ]
-  player_stats <- head(player_stats, top_n)
-
-  return(player_stats)
+  utils::head(player_stats, top_n)
 }
 
 #' Made Cuts Percentage
@@ -265,15 +283,18 @@ scoring_avg_leaders <- function(year = NULL, min_events = 5, top_n = 10,
 #' @param min_events Minimum events played
 #' @param top_n Number of players to show
 #' @param file_path Path to data file (.rds or .parquet)
+#' @param data Optional leaderboard data frame. Use this instead of
+#'   `file_path` when the data is already in memory.
 #' @return Tibble with made cuts leaders
 #' @export
 #' @examples
 #' \dontrun{
-#' made_cuts_leaders(year = 2025, file_path = "golf_data.rds")
+#' season <- load_leaderboard(2025)
+#' made_cuts_leaders(data = season)
 #' }
 made_cuts_leaders <- function(year = NULL, min_events = 5, top_n = 10,
-                              file_path) {
-  data <- load_data(file_path)
+                              file_path = NULL, data = NULL) {
+  data <- resolve_leaderboard_data(data = data, file_path = file_path)
 
   if (!is.null(year)) {
     data <- data[data$year == year, ]
@@ -283,8 +304,8 @@ made_cuts_leaders <- function(year = NULL, min_events = 5, top_n = 10,
 
   player_stats <- lapply(players, function(p) {
     pdata <- data[data$display_name == p, ]
-    # Assume made cut if position <= 65 (typical cut line)
-    made_cut <- sum(!is.na(pdata$total_score) & pdata$position <= 65, na.rm = TRUE)
+    made_cut <- sum(!is.na(pdata$total_score) & pdata$position <= 65,
+                    na.rm = TRUE)
     tibble::tibble(
       player = p,
       events = nrow(pdata),
@@ -296,9 +317,7 @@ made_cuts_leaders <- function(year = NULL, min_events = 5, top_n = 10,
   player_stats <- dplyr::bind_rows(player_stats)
   player_stats <- player_stats[player_stats$events >= min_events, ]
   player_stats <- player_stats[order(-player_stats$cut_pct), ]
-  player_stats <- head(player_stats, top_n)
-
-  return(player_stats)
+  utils::head(player_stats, top_n)
 }
 
 #' Tournament History
@@ -307,20 +326,23 @@ made_cuts_leaders <- function(year = NULL, min_events = 5, top_n = 10,
 #'
 #' @param tournament Tournament name (partial match)
 #' @param file_path Path to data file (.rds or .parquet)
+#' @param data Optional leaderboard data frame. Use this instead of
+#'   `file_path` when the data is already in memory.
 #' @return Tibble with tournament winners by year
 #' @export
 #' @examples
 #' \dontrun{
-#' tournament_history("Masters", file_path = "golf_data.rds")
+#' season <- load_leaderboard(2025)
+#' tournament_history("Masters", data = season)
 #' }
-tournament_history <- function(tournament, file_path) {
-  data <- load_data(file_path, tournament = tournament)
+tournament_history <- function(tournament, file_path = NULL, data = NULL) {
+  data <- resolve_leaderboard_data(data = data, file_path = file_path,
+                                   tournament = tournament)
 
   if (nrow(data) == 0) {
     cli::cli_abort("Tournament {.val {tournament}} not found.")
   }
 
-  # Get winners for each year
   winners <- data[data$position == 1, ]
   winners <- winners[order(winners$year), ]
 
@@ -328,5 +350,5 @@ tournament_history <- function(tournament, file_path) {
                         "score_display", "total_score")]
   names(result) <- c("Year", "Tournament", "Winner", "Score", "Total")
 
-  return(result)
+  result
 }

@@ -4,7 +4,7 @@
 #' standard R user directory per CRAN policy.
 #'
 #' @return Character string with the cache directory path.
-#' @keywords internal
+#' @noRd
 get_cache_dir <- function() {
   tools::R_user_dir("golfastr", "cache")
 }
@@ -112,7 +112,7 @@ cache_info <- function() {
 #' @param data Data to cache.
 #' @param filename Name for the cached file.
 #' @return Invisible path to the cached file.
-#' @keywords internal
+#' @noRd
 cache_save <- function(data, filename) {
   cache_dir <- get_cache_dir()
   if (!dir.exists(cache_dir)) {
@@ -130,7 +130,7 @@ cache_save <- function(data, filename) {
 #'
 #' @param filename Name of the cached file.
 #' @return The cached data, or NULL if not found.
-#' @keywords internal
+#' @noRd
 cache_load <- function(filename) {
   cache_dir <- get_cache_dir()
   path <- file.path(cache_dir, filename)
@@ -148,7 +148,7 @@ cache_load <- function(filename) {
 #'
 #' @param filename Name of the cached file.
 #' @return Logical indicating if file exists in cache.
-#' @keywords internal
+#' @noRd
 cache_exists <- function(filename) {
   cache_dir <- get_cache_dir()
   path <- file.path(cache_dir, filename)

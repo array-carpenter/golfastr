@@ -4,7 +4,7 @@
 \alias{win_leaders}
 \title{Most Wins}
 \usage{
-win_leaders(year = NULL, top_n = 10, file_path)
+win_leaders(year = NULL, top_n = 10, file_path = NULL, data = NULL)
 }
 \arguments{
 \item{year}{Optional year filter}
@@ -12,6 +12,9 @@ win_leaders(year = NULL, top_n = 10, file_path)
 \item{top_n}{Number of players to show}
 
 \item{file_path}{Path to data file (.rds or .parquet)}
+
+\item{data}{Optional leaderboard data frame. Use this instead of
+`file_path` when the data is already in memory.}
 }
 \value{
 Tibble with win leaders
@@ -21,6 +24,7 @@ Get players with most wins.
 }
 \examples{
 \dontrun{
-win_leaders(year = 2025, file_path = "golf_data.rds")
+season <- load_leaderboard(2025)
+win_leaders(data = season)
 }
 }

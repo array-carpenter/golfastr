@@ -4,7 +4,7 @@
 \alias{plot_scoring}
 \title{Plot Scoring Distribution}
 \usage{
-plot_scoring(tournament, year, file_path)
+plot_scoring(tournament, year, file_path = NULL, data = NULL)
 }
 \arguments{
 \item{tournament}{Tournament name}
@@ -12,6 +12,9 @@ plot_scoring(tournament, year, file_path)
 \item{year}{Season year}
 
 \item{file_path}{Path to data file (.rds or .parquet)}
+
+\item{data}{Optional leaderboard data frame. Use this instead of
+`file_path` when the data is already in memory.}
 }
 \value{
 ggplot object
@@ -21,6 +24,7 @@ Histogram of tournament scores.
 }
 \examples{
 \dontrun{
-plot_scoring("Masters", 2025, file_path = "golf_data.rds")
+season <- load_leaderboard(2025)
+plot_scoring("Masters", 2025, data = season)
 }
 }

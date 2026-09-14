@@ -34,7 +34,9 @@ library(ggplot2)
 masters <- load_leaderboard(2025, "Masters")
 
 leaders <- masters |>
-  mutate(score_to_par = as.numeric(score_to_par)) |>
+  mutate(
+    score_to_par = ifelse(score_to_par == "E", 0, as.numeric(score_to_par))
+  ) |>
   arrange(score_to_par, total_score) |>
   slice_head(n = 15)
 
@@ -43,8 +45,8 @@ leaders |>
   head()
 ```
 
-`score_to_par` is the number of strokes above or below par.
-A negative value is below par.
+`score_to_par` is strokes above or below par. ESPN stores even par as
+`"E"`. The chart converts that to `0`. A negative value is below par.
 
 ## Make the chart
 

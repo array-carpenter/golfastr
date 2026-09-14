@@ -4,7 +4,7 @@
 \alias{leaderboard}
 \title{Leaderboard Snapshot}
 \usage{
-leaderboard(tournament, year, top_n = 10, file_path)
+leaderboard(tournament, year, top_n = 10, file_path = NULL, data = NULL)
 }
 \arguments{
 \item{tournament}{Tournament name}
@@ -14,15 +14,19 @@ leaderboard(tournament, year, top_n = 10, file_path)
 \item{top_n}{Number of players to show (default: 10)}
 
 \item{file_path}{Path to data file (.rds or .parquet)}
+
+\item{data}{Optional leaderboard data frame. Use this instead of
+`file_path` when the data is already in memory.}
 }
 \value{
 Formatted tibble for display
 }
 \description{
-Get formatted leaderboard for display.
+Get a compact leaderboard for display.
 }
 \examples{
 \dontrun{
-leaderboard("Masters", 2025, file_path = "golf_data.rds")
+season <- load_leaderboard(2025)
+leaderboard("Masters", 2025, data = season)
 }
 }

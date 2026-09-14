@@ -3,7 +3,8 @@
 #' Retrieves the tournament schedule for a given year and tour.
 #'
 #' @param year Season year (e.g., 2026). Defaults to current year.
-#' @param tour Tour identifier. Currently supports "pga" (default).
+#' @param tour Tour identifier: `"pga"` (default), `"liv"`, `"lpga"`,
+#'   `"euro"`, or `"champions"`.
 #' @return A tibble with columns:
 #'   \itemize{
 #'     \item \code{event_id}: ESPN event identifier

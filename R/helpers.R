@@ -1,80 +1,73 @@
 #' Get Player Results
 #'
-#' Look up a player's results across all tournaments in a data file.
+#' Look up a player's results across tournaments. Pass a data frame from
+#' [load_leaderboard()] or a local file created with [save_to_rds()].
 #'
 #' @param name Player name (partial match, case-insensitive)
 #' @param file_path Path to data file (.rds or .parquet)
+#' @param data Optional leaderboard data frame. Use this instead of
+#'   `file_path` when the data is already in memory.
 #' @return Tibble with player's tournament results
 #' @export
 #' @examples
 #' \dontrun{
-#' # Get Rory McIlroy's results
-#' get_player("McIlroy", file_path = "golf_data.rds")
-#'
-#' # Get Scottie Scheffler's results
+#' season <- load_leaderboard(2025)
+#' get_player("McIlroy", data = season)
 #' get_player("Scheffler", file_path = "golf_data.rds")
 #' }
-get_player <- function(name, file_path) {
-  data <- load_data(file_path)
+get_player <- function(name, file_path = NULL, data = NULL) {
+  data <- resolve_leaderboard_data(data = data, file_path = file_path)
 
-  # Filter by name (case-insensitive partial match)
   matches <- data[grepl(name, data$display_name, ignore.case = TRUE), ]
 
   if (nrow(matches) == 0) {
     cli::cli_abort("No player found matching {.val {name}}.")
   }
 
-  # Check if multiple players matched
   unique_players <- unique(matches$display_name)
   if (length(unique_players) > 1) {
     cli::cli_inform("Multiple players found: {unique_players}")
   }
 
-  # Sort by tournament date (using event_id as proxy)
   matches <- matches[order(matches$event_id), ]
 
-  # Select useful columns
   result <- matches[, c("tournament_name", "position", "score_display",
                         "total_score", "display_name", "event_id", "year")]
 
-  return(result)
+  result
 }
 
 #' Get Tournament Winners
 #'
-#' Get all tournament winners from a data file.
+#' Get all tournament winners from leaderboard data.
 #'
 #' @param year Optional year filter
 #' @param file_path Path to data file (.rds or .parquet)
+#' @param data Optional leaderboard data frame. Use this instead of
+#'   `file_path` when the data is already in memory.
 #' @return Tibble with tournament winners
 #' @export
 #' @examples
 #' \dontrun{
-#' # Get all winners
-#' get_winners(file_path = "golf_data.rds")
-#'
-#' # Get 2025 winners
+#' season <- load_leaderboard(2025)
+#' get_winners(data = season)
 #' get_winners(2025, file_path = "golf_data.rds")
 #' }
-get_winners <- function(year = NULL, file_path) {
-  data <- load_data(file_path)
+get_winners <- function(year = NULL, file_path = NULL, data = NULL) {
+  data <- resolve_leaderboard_data(data = data, file_path = file_path)
 
-  # Filter to winners only
   winners <- data[data$position == 1, ]
 
-  # Filter by year if specified
- if (!is.null(year)) {
+  if (!is.null(year)) {
     winners <- winners[winners$year == year, ]
   }
 
-  # Sort by event_id
   winners <- winners[order(winners$event_id), ]
 
-  # Select useful columns
   result <- winners[, c("tournament_name", "display_name", "score_display",
                         "total_score", "event_id", "year")]
 
-  return(result)
+  result
 }
 
 #' Get Major Championships
@@ -83,20 +76,19 @@ get_winners <- function(year = NULL, file_path) {
 #'
 #' @param year Season year
 #' @param file_path Path to data file (.rds or .parquet)
+#' @param data Optional leaderboard data frame. Use this instead of
+#'   `file_path` when the data is already in memory.
 #' @return Tibble with major championship results
 #' @export
 #' @examples
 #' \dontrun{
-#' # Get 2025 majors
-#' get_majors(2025, file_path = "golf_data.rds")
+#' season <- load_leaderboard(2025)
+#' get_majors(2025, data = season)
 #' }
-get_majors <- function(year, file_path) {
-  data <- load_data(file_path)
-
-  # Filter by year
+get_majors <- function(year, file_path = NULL, data = NULL) {
+  data <- resolve_leaderboard_data(data = data, file_path = file_path)
   data <- data[data$year == year, ]
 
-  # Major championship patterns
   major_patterns <- c(
     "Masters",
     "PGA Championship",
@@ -104,7 +96,6 @@ get_majors <- function(year, file_path) {
     "Open Championship|British Open"
   )
 
-  # Filter to majors
   is_major <- grepl(paste(major_patterns, collapse = "|"),
                     data$tournament_name, ignore.case = TRUE)
   majors <- data[is_major, ]
@@ -114,8 +105,7 @@ get_majors <- function(year, file_path) {
     return(tibble::tibble())
   }
 
-  # Sort by position within each tournament
   majors <- majors[order(majors$tournament_name, majors$position), ]
 
-  return(majors)
+  majors
 }

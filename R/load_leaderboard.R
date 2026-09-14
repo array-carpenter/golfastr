@@ -12,7 +12,8 @@
 #' @param year Season year (e.g., 2026). Defaults to current year.
 #' @param tournament Tournament identifier - either event_id or partial name match.
 #'   If NULL, returns all tournaments for the year.
-#' @param tour Tour identifier. Currently supports "pga" (default).
+#' @param tour Tour identifier: `"pga"` (default), `"liv"`, `"lpga"`,
+#'   `"euro"`, or `"champions"`.
 #' @param live If TRUE, skip the hosted data and fetch directly from the
 #'   ESPN API. Defaults to FALSE.
 #' @return A tibble with leaderboard data including:
@@ -109,7 +110,7 @@ load_leaderboard <- function(year = as.integer(format(Sys.Date(), "%Y")),
 }
 
 #' Fast leaderboard fetch using site API
-#' @keywords internal
+#' @noRd
 fetch_leaderboard_fast <- function(event_id, year, tour = "pga") {
   # Use site API which returns more data in single call
   response <- espn_site_request(

@@ -22,7 +22,8 @@ get_player_scorecards(event_id, athlete_id)
 
 \item{top_n}{Number of top finishers to include. Default NULL returns all.}
 
-\item{tour}{Tour identifier. Currently supports "pga" (default).}
+\item{tour}{Tour identifier: `"pga"` (default), `"liv"`, `"lpga"`,
+`"euro"`, or `"champions"`.}
 
 \item{live}{If TRUE, skip the hosted data and fetch directly from the
 ESPN API. Defaults to FALSE.}

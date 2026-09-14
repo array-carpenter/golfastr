@@ -8,7 +8,7 @@
 \description{
 \if{html}{\figure{logo.png}{options: style='float: right' alt='logo' width='120'}}
 
-Fetch Professional Golfers' Association (PGA) Tour tournament data from ESPN \url{https://www.espn.com/golf/} including leaderboards and hole-by-hole scoring. Data is returned in tidy tibble format ready for analysis. Supports local storage via RDS or 'Apache Arrow' Parquet files for fast repeated access. Designed for golf analytics, data journalism, and fantasy sports research.
+Fetch professional golf tournament data from ESPN \url{https://www.espn.com/golf/}, including leaderboards and hole-by-hole scoring for the PGA Tour, LIV Golf, LPGA, DP World Tour, and Champions Tour. Data is returned in tidy 'tibble' format. Completed PGA Tour seasons are served from hosted files for fast repeated access. Supports local storage via RDS or 'Apache Arrow' Parquet files.
 }
 \seealso{
 Useful links:

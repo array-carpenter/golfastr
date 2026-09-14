@@ -9,7 +9,8 @@ load_players(year = as.integer(format(Sys.Date(), "\%Y")), tour = "pga")
 \arguments{
 \item{year}{Season year to pull players from. Defaults to current year.}
 
-\item{tour}{Tour identifier. Currently supports "pga" (default).}
+\item{tour}{Tour identifier: `"pga"` (default), `"liv"`, `"lpga"`,
+`"euro"`, or `"champions"`.}
 }
 \value{
 A tibble with player data including:

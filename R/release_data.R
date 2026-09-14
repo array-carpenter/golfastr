@@ -13,7 +13,7 @@
 #' @param filename Asset filename (e.g., "leaderboards_2026.rds").
 #' @return A tibble, or NULL if the download fails (e.g., no internet
 #'   connection or the asset doesn't exist).
-#' @keywords internal
+#' @noRd
 release_load <- function(tag, filename) {
   cache_mode <- getOption("golfastr.cache", "memory")
   key <- paste(tag, filename, sep = "/")

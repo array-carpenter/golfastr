@@ -4,7 +4,7 @@
 \alias{field_strength}
 \title{Field Strength Analysis}
 \usage{
-field_strength(tournament, year, file_path)
+field_strength(tournament, year, file_path = NULL, data = NULL)
 }
 \arguments{
 \item{tournament}{Tournament name}
@@ -12,6 +12,9 @@ field_strength(tournament, year, file_path)
 \item{year}{Season year}
 
 \item{file_path}{Path to data file (.rds or .parquet)}
+
+\item{data}{Optional leaderboard data frame. Use this instead of
+`file_path` when the data is already in memory.}
 }
 \value{
 Tibble with field statistics
@@ -21,6 +24,7 @@ Analyze the strength of a tournament field.
 }
 \examples{
 \dontrun{
-field_strength("Masters", 2025, file_path = "golf_data.rds")
+season <- load_leaderboard(2025)
+field_strength("Masters", 2025, data = season)
 }
 }

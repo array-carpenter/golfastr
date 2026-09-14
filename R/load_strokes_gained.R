@@ -11,6 +11,7 @@
 #' @param player Optional player name filter (partial match, case-insensitive).
 #' @param use_bundled If \code{TRUE}, skip the download and use the dataset
 #'   bundled with the package. Defaults to \code{FALSE}.
+#' @param year Optional season year filter (e.g., 2026).
 #' @return A tibble with one row per player and columns:
 #'   \itemize{
 #'     \item \code{player_id}: PGA Tour player ID
@@ -27,15 +28,13 @@
 #'   }
 #' @export
 #' @examples
-#' # Get all strokes gained data (downloads latest)
-#' sg <- load_strokes_gained()
-#'
-#' # Use bundled data (no internet needed)
 #' sg <- load_strokes_gained(use_bundled = TRUE)
-#'
-#' # Look up a specific player
-#' load_strokes_gained("Scheffler")
-load_strokes_gained <- function(player = NULL, use_bundled = FALSE) {
+#' load_strokes_gained("Scheffler", use_bundled = TRUE, year = 2026)
+#' \donttest{
+#' load_strokes_gained()
+#' }
+load_strokes_gained <- function(player = NULL, use_bundled = FALSE,
+                                year = NULL) {
   if (use_bundled) {
     data <- strokes_gained
   } else {
@@ -43,6 +42,13 @@ load_strokes_gained <- function(player = NULL, use_bundled = FALSE) {
     if (is.null(data)) {
       cli::cli_inform("Using bundled strokes gained data (may not be latest).")
       data <- strokes_gained
+    }
+  }
+
+  if (!is.null(year)) {
+    data <- data[data$season == as.integer(year), ]
+    if (nrow(data) == 0) {
+      cli::cli_abort("No strokes gained data for season {.val {year}}.")
     }
   }
 

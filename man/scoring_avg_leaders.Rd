@@ -4,7 +4,13 @@
 \alias{scoring_avg_leaders}
 \title{Scoring Average Leaders}
 \usage{
-scoring_avg_leaders(year = NULL, min_events = 5, top_n = 10, file_path)
+scoring_avg_leaders(
+  year = NULL,
+  min_events = 5,
+  top_n = 10,
+  file_path = NULL,
+  data = NULL
+)
 }
 \arguments{
 \item{year}{Optional year filter}
@@ -14,6 +20,9 @@ scoring_avg_leaders(year = NULL, min_events = 5, top_n = 10, file_path)
 \item{top_n}{Number of players to show}
 
 \item{file_path}{Path to data file (.rds or .parquet)}
+
+\item{data}{Optional leaderboard data frame. Use this instead of
+`file_path` when the data is already in memory.}
 }
 \value{
 Tibble with scoring average leaders
@@ -23,6 +32,7 @@ Get players with best scoring average.
 }
 \examples{
 \dontrun{
-scoring_avg_leaders(year = 2025, file_path = "golf_data.rds")
+season <- load_leaderboard(2025)
+scoring_avg_leaders(data = season)
 }
 }

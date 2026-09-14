@@ -21,10 +21,7 @@ save_to_rds <- function(data,
   if (append && file.exists(file_path)) {
     existing <- readRDS(file_path)
     data <- dplyr::bind_rows(existing, data)
-    # Remove duplicates based on key columns
-    if ("player_id" %in% names(data) && "event_id" %in% names(data)) {
-      data <- dplyr::distinct(data, player_id, event_id, .keep_all = TRUE)
-    }
+    data <- dedupe_leaderboard(data)
   }
 
   saveRDS(data, file_path)
@@ -80,10 +77,7 @@ save_to_parquet <- function(data,
   if (append && file.exists(file_path)) {
     existing <- arrow::read_parquet(file_path)
     data <- dplyr::bind_rows(existing, data)
-    # Remove duplicates based on key columns
-    if ("player_id" %in% names(data) && "event_id" %in% names(data)) {
-      data <- dplyr::distinct(data, player_id, event_id, .keep_all = TRUE)
-    }
+    data <- dedupe_leaderboard(data)
   }
 
   arrow::write_parquet(data, file_path)

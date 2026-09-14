@@ -1,4 +1,28 @@
-# golfastr (development version)
+# golfastr 0.2.1
+
+### Analysis
+
+* Analysis and plot functions now accept a `data` argument, so they work
+  directly on tibbles from `load_leaderboard()`:
+  `player_summary("Scheffler", data = load_leaderboard(2025))`.
+* Column names from hosted/live loaders (`player_name`, `tournament_id`,
+  `score_to_par`) and older saved files (`display_name`, `event_id`,
+  `score_display`) are aligned automatically.
+* `save_to_rds()` / `save_to_parquet()` deduplicate on `tournament_id` as
+  well as the older `event_id` column.
+* `load_strokes_gained()` gains a `year` argument to filter by season.
+
+### Website and docs
+
+* Function reference hides internal helpers.
+* README, getting-started article, and field descriptions match the current
+  loaders. `score_to_par` of `"E"` (even par) is documented.
+* DESCRIPTION lists all supported tours.
+
+### Other
+
+* ESPN requests time out after 30 seconds instead of hanging.
+* Bundled strokes gained snapshot is updated through the 2026 season.
 
 ### Website
 
@@ -46,6 +70,12 @@
   and `year` columns.
 * New `data-raw/update_season_data.R` pipeline builds and uploads the hosted
   files; runs daily via GitHub Actions.
+
+# golfastr 0.2.0
+
+* Added `load_strokes_gained()` with a bundled PGA Tour strokes gained
+  dataset.
+* Added LIV Golf support via `tour = "liv"`.
 
 # golfastr 0.1.5
 

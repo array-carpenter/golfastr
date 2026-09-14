@@ -4,7 +4,7 @@
 \alias{player_summary}
 \title{Player Season Summary}
 \usage{
-player_summary(name, year = NULL, file_path)
+player_summary(name, year = NULL, file_path = NULL, data = NULL)
 }
 \arguments{
 \item{name}{Player name (partial match)}
@@ -12,6 +12,9 @@ player_summary(name, year = NULL, file_path)
 \item{year}{Optional year filter}
 
 \item{file_path}{Path to data file (.rds or .parquet)}
+
+\item{data}{Optional leaderboard data frame. Use this instead of
+`file_path` when the data is already in memory.}
 }
 \value{
 Tibble with season statistics
@@ -21,7 +24,8 @@ Get aggregate statistics for a player's season.
 }
 \examples{
 \dontrun{
-player_summary("Scheffler", file_path = "golf_data.rds")
+season <- load_leaderboard(2025)
+player_summary("Scheffler", data = season)
 player_summary("McIlroy", year = 2025, file_path = "golf_data.rds")
 }
 }

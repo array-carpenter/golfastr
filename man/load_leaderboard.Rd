@@ -20,7 +20,8 @@ get_tournament_leaderboard(event_id)
 \item{tournament}{Tournament identifier - either event_id or partial name match.
 If NULL, returns all tournaments for the year.}
 
-\item{tour}{Tour identifier. Currently supports "pga" (default).}
+\item{tour}{Tour identifier: `"pga"` (default), `"liv"`, `"lpga"`,
+`"euro"`, or `"champions"`.}
 
 \item{live}{If TRUE, skip the hosted data and fetch directly from the
 ESPN API. Defaults to FALSE.}

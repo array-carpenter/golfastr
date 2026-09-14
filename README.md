@@ -1,4 +1,4 @@
-# golfastR <img src="https://raw.githubusercontent.com/array-carpenter/golfastr/main/man/figures/logo.png" align="right" height="139" alt="golfastR logo" />
+# golfastr <img src="https://raw.githubusercontent.com/array-carpenter/golfastr/main/man/figures/logo.png" align="right" height="139" alt="golfastr logo" />
 
 <!-- badges: start -->
 [![CRAN status](https://www.r-pkg.org/badges/version/golfastr)](https://CRAN.R-project.org/package=golfastr)
@@ -8,7 +8,7 @@
 
 > Fast, tidy Pro Golf data in R
 
-`golfastR` provides easy access to professional golf data from ESPN with functions to get leaderboards and hole-by-hole scores in tidy data formats ready for analysis. Supports **PGA Tour**, **LIV Golf**, **LPGA**, **DP World Tour**, and **Champions Tour**.
+`golfastr` provides easy access to professional golf data from ESPN with functions to get leaderboards and hole-by-hole scores in tidy data formats ready for analysis. Supports **PGA Tour**, **LIV Golf**, **LPGA**, **DP World Tour**, and **Champions Tour**.
 
 ## Installation
 
@@ -78,11 +78,11 @@ both functions automatically fall back to the live ESPN API.
 Pre-built PGA Tour strokes gained data ships with the package:
 
 ```r
-# Get all strokes gained data
+# Latest strokes gained (downloads if needed; bundled data is the fallback)
 sg <- load_strokes_gained()
 
-# Look up a specific player
-load_strokes_gained("Scheffler")
+# One player in one season, no network
+load_strokes_gained("Scheffler", use_bundled = TRUE, year = 2026)
 ```
 
 Returns per-round averages for all six SG categories:
@@ -153,7 +153,7 @@ players <- load_players(2026)
 | player_id | ESPN athlete ID |
 | player_name | Player display name |
 | total_score | Total strokes |
-| score_to_par | Score vs par (e.g., "-11") |
+| score_to_par | Score vs par as text (e.g., "-11", `"E"` for even par) |
 | status | Player status |
 
 ### Hole-by-Hole
@@ -199,18 +199,15 @@ check_season(2025, file_path = "pga_2025.rds")
 
 ## Analysis Functions
 
+Pass a tibble from `load_leaderboard()`, or a file saved with `save_to_rds()`:
+
 ```r
-# Player season summary
-player_summary("Scheffler", file_path = "golf_data.rds")
+season <- load_leaderboard(2025)
 
-# Compare multiple players
-compare_players(c("Scheffler", "McIlroy"), file_path = "golf_data.rds")
-
-# Win leaders
-win_leaders(file_path = "golf_data.rds")
-
-# Scoring average leaders
-scoring_avg_leaders(file_path = "golf_data.rds")
+player_summary("Scheffler", data = season)
+compare_players(c("Scheffler", "McIlroy"), data = season)
+win_leaders(data = season)
+scoring_avg_leaders(data = season)
 ```
 
 ## Data Source

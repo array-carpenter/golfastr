@@ -4,14 +4,14 @@
 #' Supports multiple tours via the tour parameter.
 #'
 #' @name api_espn
-#' @keywords internal
+#' @noRd
 NULL
 
 #' Get ESPN tour code
 #'
 #' @param tour Tour identifier ("pga", "lpga", "euro", etc.)
 #' @return ESPN tour code string
-#' @keywords internal
+#' @noRd
 get_espn_tour_code <- function(tour = "pga") {
  tour <- tolower(tour)
  codes <- list(
@@ -39,7 +39,7 @@ get_espn_tour_code <- function(tour = "pga") {
 #' @param tour Tour code (default "pga")
 #' @param query_params Optional query parameters
 #' @return Parsed JSON response
-#' @keywords internal
+#' @noRd
 #' @importFrom httr2 request req_url_query req_perform resp_body_json
 espn_core_request <- function(endpoint, tour = "pga", query_params = NULL) {
  tour_code <- get_espn_tour_code(tour)
@@ -55,6 +55,7 @@ espn_core_request <- function(endpoint, tour = "pga", query_params = NULL) {
    req <- httr2::req_url_query(req, !!!all_params)
  }
 
+ req <- httr2::req_timeout(req, 30)
  resp <- httr2::req_perform(req)
  httr2::resp_body_json(resp, simplifyVector = TRUE)
 }
@@ -67,7 +68,7 @@ espn_core_request <- function(endpoint, tour = "pga", query_params = NULL) {
 #' @param tour Tour code (default "pga")
 #' @param query_params Optional query parameters
 #' @return Parsed JSON response
-#' @keywords internal
+#' @noRd
 #' @importFrom httr2 request req_url_query req_perform resp_body_json
 espn_site_request <- function(endpoint, tour = "pga", query_params = NULL) {
  tour_code <- get_espn_tour_code(tour)
@@ -80,6 +81,7 @@ espn_site_request <- function(endpoint, tour = "pga", query_params = NULL) {
    req <- httr2::req_url_query(req, !!!query_params)
  }
 
+ req <- httr2::req_timeout(req, 30)
  resp <- httr2::req_perform(req)
  httr2::resp_body_json(resp, simplifyVector = TRUE)
 }

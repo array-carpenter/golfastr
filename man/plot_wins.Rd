@@ -4,7 +4,7 @@
 \alias{plot_wins}
 \title{Plot Win Distribution}
 \usage{
-plot_wins(year = NULL, top_n = 10, file_path)
+plot_wins(year = NULL, top_n = 10, file_path = NULL, data = NULL)
 }
 \arguments{
 \item{year}{Optional year filter}
@@ -12,15 +12,19 @@ plot_wins(year = NULL, top_n = 10, file_path)
 \item{top_n}{Number of players to show}
 
 \item{file_path}{Path to data file (.rds or .parquet)}
+
+\item{data}{Optional leaderboard data frame. Use this instead of
+`file_path` when the data is already in memory.}
 }
 \value{
 ggplot object
 }
 \description{
-Pie/bar chart of wins by player.
+Bar chart of wins by player.
 }
 \examples{
 \dontrun{
-plot_wins(year = 2025, file_path = "golf_data.rds")
+season <- load_leaderboard(2025)
+plot_wins(data = season)
 }
 }

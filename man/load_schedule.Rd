@@ -12,7 +12,8 @@ get_pga_schedule(year = format(Sys.Date(), "\%Y"))
 \arguments{
 \item{year}{Season year (e.g., 2026). Defaults to current year.}
 
-\item{tour}{Tour identifier. Currently supports "pga" (default).}
+\item{tour}{Tour identifier: `"pga"` (default), `"liv"`, `"lpga"`,
+`"euro"`, or `"champions"`.}
 }
 \value{
 A tibble with columns:

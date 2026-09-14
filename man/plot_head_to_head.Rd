@@ -4,7 +4,7 @@
 \alias{plot_head_to_head}
 \title{Plot Head-to-Head Comparison}
 \usage{
-plot_head_to_head(players, year = NULL, file_path)
+plot_head_to_head(players, year = NULL, file_path = NULL, data = NULL)
 }
 \arguments{
 \item{players}{Vector of player names}
@@ -12,6 +12,9 @@ plot_head_to_head(players, year = NULL, file_path)
 \item{year}{Optional year filter}
 
 \item{file_path}{Path to data file (.rds or .parquet)}
+
+\item{data}{Optional leaderboard data frame. Use this instead of
+`file_path` when the data is already in memory.}
 }
 \value{
 ggplot object
@@ -21,6 +24,7 @@ Compare two or more players' finishes across tournaments.
 }
 \examples{
 \dontrun{
-plot_head_to_head(c("Scheffler", "McIlroy"), file_path = "golf_data.rds")
+season <- load_leaderboard(2025)
+plot_head_to_head(c("Scheffler", "McIlroy"), data = season)
 }
 }

@@ -161,7 +161,7 @@ load_pga_hbh <- function(years,
 #' @param event_id ESPN event ID
 #' @param top_n Number of top finishers to get scorecards for
 #' @return List with leaderboard and scorecards
-#' @keywords internal
+#' @noRd
 get_tournament_summary <- function(event_id, top_n = NULL) {
   # Get leaderboard using new API
   year <- as.integer(format(Sys.Date(), "%Y"))

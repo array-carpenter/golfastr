@@ -4,7 +4,7 @@
 \alias{compare_players}
 \title{Compare Players}
 \usage{
-compare_players(players, year = NULL, file_path)
+compare_players(players, year = NULL, file_path = NULL, data = NULL)
 }
 \arguments{
 \item{players}{Vector of player names}
@@ -12,6 +12,9 @@ compare_players(players, year = NULL, file_path)
 \item{year}{Optional year filter}
 
 \item{file_path}{Path to data file (.rds or .parquet)}
+
+\item{data}{Optional leaderboard data frame. Use this instead of
+`file_path` when the data is already in memory.}
 }
 \value{
 Tibble comparing player statistics
@@ -21,6 +24,7 @@ Side-by-side comparison of multiple players.
 }
 \examples{
 \dontrun{
-compare_players(c("Scheffler", "McIlroy", "Hovland"), file_path = "golf_data.rds")
+season <- load_leaderboard(2025)
+compare_players(c("Scheffler", "McIlroy"), data = season)
 }
 }
