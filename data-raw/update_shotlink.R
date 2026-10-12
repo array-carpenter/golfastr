@@ -164,9 +164,10 @@ parse_shots <- function(res, season, ev, pr) {
   rd <- function(x) x$s$radarData
   data.frame(
     season = season, tournament_id = ev$id, tournament_name = chr(ev$tournamentName),
-    player_id = pr$pid, player_name = pr$name, round = pr$round,
+    player_id = pr$pid, player_name = pr$name, round = pr$round, course_id = pr$course_id,
     hole = col(rows, function(x) as.integer(x$h$holeNumber), 0L),
     par = col(rows, function(x) as.integer(x$h$par %||% NA), 0L),
+    yardage = col(rows, function(x) as.integer(x$h$yardage %||% NA), 0L),
     hole_score = col(rows, function(x) suppressWarnings(as.integer(chr(x$h$score))), 0L),
     stroke = col(rows, function(x) as.integer(x$s$strokeNumber), 0L),
     stroke_type = col(rows, function(x) chr(x$s$strokeType), ""),
