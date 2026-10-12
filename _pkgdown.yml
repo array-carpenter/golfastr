@@ -39,6 +39,15 @@ reference:
   - load_players
   - load_strokes_gained
 
+- title: ShotLink
+  desc: >
+    Every stroke, tee time and pin position from the PGA Tour's ShotLink
+    feed, served from pre-built season files on GitHub releases.
+  contents:
+  - load_shots
+  - load_tee_times
+  - load_course_setup
+
 - title: Live ESPN API
   desc: Query tournaments directly from ESPN.
   contents:
