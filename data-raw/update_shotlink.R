@@ -54,13 +54,19 @@ pga_query <- function(query) {
 # Fetch once, then always read from disk. A response with GraphQL errors is
 # cached too, so a missing round is not re-requested on every run.
 cached <- function(path, query) {
-  if (!file.exists(path)) {
-    dir.create(dirname(path), recursive = TRUE, showWarnings = FALSE)
-    body <- pga_query(query)
-    con <- gzfile(path, "w")
-    writeLines(body, con)
-    close(con)
+  if (file.exists(path)) {
+    hit <- tryCatch(fromJSON(path, simplifyVector = FALSE), error = function(e) NULL)
+    if (!is.null(hit)) return(hit)
+    # a run stopped mid-write leaves a truncated file
+    file.remove(path)
   }
+  dir.create(dirname(path), recursive = TRUE, showWarnings = FALSE)
+  body <- pga_query(query)
+  tmp <- paste0(path, ".tmp")
+  con <- gzfile(tmp, "w")
+  writeLines(body, con)
+  close(con)
+  file.rename(tmp, path)
   fromJSON(path, simplifyVector = FALSE)
 }
 
