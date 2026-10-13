@@ -9,7 +9,7 @@
 #' and distances but no coordinates or radar data. Events without ShotLink
 #' coverage are not included.
 #'
-#' @param year Season year (e.g., 2025).
+#' @param year Season year (e.g., 2026).
 #' @param tournament Optional PGA Tour tournament ID (e.g., `"R2025011"`) or
 #'   partial tournament name match.
 #' @param player Optional player name filter (partial match, case-insensitive).
@@ -37,7 +37,7 @@
 #' @export
 #' @examples
 #' \donttest{
-#' shots <- load_shots(2025, "Players")
+#' shots <- load_shots(2026, "Sony")
 #' }
 load_shots <- function(year, tournament = NULL, player = NULL) {
   shotlink_load("shots", year, tournament, player)
@@ -57,7 +57,7 @@ load_shots <- function(year, tournament = NULL, player = NULL) {
 #' @export
 #' @examples
 #' \donttest{
-#' tee_times <- load_tee_times(2025, "Players")
+#' tee_times <- load_tee_times(2026, "Sony")
 #' }
 load_tee_times <- function(year, tournament = NULL, player = NULL) {
   shotlink_load("tee_times", year, tournament, player)
@@ -76,7 +76,7 @@ load_tee_times <- function(year, tournament = NULL, player = NULL) {
 #' @export
 #' @examples
 #' \donttest{
-#' setup <- load_course_setup(2025, "Players")
+#' setup <- load_course_setup(2026, "Sony")
 #' }
 load_course_setup <- function(year, tournament = NULL) {
   shotlink_load("course_setup", year, tournament)
@@ -86,10 +86,11 @@ load_course_setup <- function(year, tournament = NULL) {
 shotlink_load <- function(tag, year, tournament = NULL, player = NULL) {
   data <- release_load(tag, sprintf("%s_%d.rds", tag, as.integer(year)))
   if (is.null(data)) {
-    cli::cli_abort(c(
+    cli::cli_inform(c(
       "No {tag} data available for {.val {year}}.",
       "i" = "The season may not be built yet, or the download failed."
     ))
+    return(tibble::tibble())
   }
 
   if (!is.null(tournament)) {

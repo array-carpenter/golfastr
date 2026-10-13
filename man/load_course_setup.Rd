@@ -7,7 +7,7 @@
 load_course_setup(year, tournament = NULL)
 }
 \arguments{
-\item{year}{Season year (e.g., 2025).}
+\item{year}{Season year (e.g., 2026).}
 
 \item{tournament}{Optional PGA Tour tournament ID (e.g., `"R2025011"`) or
 partial tournament name match.}
@@ -24,6 +24,6 @@ a PGA Tour season.
 }
 \examples{
 \donttest{
-setup <- load_course_setup(2025, "Players")
+setup <- load_course_setup(2026, "Sony")
 }
 }

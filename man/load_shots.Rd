@@ -7,7 +7,7 @@
 load_shots(year, tournament = NULL, player = NULL)
 }
 \arguments{
-\item{year}{Season year (e.g., 2025).}
+\item{year}{Season year (e.g., 2026).}
 
 \item{tournament}{Optional PGA Tour tournament ID (e.g., `"R2025011"`) or
 partial tournament name match.}
@@ -50,6 +50,6 @@ coverage are not included.
 }
 \examples{
 \donttest{
-shots <- load_shots(2025, "Players")
+shots <- load_shots(2026, "Sony")
 }
 }

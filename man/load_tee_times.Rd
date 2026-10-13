@@ -7,7 +7,7 @@
 load_tee_times(year, tournament = NULL, player = NULL)
 }
 \arguments{
-\item{year}{Season year (e.g., 2025).}
+\item{year}{Season year (e.g., 2026).}
 
 \item{tournament}{Optional PGA Tour tournament ID (e.g., `"R2025011"`) or
 partial tournament name match.}
@@ -27,6 +27,6 @@ round of a PGA Tour season.
 }
 \examples{
 \donttest{
-tee_times <- load_tee_times(2025, "Players")
+tee_times <- load_tee_times(2026, "Sony")
 }
 }

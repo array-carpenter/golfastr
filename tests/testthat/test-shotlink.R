@@ -61,6 +61,7 @@ test_that("shotlink loaders give clear errors", {
   with_shotlink({
     expect_error(load_shots(2004, "Masters"), "No tournament")
     expect_error(load_shots(2004, player = "Tiger"), "No player")
-    expect_error(load_shots(1999), "No shots data")
+    expect_message(none <- load_shots(1999), "No shots data")
+    expect_equal(nrow(none), 0)
   })
 })
