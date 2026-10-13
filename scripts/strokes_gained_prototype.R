@@ -52,7 +52,13 @@ fit_baseline <- function(states) {
   grid <- exp(seq(log(0.1), log(700), length.out = 400))
   curves <- lapply(split(states, states$lie), function(d) {
     d <- d[d$to_hole_out <= 10, ]
-    fit <- stats::loess(to_hole_out ~ log(start_dist), data = d, span = 0.3,
+    # average within narrow log-distance bins first so the smoother stays fast
+    d$bin <- round(log(d$start_dist) * 40) / 40
+    d <- stats::aggregate(cbind(to_hole_out, start_dist) ~ bin, d,
+                          function(v) c(mean = mean(v), n = length(v)))
+    d <- data.frame(start_dist = d$start_dist[, "mean"], to_hole_out = d$to_hole_out[, "mean"],
+                    n = d$to_hole_out[, "n"])
+    fit <- stats::loess(to_hole_out ~ log(start_dist), data = d, weights = n, span = 0.3,
                         control = stats::loess.control(surface = "direct"))
     in_range <- grid >= min(d$start_dist) & grid <= max(d$start_dist)
     y <- stats::predict(fit, data.frame(start_dist = grid[in_range]))
