@@ -1,5 +1,26 @@
 # golfastr 0.2.1
 
+### ShotLink data
+
+* `load_shots()` returns every stroke from PGA Tour ShotLink, 2012 to now:
+  distance, distance to the hole, lie before and after, play-by-play text,
+  and, in recent seasons, shot coordinates and launch monitor readings
+  (ball speed, spin, launch angle, apex height).
+* `load_tee_times()` returns pairings, tee times and starting holes for
+  every round.
+* `load_course_setup()` returns par, yardage and pin position by hole and
+  round.
+* All three read season files from GitHub releases.
+
+### Strokes gained
+
+* `calculate_strokes_gained()` scores every shot against a bundled baseline
+  of expected strokes by lie and distance, fit from ShotLink strokes.
+* `summarise_strokes_gained()` totals shots by round, tournament or season,
+  adjusted to the field. Season totals track the PGA Tour's official
+  strokes gained total closely (correlation 0.98 in 2026) and cover every
+  player in the field, not only those with enough measured rounds.
+
 ### Analysis
 
 * Analysis and plot functions now accept a `data` argument, so they work

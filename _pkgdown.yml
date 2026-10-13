@@ -47,6 +47,8 @@ reference:
   - load_shots
   - load_tee_times
   - load_course_setup
+  - calculate_strokes_gained
+  - summarise_strokes_gained
 
 - title: Live ESPN API
   desc: Query tournaments directly from ESPN.
