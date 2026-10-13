@@ -281,7 +281,19 @@ write_release <- function(x, tag, season) {
       path <- paste0(base, ext)
       if (!file.exists(path)) next
       message("Uploading ", basename(path), " to release '", tag, "'")
-      piggyback::pb_upload(path, repo = "array-carpenter/golfastr", tag = tag, overwrite = TRUE)
+      # a new release can take a few seconds to show up in the API
+      for (attempt in 1:5) {
+        piggyback::.pb_cache_clear()
+        ok <- tryCatch({
+          piggyback::pb_upload(path, repo = "array-carpenter/golfastr", tag = tag, overwrite = TRUE)
+          TRUE
+        }, error = function(e) {
+          message("  upload attempt ", attempt, " failed: ", conditionMessage(e))
+          FALSE
+        })
+        if (ok) break
+        Sys.sleep(15 * attempt)
+      }
     }
   }
 }
