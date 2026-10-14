@@ -7,12 +7,13 @@
 #' the next swing).
 #'
 #' The baseline is fit from ShotLink strokes and ships with the package. Over
-#' the 2026 season, round totals built from it and adjusted with
+#' the 2025 and 2026 seasons, round totals built from it and adjusted with
 #' [summarise_strokes_gained()] track the PGA Tour's official strokes gained
-#' total closely (correlation 0.98, mean difference 0.08 strokes per round).
-#' The split between off-the-tee and approach is less exact (correlation about
-#' 0.85), and "around the green" is defined as within 30 yards of the hole
-#' rather than of the green's edge.
+#' total closely (correlation 0.97 to 0.98, mean difference about 0.1 strokes
+#' per round). The split between off-the-tee and approach is less exact
+#' (correlation 0.82 to 0.92). Native area and trees count as rough, and
+#' "around the green" is defined as within 30 yards of the hole rather than
+#' of the green's edge.
 #'
 #' @param shots A tibble from [load_shots()]. Holes without a holed final
 #'   stroke are dropped.
@@ -23,7 +24,7 @@
 #' @return A tibble with one row per stroke hit (penalty and drop rows are
 #'   folded into the shot that caused them), with the columns of `shots` plus:
 #'   \itemize{
-#'     \item \code{start_lie}: tee, fairway, rough, sand, recovery or green
+#'     \item \code{start_lie}: tee, fairway, rough, sand, recovery (water or unknown) or green
 #'     \item \code{start_distance}: Yards to the hole before the shot
 #'     \item \code{strokes_used}: Strokes the shot cost, including penalties
 #'     \item \code{expected_before}, \code{expected_after}: Baseline strokes to
@@ -187,7 +188,9 @@ sg_lie <- function(code) {
   out <- rep("recovery", length(code))
   out[code == "OTB"] <- "tee"
   out[code == "OFW"] <- "fairway"
-  out[code %in% c("ORO", "OIR")] <- "rough"
+  # native area, tree outline and "other" play like rough; the tour has no
+  # lie code for a blocked shot, so true recovery shots can't be told apart
+  out[code %in% c("ORO", "OIR", "ONA", "OTO", "OTH")] <- "rough"
   out[code %in% c("OGS", "OST")] <- "sand"
   out[code == "OGR"] <- "green"
   out
