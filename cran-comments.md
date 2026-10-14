@@ -8,12 +8,18 @@
 
 0 errors | 0 warnings | 0 notes
 
-## Resubmission
+## Update
 
-This is golfastr 0.2.1. CRAN currently has 0.2.0.
+This is golfastr 0.2.1, an update to 0.2.0 (on CRAN since February 2026).
 
 This version:
 
+* Adds `load_shots()`, `load_tee_times()` and `load_course_setup()`, which
+  read PGA Tour ShotLink season files hosted as GitHub release assets.
+  When a file can't be downloaded they return an empty tibble with a
+  message instead of an error.
+* Adds `calculate_strokes_gained()` and `summarise_strokes_gained()`. The
+  baseline they use is a small internal data set in `R/sysdata.rda`.
 * Lets analysis and plot functions take a `data` argument so they work on
   tibbles returned by `load_leaderboard()`, not only on user-created files.
 * Aligns older saved-file column names (`display_name`, `event_id`,

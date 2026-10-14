@@ -18,7 +18,7 @@
   of expected strokes by lie and distance, fit from ShotLink strokes.
 * `summarise_strokes_gained()` totals shots by round, tournament or season,
   adjusted to the field. Season totals track the PGA Tour's official
-  strokes gained total closely (correlation 0.98 in 2026) and cover every
+  strokes gained total closely (correlation 0.97 in 2025 and 0.98 in 2026) and cover every
   player in the field, not only those with enough measured rounds.
 
 ### Analysis
