@@ -271,6 +271,8 @@ wp_event <- function(holes, ratings, params, cuts = NULL, n_rounds = NULL,
     }
   }
 
+  if (!is.null(params$calibration)) wp <- wp_calibrate(wp, params$calibration)
+
   holes$win_prob <- wp[cbind(match(holes$player_id, players), holes$g + 1L)]
   holes$win_prob_before <- wp[cbind(match(holes$player_id, players), holes$g)]
   out <- holes
@@ -300,5 +302,40 @@ wp_event <- function(holes, ratings, params, cuts = NULL, n_rounds = NULL,
   }
   out$wpa <- out$win_prob - out$win_prob_before
   out$skill_rating <- unname(rating[match(out$player_id, players)])
+  out
+}
+
+# Isotonic maps fit on 2004-2019 (rounds 1-2 and later separately), then
+# each tick rescaled so the field still adds up to 1.
+#' @noRd
+wp_calibrate <- function(wp, calibration) {
+  for (j in seq_len(ncol(wp))) {
+    g <- j - 1L
+    knots <- if (g <= 36) calibration$early else calibration$late
+    x <- wp[, j]
+    y <- stats::approx(knots$x, knots$y, x, ties = "ordered", rule = 2)$y
+    y[x == 0] <- 0
+    if (sum(y) > 0) wp[, j] <- y / sum(y)
+  }
+  wp
+}
+
+# Cuts already made in the data: after round r, at least 5 players who
+# finished it did not go on. The rule ("top N and ties") is taken as the
+# number who went on.
+#' @noRd
+wp_find_cuts <- function(holes) {
+  n_holes <- tapply(holes$hole, list(holes$player_id, holes$round), length)
+  strokes <- tapply(holes$score, list(holes$player_id, holes$round), sum)
+  out <- data.frame(after_round = integer(), rule = integer())
+  rounds <- sort(as.integer(colnames(n_holes)))
+  for (r in rounds[-length(rounds)]) {
+    done <- rowSums(n_holes[, as.character(seq_len(r)), drop = FALSE] == 18, na.rm = TRUE) == r
+    went_on <- !is.na(n_holes[, as.character(r + 1L)])
+    if (sum(done & !went_on) < 5 || !any(went_on)) next
+    total <- rowSums(strokes[, as.character(seq_len(r)), drop = FALSE])
+    line <- max(total[done & went_on], na.rm = TRUE)
+    out <- rbind(out, data.frame(after_round = r, rule = sum(done & total <= line, na.rm = TRUE)))
+  }
   out
 }

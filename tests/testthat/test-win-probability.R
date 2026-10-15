@@ -122,3 +122,29 @@ test_that("playoff holes settle the tie", {
   expect_equal(last$win_prob[last$player_id == "1"], 1)
   expect_equal(last$win_prob[last$player_id == "2"], 0)
 })
+
+test_that("add_win_probability keeps row order and adds the columns", {
+  ev <- fake_event(n_players = 5, rounds = 4)
+  ev <- ev[sample(nrow(ev)), ]
+  out <- add_win_probability(ev, sims = 500, ratings = c(`1` = 2))
+  expect_equal(out[names(ev)], tibble::as_tibble(ev))
+  expect_true(all(c("win_prob", "win_prob_before", "wpa", "skill_rating") %in% names(out)))
+  expect_true(all(out$win_prob >= 0 & out$win_prob <= 1))
+  expect_equal(out$skill_rating[out$player_id == "1"][1], 2)
+})
+
+test_that("Stableford events are left as NA", {
+  ev <- fake_event(n_players = 4, rounds = 1)
+  ev$tournament_name <- "Barracuda Championship"
+  expect_message(out <- add_win_probability(ev, ratings = c()), "not individual stroke play")
+  expect_true(all(is.na(out$win_prob)))
+})
+
+test_that("cuts already made are read from the data", {
+  ev <- fake_event(n_players = 12, rounds = 4)
+  ev$score[ev$player_id %in% as.character(7:12) & ev$round <= 2] <- 6L
+  ev <- ev[!(ev$player_id %in% as.character(7:12) & ev$round > 2), ]
+  cuts <- wp_find_cuts(ev)
+  expect_equal(cuts$after_round, 2L)
+  expect_equal(cuts$rule, 6L)
+})
