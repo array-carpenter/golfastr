@@ -132,7 +132,8 @@ wp_event <- function(holes, ratings, params, cuts = NULL, n_rounds = NULL,
   rating <- if (length(ratings)) unname(ratings[players]) else rep(NA_real_, n)
   names(rating) <- players
   rating[is.na(rating)] <- params$skill_params[["prior_mean"]]
-  skill0 <- params$a * (rating - mean(rating))
+  a <- rep_len(params$a, 2)
+  centered <- rating - mean(rating)
   start_strokes <- if (is.null(start)) rep(0, n) else {
     s <- start[players]
     s[is.na(s)] <- 0
@@ -145,7 +146,7 @@ wp_event <- function(holes, ratings, params, cuts = NULL, n_rounds = NULL,
   # hole's other rounds, then the pooled distribution for its par
   par_of <- tapply(holes$par, holes$hole, function(p) as.integer(names(which.max(table(p)))))
   hole_par <- rep(4L, 18)
-  hole_par[as.integer(names(par_of))] <- par_of
+  hole_par[as.integer(names(par_of))] <- pmin(pmax(par_of, 3L), 5L)
   cl_of <- function(x) {
     cm <- cumsum(x)[-length(x)]
     stats::qlogis(pmin(pmax(cm, 1e-12), 1 - 1e-12))
@@ -215,7 +216,7 @@ wp_event <- function(holes, ratings, params, cuts = NULL, n_rounds = NULL,
     if (r != cache_round) {
       form <- if (r > 1) rowMeans(round_sg[, seq_len(r - 1), drop = FALSE], na.rm = TRUE) else rep(0, n)
       form[is.na(form)] <- 0
-      skill <- skill0 + params$w * (form - mean(form[active]))
+      skill <- a[if (r == 1) 1 else 2] * centered + params$w * (form - mean(form[active]))
       suffix <- vector("list", n)
       later <- vector("list", n)
       for (i in seq_len(n)) {

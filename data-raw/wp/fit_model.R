@@ -19,6 +19,7 @@ ratings <- readRDS(file.path(cache, "skill_ratings.rds"))
 ok <- events$tournament_id[events$wp_eligible & !events$starting_strokes]
 holes <- holes[holes$tournament_id %in% ok & !holes$playoff, ]
 holes$to_par <- holes$score - holes$par
+holes$par <- pmin(pmax(holes$par, 3L), 5L)
 
 # Pooled hole distributions by par, the prior for every hole-round
 par_prior <- lapply(c(`3` = 3, `4` = 4, `5` = 5), function(p) {
@@ -44,12 +45,12 @@ later$form_c <- later$form - ave(later$form, later$tournament_id, later$round)
 fit_w <- lm(sg ~ 0 + rating_c + form_c, data = later)
 print(summary(fit_a)$coefficients)
 print(summary(fit_w)$coefficients)
-a <- unname(coef(fit_a)["rating_c"])
+a <- c(unname(coef(fit_a)["rating_c"]), unname(coef(fit_w)["rating_c"]))
 w <- unname(coef(fit_w)["form_c"])
-message(sprintf("a = %.3f, w = %.3f, round residual sd = %.2f", a, w, sigma(fit_w)))
+message(sprintf("a = %.3f / %.3f, w = %.3f, round residual sd = %.2f", a[1], a[2], w, sigma(fit_w)))
 
 # --- hole level --------------------------------------------------------------
-rounds$skill <- a * rounds$rating_c
+rounds$skill <- ifelse(rounds$round == 1, a[1], a[2]) * rounds$rating_c
 rounds$skill[rounds$round > 1] <- rounds$skill[rounds$round > 1] + w *
   (rounds$form[rounds$round > 1] - ave(rounds$form[rounds$round > 1],
      rounds$tournament_id[rounds$round > 1], rounds$round[rounds$round > 1]))
