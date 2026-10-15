@@ -6,14 +6,16 @@
 devtools::load_all(quiet = TRUE)
 
 cache <- "data-raw/wp/cache"
-out_dir <- file.path(cache, "raw")
-dir.create(out_dir, showWarnings = FALSE)
 args <- commandArgs(trailingOnly = TRUE)
 cores <- if (length(args)) as.integer(args[1]) else 4L
 
 events <- readRDS(file.path(cache, "events.rds"))
 fit <- readRDS(file.path(cache, "wp_fit.rds"))
 start <- utils::read.csv("data-raw/wp/starting_strokes.csv", colClasses = "character")
+order_file <- file.path(cache, "hole_order.rds")
+hole_order <- if (file.exists(order_file)) split(readRDS(order_file), readRDS(order_file)$tournament_id)
+out_dir <- file.path(cache, Sys.getenv("WP_RUN", "raw"))
+dir.create(out_dir, showWarnings = FALSE)
 
 # One input file per event so each worker only loads its own event
 in_dir <- file.path(cache, "event_inputs")
@@ -41,11 +43,16 @@ res <- parallel::mclapply(todo, function(id) {
   out <- tryCatch(
     wp_event(input$holes, stats::setNames(r$rating, r$player_id), fit,
              cuts = ev$cuts[[1]], n_rounds = ev$rounds, sims = 10000,
-             start = if (nrow(st)) stats::setNames(as.numeric(st$start), st$player_id)),
+             start = if (nrow(st)) stats::setNames(as.numeric(st$start), st$player_id),
+             order = hole_order[[id]]),
     error = function(e) e
   )
   if (inherits(out, "error")) return(paste(id, conditionMessage(out)))
-  keep <- c("tournament_id", "player_id", "round", "hole", "g", "win_prob", "win_prob_before")
+  out$hole_order_source <- if (is.null(hole_order[[id]])) "assumed" else
+    ifelse(paste(out$player_id, out$round) %in% paste(hole_order[[id]]$player_id, hole_order[[id]]$round),
+           "shotlink", "assumed")
+  keep <- c("tournament_id", "player_id", "round", "hole", "g", "win_prob", "win_prob_before",
+            "skill_rating", "hole_order_source")
   saveRDS(out[keep], file.path(out_dir, paste0(id, ".rds")))
   NA_character_
 }, mc.cores = cores, mc.preschedule = FALSE)
