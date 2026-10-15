@@ -9,6 +9,7 @@
 
 devtools::load_all(quiet = TRUE)
 suppressMessages(library(dplyr))
+source("data-raw/wp/helpers.R")
 
 cache <- "data-raw/wp/cache"
 holes <- readRDS(file.path(cache, "holes_all.rds"))
@@ -21,16 +22,7 @@ rounds$year <- events$year[match(rounds$tournament_id, events$tournament_id)]
 message(nrow(rounds), " player-rounds")
 
 rate <- function(half_life, prior_mean, prior_n, passes = 3) {
-  r <- rounds
-  r$sg_adj <- r$sg
-  for (p in seq_len(passes)) {
-    x <- r
-    x$sg <- x$sg_adj
-    ratings <- wp_skill_ratings(x, events, half_life, prior_mean, prior_n)
-    strength <- tapply(ratings$rating, ratings$tournament_id, mean)
-    r$sg_adj <- r$sg + strength[r$tournament_id]
-  }
-  list(ratings = ratings, strength = strength)
+  rate_events(rounds, events, half_life, prior_mean, prior_n, passes)
 }
 
 score <- function(ratings) {
