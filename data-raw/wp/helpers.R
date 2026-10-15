@@ -112,3 +112,78 @@ rate_events <- function(rounds, events, half_life, prior_mean, prior_n, passes =
   }
   list(ratings = ratings, strength = strength)
 }
+
+# Play order for players who started on the 10th tee (10-18, then 1-9)
+hole_order_table <- function(tee, event_ids, player_ids) {
+  tee |>
+    dplyr::filter(!is.na(start_tee)) |>
+    dplyr::inner_join(dplyr::select(event_ids, espn_tournament_id, pga_tournament_id),
+                      by = c("tournament_id" = "pga_tournament_id")) |>
+    dplyr::inner_join(dplyr::select(player_ids, espn_player_id, pga_player_id),
+                      by = c("player_id" = "pga_player_id")) |>
+    dplyr::distinct(tournament_id = espn_tournament_id, player_id = espn_player_id, round, start_tee) |>
+    tidyr::crossing(hole = 1:18) |>
+    dplyr::mutate(seq = (hole - start_tee) %% 18 + 1)
+}
+
+# Run one event with the bundled model and return the new columns by row key
+event_win_probability <- function(h, ev, ratings, params, order = NULL, start = NULL, sims = 10000) {
+  out <- golfastr:::wp_event(h, ratings, params, cuts = ev$cuts[[1]], n_rounds = ev$rounds,
+                             order = order, start = start, sims = sims)
+  known <- if (is.null(order)) character() else paste(order$player_id, order$round)
+  out$hole_order_source <- ifelse(paste(out$player_id, out$round) %in% known, "shotlink", "assumed")
+  out[c("tournament_id", "player_id", "round", "hole", "win_prob", "win_prob_before", "wpa",
+        "skill_rating", "hole_order_source")]
+}
+
+wp_columns <- c("win_prob", "win_prob_before", "wpa", "skill_rating", "hole_order_source")
+
+# Put win probability columns on a season's hole file, replacing any there
+attach_win_probability <- function(holes, results) {
+  holes <- holes[setdiff(names(holes), c(wp_columns, "playoff"))]
+  key <- c("tournament_id", "player_id", "round", "hole")
+  dplyr::left_join(holes, results, by = key)
+}
+
+ratings_files <- function(holes, events, rated, params) {
+  sp <- params$skill_params
+  rounds <- golfastr:::wp_round_values(holes[holes$tournament_id %in% events$tournament_id, ])
+  rounds$sg <- rounds$sg + rated$strength[rounds$tournament_id]
+  ev <- rbind(events[c("tournament_id", "start_date")],
+              tibble::tibble(tournament_id = "latest", start_date = Sys.Date() + 1))
+  stub <- tibble::tibble(tournament_id = "latest", player_id = unique(rounds$player_id), round = 1L,
+                         strokes = NA_real_, sg = 0)
+  latest <- golfastr:::wp_skill_ratings(rbind(rounds, stub), ev, sp[["half_life"]], sp[["prior_mean"]],
+                                        sp[["prior_n"]])
+  latest <- latest[latest$tournament_id == "latest", c("player_id", "rating", "n_rounds")]
+  names_tbl <- holes[!duplicated(holes$player_id, fromLast = TRUE), c("player_id", "player_name")]
+  latest <- dplyr::left_join(latest, names_tbl, by = "player_id")
+  latest$as_of <- max(events$start_date, na.rm = TRUE)
+  latest <- latest[order(-latest$rating), c("player_id", "player_name", "rating", "n_rounds", "as_of")]
+  by_event <- dplyr::left_join(rated$ratings, names_tbl, by = "player_id")
+  list(skill_ratings = by_event[c("tournament_id", "player_id", "player_name", "rating", "n_rounds")],
+       skill_ratings_latest = latest)
+}
+
+save_and_upload <- function(x, name, tag, upload) {
+  out <- file.path(tempdir(), tag)
+  dir.create(out, showWarnings = FALSE)
+  base <- file.path(out, name)
+  saveRDS(x, paste0(base, ".rds"))
+  utils::write.csv(x, paste0(base, ".csv"), row.names = FALSE)
+  arrow::write_parquet(x, paste0(base, ".parquet"))
+  if (upload) {
+    for (ext in c(".rds", ".csv", ".parquet")) {
+      for (i in 1:5) {
+        ok <- tryCatch({
+          piggyback::pb_upload(paste0(base, ext), repo = "array-carpenter/golfastr", tag = tag, overwrite = TRUE)
+          TRUE
+        }, error = function(e) FALSE)
+        if (ok) break
+        Sys.sleep(10 * i)
+      }
+      if (!ok) stop("could not upload ", basename(base), ext)
+    }
+  }
+  invisible(base)
+}

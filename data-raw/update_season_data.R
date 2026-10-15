@@ -161,9 +161,14 @@ for (year in years) {
 
   holes <- dplyr::bind_rows(c(list(existing), holes_new))
   if (nrow(holes) > 0) {
+    # win probability columns come from update_win_probability.R; keep them
+    # for events that already have them
+    wp_cols <- intersect(c("win_prob", "win_prob_before", "wpa", "skill_rating",
+                           "hole_order_source"), names(holes))
     holes <- holes[, c("player_id", "player_name", "position",
                        "tournament_id", "tournament_name",
-                       "round", "hole", "par", "score", "score_type", "year")]
+                       "round", "hole", "par", "score", "score_type", "year",
+                       wp_cols)]
     holes <- add_hole_stats(holes)
   }
   save_asset(holes, sprintf("holes_%d", year))

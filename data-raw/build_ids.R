@@ -91,15 +91,9 @@ player_ids <- pairs[!conflict, ] |>
 message(nrow(player_ids), " players matched, ", sum(conflict), " conflicting pairs set aside")
 
 # True play order: players starting on the 10th tee play 10-18 then 1-9
-order_tbl <- tee |>
-  filter(!is.na(start_tee)) |>
-  inner_join(event_ids |> select(espn_tournament_id, pga_tournament_id),
-             by = c("tournament_id" = "pga_tournament_id")) |>
-  inner_join(player_ids |> select(espn_player_id, pga_player_id), by = c("player_id" = "pga_player_id")) |>
-  distinct(tournament_id = espn_tournament_id, player_id = espn_player_id, round, start_tee)
-hole_order <- order_tbl |>
-  tidyr::crossing(hole = 1:18) |>
-  mutate(seq = (hole - start_tee) %% 18 + 1)
+source("data-raw/wp/helpers.R")
+hole_order <- hole_order_table(tee, event_ids, player_ids)
+order_tbl <- distinct(hole_order, tournament_id, player_id, round, start_tee)
 saveRDS(hole_order, file.path(cache, "hole_order.rds"))
 message(nrow(order_tbl), " player-rounds with a known starting tee, ",
         round(100 * mean(order_tbl$start_tee != 1), 1), "% off the 10th")
