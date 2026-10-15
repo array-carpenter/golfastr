@@ -10,7 +10,7 @@
 
 ## Update
 
-This is golfastr 0.2.1, an update to 0.2.0 (on CRAN since February 2026).
+This is golfastr 0.3.0, an update to 0.2.0 (on CRAN since February 2026).
 
 This version:
 
@@ -20,6 +20,11 @@ This version:
   message instead of an error.
 * Adds `calculate_strokes_gained()` and `summarise_strokes_gained()`. The
   baseline they use is a small internal data set in `R/sysdata.rda`.
+* Adds `add_win_probability()`, a win probability model for each hole of a
+  PGA Tour event. Its fitted parameters are also in `R/sysdata.rda`.
+* Adds `load_player_ids()` and `load_event_ids()`, which read an ID
+  crosswalk hosted as a GitHub release asset, with the same empty-tibble
+  fallback as the other loaders.
 * Lets analysis and plot functions take a `data` argument so they work on
   tibbles returned by `load_leaderboard()`, not only on user-created files.
 * Aligns older saved-file column names (`display_name`, `event_id`,

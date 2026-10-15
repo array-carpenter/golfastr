@@ -1,4 +1,27 @@
-# golfastr 0.2.1
+# golfastr 0.3.0
+
+### Win probability
+
+* `load_holes()` files now carry `win_prob`, `win_prob_before`, `wpa` (win
+  probability added) and `skill_rating` for every hole of every PGA Tour
+  stroke play event since 2004.
+* `add_win_probability()` computes the same columns for an event in progress
+  or for your own hole data.
+* The model plays out the rest of the event from every hole: each hole is
+  drawn from how the field played it that day, shifted for each player's
+  skill rating and for how the player has done this week and this round.
+  Cuts and playoffs are handled, the result is exact once no cut is left,
+  and it is calibrated against 2004-2019 results.
+
+### Hole history
+
+* `load_holes()` covers 2004 to now (was 2025 to now), including playoff
+  holes as an extra round.
+
+### IDs
+
+* `load_player_ids()` and `load_event_ids()` link ESPN IDs to PGA Tour IDs,
+  so ESPN scoring data joins to ShotLink and strokes gained.
 
 ### ShotLink data
 
@@ -18,8 +41,9 @@
   of expected strokes by lie and distance, fit from ShotLink strokes.
 * `summarise_strokes_gained()` totals shots by round, tournament or season,
   adjusted to the field. Season totals track the PGA Tour's official
-  strokes gained total closely (correlation 0.97 in 2025 and 0.98 in 2026) and cover every
-  player in the field, not only those with enough measured rounds.
+  strokes gained total closely (correlation 0.97 in 2025 and 0.98 in 2026)
+  and cover every player in the field, not only those with enough measured
+  rounds.
 
 ### Analysis
 
