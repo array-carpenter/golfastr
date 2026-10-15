@@ -10,8 +10,9 @@
 * The model plays out the rest of the event from every hole: each hole is
   drawn from how the field played it that day, shifted for each player's
   skill rating and for how the player has done this week and this round.
-  Cuts and playoffs are handled, the result is exact once no cut is left,
-  and it is calibrated against 2004-2019 results.
+  Cuts and playoffs are handled, and the result is exact once no cut is
+  left. Fit on 2004-2019, it is calibrated on 2020-2026 events it never
+  saw.
 
 ### Hole history
 

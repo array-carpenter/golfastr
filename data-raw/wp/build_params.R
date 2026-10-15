@@ -9,12 +9,9 @@ load("R/sysdata.rda", envir = env)
 sg_baseline <- env$sg_baseline
 
 fit <- readRDS(file.path(cache, "wp_fit.rds"))
-cal_file <- file.path(cache, "wp_calibration.rds")
 wp_params <- list(
   a = fit$a, w = fit$w, beta = fit$beta, sigma_round = fit$sigma_round,
   par_prior = fit$par_prior, prior_n_hole = fit$prior_n_hole,
-  skill_params = fit$skill_params,
-  calibration = if (file.exists(cal_file)) readRDS(cal_file)
+  skill_params = fit$skill_params
 )
-message("calibration included: ", !is.null(wp_params$calibration))
 usethis::use_data(sg_baseline, wp_params, internal = TRUE, overwrite = TRUE)
