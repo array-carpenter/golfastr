@@ -62,7 +62,9 @@ fix_par <- function(holes) {
 
 build_season <- function(year) {
   raw <- arrow::read_parquet(file.path(path.expand(src_dir), sprintf("holes_%d.parquet", year)))
-  raw <- raw[raw$round <= 4 & raw$hole <= 18 & !is.na(raw$score) & !is.na(raw$par), ]
+  raw <- raw[raw$round <= 6 & raw$hole <= 18 & !is.na(raw$score) & !is.na(raw$par), ]
+  # withdrawn players can carry a round of zeros; Stableford points can be 0
+  raw <- raw[raw$score > 0 | raw$event_format != "stroke", ]
   holes <- tibble::tibble(
     player_id = as.character(raw$player_id),
     player_name = raw$player_name,

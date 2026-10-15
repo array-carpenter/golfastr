@@ -20,14 +20,26 @@ read_season <- function(year) {
 }
 
 holes <- bind_rows(lapply(2004:2026, read_season))
-holes <- holes[holes$round <= 5 & holes$hole <= 18, ]
+holes <- holes[holes$hole <= 18, ]
+
+# Playoff holes come through as an extra round with a handful of players.
+# A round is regulation when at least a quarter of the opening field (and
+# at least 10 players) played it.
+per_round <- holes |>
+  group_by(tournament_id, round) |>
+  summarise(n = n_distinct(player_id), .groups = "drop") |>
+  group_by(tournament_id) |>
+  mutate(regulation = n >= pmax(10, 0.25 * n[round == 1])) |>
+  ungroup()
+reg <- per_round[per_round$regulation, c("tournament_id", "round")]
+holes$playoff <- !paste(holes$tournament_id, holes$round) %in% paste(reg$tournament_id, reg$round)
 message(nrow(holes), " hole rows")
 
 dates <- arrow::read_parquet("~/Code/golf-wp-planning/data/events.parquet") |>
   transmute(tournament_id = as.character(event_id), start_date = as.Date(substr(event_date, 1, 10)))
 
 # Strokes after each round for players with all 18 holes of it
-round_totals <- holes |>
+round_totals <- holes[!holes$playoff, ] |>
   group_by(tournament_id, player_id, round) |>
   summarise(holes = n(), strokes = sum(score), .groups = "drop") |>
   filter(holes == 18) |>
@@ -67,7 +79,8 @@ find_cuts <- function(rt, n_rounds, year) {
 events <- holes |>
   group_by(tournament_id) |>
   summarise(year = first(year), tournament_name = first(tournament_name),
-            players = n_distinct(player_id), rounds = max(round),
+            players = n_distinct(player_id), rounds = max(round[!playoff]),
+            playoff = any(playoff),
             winner_id = first(player_id[position == 1]),
             stableford = any(!par %in% 3:6) || grepl("Barracuda", first(tournament_name)),
             .groups = "drop") |>
@@ -81,7 +94,7 @@ events$cuts <- cuts[events$tournament_id]
 events$cuts[vapply(events$cuts, is.null, TRUE)] <- list(data.frame(after_round = integer(), place = integer(), made = integer(), rule = integer()))
 
 team <- grepl("Zurich", events$tournament_name) & events$year >= 2017
-match_play <- grepl("Match Play|Presidents Cup|Ryder Cup", events$tournament_name)
+match_play <- grepl("Match Play|Presidents Cup|Ryder Cup|Qualifying|Q-School", events$tournament_name)
 events$starting_strokes <- grepl("TOUR Championship", events$tournament_name, ignore.case = TRUE) &
   events$year %in% 2019:2024
 events$wp_eligible <- !events$stableford & !team & !match_play & !is.na(events$winner_id) &
