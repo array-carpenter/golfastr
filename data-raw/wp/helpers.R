@@ -75,6 +75,7 @@ event_table <- function(holes, dates) {
     dplyr::group_by(tournament_id) |>
     dplyr::summarise(year = dplyr::first(year), tournament_name = dplyr::first(tournament_name),
                      players = dplyr::n_distinct(player_id), rounds = max(round[!playoff]),
+                     rounds_complete = setequal(unique(round[!playoff]), seq_len(max(round[!playoff]))),
                      playoff = any(playoff),
                      winner_id = dplyr::first(player_id[position == 1]),
                      stableford = any(!par %in% 3:6) || grepl("Barracuda", dplyr::first(tournament_name)),
@@ -94,7 +95,7 @@ event_table <- function(holes, dates) {
   events$starting_strokes <- grepl("TOUR Championship", events$tournament_name, ignore.case = TRUE) &
     events$year %in% 2019:2024
   events$wp_eligible <- !events$stableford & !team & !other & !is.na(events$winner_id) &
-    events$players >= 10 & events$rounds >= 3
+    events$players >= 10 & events$rounds >= 3 & events$rounds_complete
   events
 }
 

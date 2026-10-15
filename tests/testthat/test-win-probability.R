@@ -148,3 +148,23 @@ test_that("cuts already made are read from the data", {
   expect_equal(cuts$after_round, 2L)
   expect_equal(cuts$rule, 6L)
 })
+
+test_that("a hole missing from the data counts as par and keeps ticks aligned", {
+  ev <- fake_event(n_players = 6, rounds = 2)
+  ev <- ev[!(ev$player_id == "2" & ev$round == 1 & ev$hole == 5), ]
+  out <- wp_event(ev, c(), test_params(), sims = 500)
+  p2 <- out[out$player_id == "2", ]
+  expect_false(5 %in% p2$g)
+  expect_equal(max(p2$g), 36)
+  sums <- tapply(out$win_prob, out$g, sum)
+  expect_true(all(abs(sums[names(sums) != "5"] - 1) < 1e-8))
+})
+
+test_that("starting on the 10th tee shifts the order of play", {
+  ev <- fake_event(n_players = 4, rounds = 1)
+  order <- data.frame(player_id = "1", round = 1L, hole = 1:18, seq = (1:18 - 10) %% 18 + 1)
+  out <- wp_event(ev, c(), test_params(), order = order, sims = 500)
+  p1 <- out[out$player_id == "1", ]
+  expect_equal(p1$g[p1$hole == 10], 1)
+  expect_equal(p1$g[p1$hole == 9], 18)
+})

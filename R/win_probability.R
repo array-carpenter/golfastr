@@ -135,6 +135,14 @@ wp_event <- function(holes, ratings, params, cuts = NULL, n_rounds = NULL,
   playoff <- wp_playoff_rows(holes)
   po <- holes[playoff, ]
   holes <- holes[!playoff, ]
+  # a player's rounds must run 1, 2, ... without gaps (the data has a few
+  # players missing a whole round)
+  rounds_played <- tapply(holes$round, holes$player_id, function(r) {
+    u <- sort(unique(r))
+    identical(u, seq_along(u))
+  })
+  holes <- holes[holes$player_id %in% names(rounds_played)[rounds_played], ]
+  po <- po[po$player_id %in% names(rounds_played)[rounds_played], ]
   if (is.null(n_rounds)) n_rounds <- max(4L, max(holes$round))
   if (is.null(cuts)) cuts <- data.frame(after_round = integer(), rule = integer())
   cuts <- cuts[cuts$after_round < n_rounds, , drop = FALSE]
@@ -187,12 +195,26 @@ wp_event <- function(holes, ratings, params, cuts = NULL, n_rounds = NULL,
   holes$seq <- seq_of
   holes <- holes[order(pid, holes$round, holes$seq), ]
   pid <- match(holes$player_id, players)
-  holes$g <- 18L * (holes$round - 1L) + stats::ave(holes$seq, pid, holes$round, FUN = seq_along)
+  holes$g <- 18L * (holes$round - 1L) + as.integer(holes$seq)
   progress <- tapply(holes$g, factor(pid, levels = seq_len(n)), max)
   progress[is.na(progress)] <- 0L
-  cum_to_par <- lapply(seq_len(n), function(i) c(0, cumsum(holes$to_par[pid == i])))
-  hole_order <- lapply(seq_len(n), function(i) split(holes$hole[pid == i], holes$round[pid == i]))
-  played_by <- lapply(seq_len(n), function(i) split(holes$to_par[pid == i], holes$round[pid == i]))
+  # score through each tick; a hole missing from the data counts as par
+  cum_to_par <- lapply(seq_len(n), function(i) {
+    by_tick <- numeric(progress[i])
+    by_tick[holes$g[pid == i]] <- holes$to_par[pid == i]
+    c(0, cumsum(by_tick))
+  })
+  played_by <- lapply(seq_len(n), function(i) {
+    x <- holes[pid == i, c("round", "hole", "seq", "to_par")]
+    split(x, x$round)
+  })
+  # all 18 holes in the order the player plays them that round
+  full_order <- function(i, r) {
+    x <- played_by[[i]][[as.character(r)]]
+    if (is.null(x) || !nrow(x)) return(1:18)
+    offset <- (x$hole[1] - x$seq[1]) %% 18
+    order((1:18 - offset - 1) %% 18 + 1)
+  }
 
   round_sg <- matrix(NA_real_, n, n_rounds)
   rt <- tapply(holes$to_par, list(factor(pid, levels = seq_len(n)), factor(holes$round, levels = seq_len(n_rounds))), sum)
@@ -234,8 +256,7 @@ wp_event <- function(holes, ratings, params, cuts = NULL, n_rounds = NULL,
       suffix <- vector("list", n)
       later <- vector("list", n)
       for (i in seq_len(n)) {
-        ord <- hole_order[[i]][[as.character(r)]]
-        if (length(ord) < 18) ord <- c(ord, setdiff(1:18, ord))
+        ord <- full_order(i, r)
         cl_r <- matrix(hole_cl[r, ord, ], 18)
         suffix[[i]] <- lapply(grid$node, function(z) wp_suffixes(cl_r, hole_beta[r, ord], skill[i] + z))
         later[[i]] <- lapply(seq_len(n_rounds)[seq_len(n_rounds) > r], function(rr) {
@@ -252,11 +273,10 @@ wp_event <- function(holes, ratings, params, cuts = NULL, n_rounds = NULL,
     current <- vapply(ids, function(i) cum_to_par[[i]][g + 1L], 0) + start_strokes[ids]
     rest_now <- lapply(ids, function(i) {
       if (k == 18L) return(wp_point(0L))
-      played <- played_by[[i]][[as.character(r)]]
-      ord <- hole_order[[i]][[as.character(r)]]
-      if (length(ord) < 18) ord <- c(ord, setdiff(1:18, ord))
-      pmfs <- lapply(ord[seq_len(k)], function(h) diff(c(0, stats::plogis(hole_cl[r, h, ]), 1)))
-      post <- wp_shock_posterior(played[seq_len(k)], pmfs, skill[i], hole_beta[r, ord[seq_len(k)]], grid)
+      x <- played_by[[i]][[as.character(r)]]
+      x <- x[x$seq <= k, ]
+      pmfs <- lapply(x$hole, function(h) diff(c(0, stats::plogis(hole_cl[r, h, ]), 1)))
+      post <- wp_shock_posterior(x$to_par, pmfs, skill[i], hole_beta[r, x$hole], grid)
       wp_mix(lapply(suffix[[i]], function(sf) sf[[k + 1L]]), post)
     })
 
