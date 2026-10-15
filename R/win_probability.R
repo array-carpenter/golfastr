@@ -128,7 +128,7 @@ wp_playoff_rows <- function(holes) {
 # Win probability after every hole of one event.
 #' @noRd
 wp_event <- function(holes, ratings, params, cuts = NULL, n_rounds = NULL,
-                     order = NULL, start = NULL, sims = 10000, seed = 1) {
+                     order = NULL, start = NULL, wave = NULL, sims = 10000, seed = 1) {
   holes <- as.data.frame(holes, stringsAsFactors = FALSE)
   holes$player_id <- as.character(holes$player_id)
   holes$to_par <- holes$score - holes$par
@@ -172,16 +172,31 @@ wp_event <- function(holes, ratings, params, cuts = NULL, n_rounds = NULL,
     cm <- cumsum(x)[-length(x)]
     stats::qlogis(pmin(pmax(cm, 1e-12), 1 - 1e-12))
   }
-  hole_cl <- array(NA_real_, c(n_rounds, 18, length(wp_support) - 1L))
+  # third index: the whole field, then the morning and afternoon waves. A
+  # wave's distribution leans on the field's for that hole and round.
+  wave_of <- rep(1L, nrow(holes))
+  if (!is.null(wave)) {
+    w <- wave$wave[match(paste(holes$player_id, holes$round), paste(wave$player_id, wave$round))]
+    wave_of[!is.na(w)] <- ifelse(w[!is.na(w)] == "AM", 2L, 3L)
+  }
+  holes$wave_i <- wave_of
+  prior_n_wave <- if (is.null(params$prior_n_wave)) 20 else params$prior_n_wave
+  hole_cl <- array(NA_real_, c(n_rounds, 18, length(wp_support) - 1L, 3L))
   hole_beta <- matrix(beta[as.character(hole_par)], n_rounds, 18, byrow = TRUE)
   for (h in 1:18) {
     prior <- params$par_prior[[as.character(hole_par[h])]]
     all_rounds <- holes$to_par[holes$hole == h]
     for (r in seq_len(n_rounds)) {
-      x <- holes$to_par[holes$hole == h & holes$round == r]
+      here <- holes$hole == h & holes$round == r
+      x <- holes$to_par[here]
       pmf <- if (length(x)) wp_hole_pmf(x, prior, params$prior_n_hole) else
         wp_hole_pmf(all_rounds, prior, params$prior_n_hole)
-      hole_cl[r, h, ] <- cl_of(pmf)
+      hole_cl[r, h, , 1L] <- cl_of(pmf)
+      for (v in 2:3) {
+        xv <- holes$to_par[here & wave_of == v]
+        hole_cl[r, h, , v] <- if (length(xv)) cl_of(wp_hole_pmf(xv, pmf, prior_n_wave)) else
+          hole_cl[r, h, , 1L]
+      }
     }
   }
 
@@ -208,6 +223,8 @@ wp_event <- function(holes, ratings, params, cuts = NULL, n_rounds = NULL,
     x <- holes[pid == i, c("round", "hole", "seq", "to_par")]
     split(x, x$round)
   })
+  wave_idx <- matrix(1L, n, n_rounds)
+  wave_idx[cbind(pid, holes$round)] <- holes$wave_i
   # all 18 holes in the order the player plays them that round
   full_order <- function(i, r) {
     x <- played_by[[i]][[as.character(r)]]
@@ -257,10 +274,10 @@ wp_event <- function(holes, ratings, params, cuts = NULL, n_rounds = NULL,
       later <- vector("list", n)
       for (i in seq_len(n)) {
         ord <- full_order(i, r)
-        cl_r <- matrix(hole_cl[r, ord, ], 18)
+        cl_r <- matrix(hole_cl[r, ord, , wave_idx[i, r]], 18)
         suffix[[i]] <- lapply(grid$node, function(z) wp_suffixes(cl_r, hole_beta[r, ord], skill[i] + z))
         later[[i]] <- lapply(seq_len(n_rounds)[seq_len(n_rounds) > r], function(rr) {
-          cl_rr <- matrix(hole_cl[rr, , ], 18)
+          cl_rr <- matrix(hole_cl[rr, , , wave_idx[i, rr]], 18)
           wp_mix(lapply(grid$node, function(z) wp_suffixes(cl_rr, hole_beta[rr, ], skill[i] + z)[[1]]),
                  grid$weight)
         })
@@ -275,7 +292,7 @@ wp_event <- function(holes, ratings, params, cuts = NULL, n_rounds = NULL,
       if (k == 18L) return(wp_point(0L))
       x <- played_by[[i]][[as.character(r)]]
       x <- x[x$seq <= k, ]
-      pmfs <- lapply(x$hole, function(h) diff(c(0, stats::plogis(hole_cl[r, h, ]), 1)))
+      pmfs <- lapply(x$hole, function(h) diff(c(0, stats::plogis(hole_cl[r, h, , wave_idx[i, r]]), 1)))
       post <- wp_shock_posterior(x$to_par, pmfs, skill[i], hole_beta[r, x$hole], grid)
       wp_mix(lapply(suffix[[i]], function(sf) sf[[k + 1L]]), post)
     })

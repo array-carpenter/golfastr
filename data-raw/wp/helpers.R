@@ -188,3 +188,18 @@ save_and_upload <- function(x, name, tag, upload) {
   }
   invisible(base)
 }
+
+# Morning or afternoon wave in rounds 1-2: before or after the median tee
+# time for that event, round and course
+wave_table <- function(tee, event_ids, player_ids) {
+  tee |>
+    dplyr::filter(round <= 2, !is.na(tee_time)) |>
+    dplyr::group_by(tournament_id, round, course_id) |>
+    dplyr::mutate(wave = ifelse(tee_time < stats::median(tee_time), "AM", "PM")) |>
+    dplyr::ungroup() |>
+    dplyr::inner_join(dplyr::select(event_ids, espn_tournament_id, pga_tournament_id),
+                      by = c("tournament_id" = "pga_tournament_id")) |>
+    dplyr::inner_join(dplyr::select(player_ids, espn_player_id, pga_player_id),
+                      by = c("player_id" = "pga_player_id")) |>
+    dplyr::distinct(tournament_id = espn_tournament_id, player_id = espn_player_id, round, wave)
+}

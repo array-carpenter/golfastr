@@ -168,3 +168,19 @@ test_that("starting on the 10th tee shifts the order of play", {
   expect_equal(p1$g[p1$hole == 10], 1)
   expect_equal(p1$g[p1$hole == 9], 18)
 })
+
+test_that("holes still to play in the harder wave lower a player's chances", {
+  ev <- fake_event(n_players = 20, rounds = 1, seed = 4)
+  pm <- as.character(11:20)
+  # the afternoon wave plays the back nine harder
+  back <- ev$player_id %in% pm & ev$hole >= 10
+  ev$score[back] <- ev$score[back] + rep(c(1L, 0L, 1L), length.out = sum(back))
+  # one player from each wave level par through nine
+  ev$score[ev$player_id %in% c("1", "11") & ev$hole <= 9] <- 4L
+  wave <- data.frame(player_id = as.character(1:20), round = 1L, wave = ifelse(1:20 <= 10, "AM", "PM"))
+  without <- wp_event(ev, c(), test_params(), n_rounds = 1, sims = 500)
+  with <- wp_event(ev, c(), test_params(), n_rounds = 1, wave = wave, sims = 500)
+  at <- function(x, p) x$win_prob[x$player_id == p & x$g == 9]
+  expect_equal(at(without, "1"), at(without, "11"))
+  expect_lt(at(with, "11"), at(with, "1"))
+})
