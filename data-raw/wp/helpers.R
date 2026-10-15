@@ -104,13 +104,17 @@ event_table <- function(holes, dates) {
 rate_events <- function(rounds, events, half_life, prior_mean, prior_n, passes = 3) {
   r <- rounds
   r$sg_adj <- r$sg
+  strength <- NULL
   for (p in seq_len(passes)) {
     x <- r
     x$sg <- x$sg_adj
     ratings <- golfastr:::wp_skill_ratings(x, events, half_life, prior_mean, prior_n)
+    if (p == passes) break
     strength <- tapply(ratings$rating, ratings$tournament_id, mean)
     r$sg_adj <- r$sg + strength[r$tournament_id]
   }
+  # `strength` is the adjustment behind the returned ratings
+  if (is.null(strength)) strength <- stats::setNames(rep(0, length(unique(r$tournament_id))), unique(r$tournament_id))
   list(ratings = ratings, strength = strength)
 }
 
