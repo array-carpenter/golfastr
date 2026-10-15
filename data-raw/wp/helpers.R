@@ -128,9 +128,10 @@ hole_order_table <- function(tee, event_ids, player_ids) {
 }
 
 # Run one event with the bundled model and return the new columns by row key
-event_win_probability <- function(h, ev, ratings, params, order = NULL, start = NULL, sims = 10000) {
+event_win_probability <- function(h, ev, ratings, params, order = NULL, start = NULL, wave = NULL,
+                                  sims = 10000) {
   out <- golfastr:::wp_event(h, ratings, params, cuts = ev$cuts[[1]], n_rounds = ev$rounds,
-                             order = order, start = start, sims = sims)
+                             order = order, start = start, wave = wave, sims = sims)
   known <- if (is.null(order)) character() else paste(order$player_id, order$round)
   out$hole_order_source <- ifelse(paste(out$player_id, out$round) %in% known, "shotlink", "assumed")
   out[c("tournament_id", "player_id", "round", "hole", "win_prob", "win_prob_before", "wpa",

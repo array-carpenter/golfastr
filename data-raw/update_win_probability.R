@@ -36,7 +36,9 @@ for (year in targets) {
   if (!length(todo)) next
 
   tee <- suppressMessages(load_tee_times(year))
-  order <- if (nrow(tee) && nrow(ids$events) && nrow(ids$players)) hole_order_table(tee, ids$events, ids$players)
+  have_ids <- nrow(tee) && nrow(ids$events) && nrow(ids$players)
+  order <- if (have_ids) hole_order_table(tee, ids$events, ids$players)
+  waves <- if (have_ids) wave_table(tee, ids$events, ids$players)
   results <- if ("win_prob" %in% names(h_year)) {
     h_year[!is.na(h_year$win_prob) & h_year$tournament_id %in% have,
            c("tournament_id", "player_id", "round", "hole", wp_columns)]
@@ -45,10 +47,12 @@ for (year in targets) {
     r <- rated$ratings[rated$ratings$tournament_id == id, ]
     ord <- if (!is.null(order)) order[order$tournament_id == id, ]
     if (!is.null(ord) && !nrow(ord)) ord <- NULL
+    wv <- if (!is.null(waves)) waves[waves$tournament_id == id, ]
+    if (!is.null(wv) && !nrow(wv)) wv <- NULL
     message("  ", events$tournament_name[events$tournament_id == id])
     results <- bind_rows(results, event_win_probability(
       h_year[h_year$tournament_id == id, ], events[events$tournament_id == id, ],
-      setNames(r$rating, r$player_id), params, order = ord))
+      setNames(r$rating, r$player_id), params, order = ord, wave = wv))
   }
   out <- attach_win_probability(h_year, results)
   save_and_upload(out, sprintf("holes_%d", year), "holes", upload)

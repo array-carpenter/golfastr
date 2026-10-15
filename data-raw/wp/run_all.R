@@ -14,6 +14,8 @@ fit <- readRDS(file.path(cache, "wp_fit.rds"))
 start <- utils::read.csv("data-raw/wp/starting_strokes.csv", colClasses = "character")
 order_file <- file.path(cache, "hole_order.rds")
 hole_order <- if (file.exists(order_file)) split(readRDS(order_file), readRDS(order_file)$tournament_id)
+wave_file <- file.path(cache, "waves.rds")
+waves <- if (file.exists(wave_file)) split(readRDS(wave_file), readRDS(wave_file)$tournament_id)
 out_dir <- file.path(cache, Sys.getenv("WP_RUN", "raw"))
 dir.create(out_dir, showWarnings = FALSE)
 
@@ -44,7 +46,7 @@ res <- parallel::mclapply(todo, function(id) {
     wp_event(input$holes, stats::setNames(r$rating, r$player_id), fit,
              cuts = ev$cuts[[1]], n_rounds = ev$rounds, sims = 10000,
              start = if (nrow(st)) stats::setNames(as.numeric(st$start), st$player_id),
-             order = hole_order[[id]]),
+             order = hole_order[[id]], wave = waves[[id]]),
     error = function(e) e
   )
   if (inherits(out, "error")) return(paste(id, conditionMessage(out)))

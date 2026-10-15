@@ -95,6 +95,7 @@ source("data-raw/wp/helpers.R")
 hole_order <- hole_order_table(tee, event_ids, player_ids)
 order_tbl <- distinct(hole_order, tournament_id, player_id, round, start_tee)
 saveRDS(hole_order, file.path(cache, "hole_order.rds"))
+saveRDS(wave_table(tee, event_ids, player_ids), file.path(cache, "waves.rds"))
 message(nrow(order_tbl), " player-rounds with a known starting tee, ",
         round(100 * mean(order_tbl$start_tee != 1), 1), "% off the 10th")
 
