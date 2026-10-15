@@ -127,24 +127,28 @@ hole_order_table <- function(tee, event_ids, player_ids) {
     dplyr::mutate(seq = (hole - start_tee) %% 18 + 1)
 }
 
-# Run one event with the bundled model and return the new columns by row key
+# Run one event with the bundled model; rows come back keyed by `.row`
 event_win_probability <- function(h, ev, ratings, params, order = NULL, start = NULL, wave = NULL,
                                   sims = 10000) {
   out <- golfastr:::wp_event(h, ratings, params, cuts = ev$cuts[[1]], n_rounds = ev$rounds,
                              order = order, start = start, wave = wave, sims = sims)
   known <- if (is.null(order)) character() else paste(order$player_id, order$round)
   out$hole_order_source <- ifelse(paste(out$player_id, out$round) %in% known, "shotlink", "assumed")
-  out[c("tournament_id", "player_id", "round", "hole", "win_prob", "win_prob_before", "wpa",
-        "skill_rating", "hole_order_source")]
+  out[c(".row", "win_prob", "win_prob_before", "wpa", "skill_rating", "hole_order_source")]
 }
 
 wp_columns <- c("win_prob", "win_prob_before", "wpa", "skill_rating", "hole_order_source")
 
-# Put win probability columns on a season's hole file, replacing any there
+# Write results into a season's hole rows by row id. Playoff holes can repeat
+# (player, round, hole), so a key join would multiply them.
 attach_win_probability <- function(holes, results) {
-  holes <- holes[setdiff(names(holes), c(wp_columns, "playoff"))]
-  key <- c("tournament_id", "player_id", "round", "hole")
-  dplyr::left_join(holes, results, by = key)
+  holes <- holes[setdiff(names(holes), "playoff")]
+  for (col in wp_columns) {
+    if (!col %in% names(holes)) holes[[col]] <- if (col == "hole_order_source") NA_character_ else NA_real_
+  }
+  i <- match(results$.row, holes$.row)
+  for (col in wp_columns) holes[[col]][i] <- results[[col]]
+  holes
 }
 
 ratings_files <- function(holes, events, rated, params) {

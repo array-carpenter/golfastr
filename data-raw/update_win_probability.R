@@ -26,6 +26,7 @@ ids <- list(events = load_event_ids(), players = load_player_ids())
 
 for (year in targets) {
   h_year <- holes[holes$year == year, ]
+  h_year$.row <- seq_len(nrow(h_year))
   have <- if ("win_prob" %in% names(h_year)) {
     unique(h_year$tournament_id[!is.na(h_year$win_prob)])
   } else character()
@@ -39,10 +40,7 @@ for (year in targets) {
   have_ids <- nrow(tee) && nrow(ids$events) && nrow(ids$players)
   order <- if (have_ids) hole_order_table(tee, ids$events, ids$players)
   waves <- if (have_ids) wave_table(tee, ids$events, ids$players)
-  results <- if ("win_prob" %in% names(h_year)) {
-    h_year[!is.na(h_year$win_prob) & h_year$tournament_id %in% have,
-           c("tournament_id", "player_id", "round", "hole", wp_columns)]
-  }
+  results <- NULL
   for (id in todo) {
     r <- rated$ratings[rated$ratings$tournament_id == id, ]
     ord <- if (!is.null(order)) order[order$tournament_id == id, ]
@@ -55,6 +53,7 @@ for (year in targets) {
       setNames(r$rating, r$player_id), params, order = ord, wave = wv))
   }
   out <- attach_win_probability(h_year, results)
+  out$.row <- NULL
   save_and_upload(out, sprintf("holes_%d", year), "holes", upload)
 }
 

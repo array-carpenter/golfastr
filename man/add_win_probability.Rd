@@ -10,7 +10,8 @@ add_win_probability(
   seed = 1,
   ratings = NULL,
   cut = 65,
-  rounds = 4
+  rounds = 4,
+  start = NULL
 )
 }
 \arguments{
@@ -33,10 +34,15 @@ each player's latest rating for events not yet in them.}
 an event whose cut has not happened yet. Use \code{NA} for events with
 no cut. Cuts already made are read from the data.}
 
-\item{rounds}{Number of rounds in the event.}
+\item{rounds}{Number of regulation rounds in the event: 3 for an event
+shortened to 54 holes, 5 for the old 90-hole Bob Hope Classic.}
+
+\item{start}{Optional starting strokes as a named numeric vector (names
+are ESPN player IDs), as at the 2019-2024 Tour Championship.}
 }
 \value{
-\code{holes} with these columns added:
+\code{holes} with these columns added, and the current chances
+  in \code{attr(, "current")}:
   \itemize{
     \item \code{win_prob}: Chance the player wins, after this hole
     \item \code{win_prob_before}: Chance before this hole
@@ -54,6 +60,10 @@ Hole files from [load_holes()] already carry these columns for completed
 events from 2004 on. Use this function for an event in progress or for
 your own hole data.
 
+For an event in progress, players who are behind in their round (or
+have not teed off) stay in the field at their latest score, and each
+player's chance right now is returned as \code{attr(x, "current")}.
+
 The model plays out the rest of the event from each hole. Each remaining
 hole is drawn from how the field played that hole that day, shifted for
 the player's skill rating (strokes per round better than the field, from
@@ -70,8 +80,9 @@ logistic model on strokes behind the leader and holes left.
 
 Holes are assumed to be played 1 to 18. Players who start on the 10th tee
 are therefore placed in the wrong order within a round; their totals at
-the end of each round are unaffected. Modified Stableford and team events
-get `NA`.
+the end of each round are unaffected. Playoff holes (rounds after
+\code{rounds}) split the chances evenly among the players still in until
+the playoff is decided. Modified Stableford and team events get `NA`.
 }
 \examples{
 \donttest{

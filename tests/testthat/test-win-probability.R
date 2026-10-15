@@ -127,7 +127,7 @@ test_that("add_win_probability keeps row order and adds the columns", {
   ev <- fake_event(n_players = 5, rounds = 4)
   ev <- ev[sample(nrow(ev)), ]
   out <- add_win_probability(ev, sims = 500, ratings = c(`1` = 2))
-  expect_equal(out[names(ev)], tibble::as_tibble(ev))
+  expect_equal(out[names(ev)], tibble::as_tibble(ev), ignore_attr = TRUE)
   expect_true(all(c("win_prob", "win_prob_before", "wpa", "skill_rating") %in% names(out)))
   expect_true(all(out$win_prob >= 0 & out$win_prob <= 1))
   expect_equal(out$skill_rating[out$player_id == "1"][1], 2)
@@ -183,4 +183,62 @@ test_that("holes still to play in the harder wave lower a player's chances", {
   at <- function(x, p) x$win_prob[x$player_id == p & x$g == 9]
   expect_equal(at(without, "1"), at(without, "11"))
   expect_lt(at(with, "11"), at(with, "1"))
+})
+
+test_that("live: players behind in their round stay in the field", {
+  ev <- fake_event(n_players = 20, rounds = 2, seed = 7)
+  # half the field is through 18 holes of round 2, the rest through 3
+  ev <- ev[!(ev$round == 2 & as.integer(ev$player_id) > 10 & ev$hole > 3), ]
+  out <- wp_event(ev, c(), test_params(), n_rounds = 4, live = TRUE, sims = 1000)
+  expect_false(any(is.na(out$win_prob)))
+  expect_equal(sum(attr(out, "current")), 1)
+  expect_true(all(attr(out, "current")[as.character(11:20)] > 0))
+  sums <- tapply(out$win_prob, out$g, sum)
+  expect_true(all(abs(sums[as.integer(names(sums)) <= 21] - 1) < 1e-8))
+})
+
+test_that("live: players through the cut who have not teed off keep their chances", {
+  ev <- fake_event(n_players = 12, rounds = 3, seed = 8)
+  ev$score[as.integer(ev$player_id) > 6 & ev$round <= 2 & ev$hole <= 6] <- 6L
+  ev <- ev[!(as.integer(ev$player_id) > 6 & ev$round == 3), ]
+  ev <- ev[!(ev$player_id %in% c("5", "6") & ev$round == 3), ]
+  out <- wp_event(ev, c(), test_params(), n_rounds = 4,
+                  cuts = data.frame(after_round = 2L, rule = 6L), live = TRUE, sims = 1000)
+  now <- attr(out, "current")
+  expect_gt(now[["5"]], 0)
+  expect_equal(unname(now[as.character(7:12)]), rep(0, 6))
+  expect_equal(sum(now), 1)
+})
+
+test_that("a playoff hole played more than once is kept in order", {
+  ev <- fake_event(n_players = 10, rounds = 4, seed = 9)
+  ev$score[!ev$player_id %in% c("1", "2") & ev$round == 1] <- 6L
+  t12 <- tapply(ev$score, ev$player_id, sum)
+  last <- ev$player_id == "2" & ev$round == 4 & ev$hole == 18
+  ev$score[last] <- ev$score[last] + (t12[["1"]] - t12[["2"]])
+  po <- data.frame(hole = 18L, round = 5L, player_id = c("1", "2", "1", "2"), par = 4L,
+                   score = c(4L, 4L, 4L, 5L), tournament_id = "T1")
+  out <- wp_event(rbind(ev, po), c(), test_params(), n_rounds = 4, sims = 500)
+  p <- out[out$round == 5, ]
+  expect_equal(nrow(p), 4)
+  expect_equal(p$win_prob, c(0.5, 0.5, 1, 0))
+})
+
+test_that("missing scores are skipped, not fatal", {
+  ev <- fake_event(n_players = 5, rounds = 2)
+  ev$score[1:3] <- NA
+  out <- wp_event(ev, c(), test_params(), n_rounds = 2, sims = 500)
+  expect_equal(nrow(out), nrow(ev) - 3)
+})
+
+test_that("add_win_probability returns current chances and spots a live event", {
+  ev <- fake_event(n_players = 8, rounds = 2, seed = 11)
+  ev <- ev[!(ev$round == 2 & ev$player_id %in% c("1", "2") & ev$hole > 9), ]
+  expect_true(wp_in_progress(ev, rounds = 4))
+  out <- add_win_probability(ev, sims = 500, ratings = c(), cut = NA)
+  now <- attr(out, "current")
+  expect_equal(nrow(now), 8)
+  expect_equal(sum(now$win_prob), 1)
+  done <- fake_event(n_players = 4, rounds = 4)
+  expect_false(wp_in_progress(done, rounds = 4))
 })
