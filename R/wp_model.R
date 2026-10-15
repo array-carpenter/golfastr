@@ -45,6 +45,10 @@ wp_convolve <- function(a, b) {
     b <- tmp
   }
   n <- length(a$p)
+  if (length(b$p) > 16L) {
+    out <- pmax(stats::convolve(a$p, rev(b$p), type = "open"), 0)
+    return(list(lo = as.integer(a$lo + b$lo), p = out / sum(out) * sum(a$p) * sum(b$p)))
+  }
   out <- numeric(n + length(b$p) - 1L)
   for (i in seq_along(b$p)) {
     idx <- i:(i + n - 1L)

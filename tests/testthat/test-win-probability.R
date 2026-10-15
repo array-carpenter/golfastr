@@ -32,7 +32,7 @@ test_that("exact results match brute-force enumeration", {
 test_that("simulation agrees with the exact answer when no cut is left", {
   d <- list(dist(-1, c(0.3, 0.4, 0.3)), dist(0, c(0.5, 0.5)), dist(-2, c(0.1, 0.2, 0.7)))
   set.seed(1)
-  u <- array(stats::runif(3 * 40000), c(3, 40000, 1))
+  u <- array(stats::runif(3 * 40000), c(40000, 3, 1))
   sim <- wp_sim(c(0, 0, 0), list(d), integer(), u)
   expect_equal(sim, wp_exact(d), tolerance = 0.01)
 })
@@ -41,7 +41,7 @@ test_that("players below the cut cannot win", {
   # player 3 always finishes the first stretch 10 back with a top-2 cut
   first <- list(wp_point(0L), wp_point(0L), wp_point(10L))
   second <- list(dist(0, c(0.5, 0.5)), dist(0, c(0.5, 0.5)), wp_point(-50L))
-  u <- array(stats::runif(3 * 2000 * 2), c(3, 2000, 2))
+  u <- array(stats::runif(3 * 2000 * 2), c(2000, 3, 2))
   sim <- wp_sim(c(0, 0, 0), list(first, second), 2L, u)
   expect_equal(sim[3], 0)
   expect_equal(sum(sim), 1)

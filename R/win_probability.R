@@ -11,9 +11,20 @@ wp_suffixes <- function(cl, beta, s) {
   cum <- cbind(0, z, 1)
   pmf <- cum[, -1, drop = FALSE] - cum[, -ncol(cum), drop = FALSE]
   pmf[pmf < 0] <- 0
+  # every suffix product at once in the Fourier domain
+  width <- ncol(pmf)
+  size <- 2L^ceiling(log2((width - 1L) * n + 1L))
+  a <- matrix(0, size, n)
+  a[seq_len(width), ] <- t(pmf)
+  f <- stats::mvfft(a)
+  suffix <- f
+  if (n > 1) for (h in (n - 1L):1) suffix[, h] <- suffix[, h] * suffix[, h + 1L]
+  back <- Re(stats::mvfft(suffix, inverse = TRUE)) / size
   lo <- min(wp_support)
-  for (h in n:1) {
-    out[[h]] <- wp_convolve(list(lo = lo, p = pmf[h, ]), out[[h + 1L]])
+  for (h in seq_len(n)) {
+    len <- (width - 1L) * (n - h + 1L) + 1L
+    p <- pmax(back[seq_len(len), h], 0)
+    out[[h]] <- list(lo = as.integer(lo * (n - h + 1L)), p = p / sum(p))
   }
   out
 }
@@ -82,25 +93,27 @@ wp_draw <- function(d, u) {
 # Monte Carlo when a cut is still to come. `current` is each player's score
 # so far, `segments` a list (one per stretch of rounds ending at a cut or the
 # finish) of per-player distributions, `rules` the cut after each stretch
-# but the last ("top N and ties"), `u` uniforms [player, sim, segment].
+# but the last ("top N and ties"), `u` uniforms [sim, player, segment].
 #' @noRd
 wp_sim <- function(current, segments, rules, u) {
   n <- length(current)
-  sims <- dim(u)[2]
-  total <- matrix(current, n, sims)
-  alive <- matrix(TRUE, n, sims)
+  sims <- dim(u)[1]
+  total <- matrix(current, sims, n, byrow = TRUE)
+  alive <- matrix(TRUE, sims, n)
+  sim_id <- rep(seq_len(sims), times = n)
   for (s in seq_along(segments)) {
-    for (i in seq_len(n)) total[i, ] <- total[i, ] + wp_draw(segments[[s]][[i]], u[i, , s])
+    for (i in seq_len(n)) total[, i] <- total[, i] + wp_draw(segments[[s]][[i]], u[, i, s])
     if (s <= length(rules)) {
-      masked <- ifelse(alive, total, Inf)
-      line <- apply(masked, 2, function(x) sort(x, partial = min(rules[s], n))[min(rules[s], n)])
-      alive <- alive & masked <= rep(line, each = n)
+      masked <- total
+      masked[!alive] <- Inf
+      sorted <- matrix(masked[order(sim_id, masked)], n)
+      alive <- alive & masked <= sorted[min(rules[s], n), ]
     }
   }
-  masked <- ifelse(alive, total, Inf)
-  best <- apply(masked, 2, min)
-  lead <- masked == rep(best, each = n)
-  rowSums(lead / rep(colSums(lead), each = n)) / sims
+  total[!alive] <- Inf
+  best <- total[order(sim_id, total)][seq.int(1L, n * sims, by = n)]
+  lead <- total == best
+  colSums(lead / rowSums(lead)) / sims
 }
 
 # Rounds with only a handful of players are playoff holes.
@@ -179,6 +192,7 @@ wp_event <- function(holes, ratings, params, cuts = NULL, n_rounds = NULL,
   progress[is.na(progress)] <- 0L
   cum_to_par <- lapply(seq_len(n), function(i) c(0, cumsum(holes$to_par[pid == i])))
   hole_order <- lapply(seq_len(n), function(i) split(holes$hole[pid == i], holes$round[pid == i]))
+  played_by <- lapply(seq_len(n), function(i) split(holes$to_par[pid == i], holes$round[pid == i]))
 
   round_sg <- matrix(NA_real_, n, n_rounds)
   rt <- tapply(holes$to_par, list(factor(pid, levels = seq_len(n)), factor(holes$round, levels = seq_len(n_rounds))), sum)
@@ -188,7 +202,7 @@ wp_event <- function(holes, ratings, params, cuts = NULL, n_rounds = NULL,
 
   set.seed(seed)
   ends <- sort(unique(c(cuts$after_round, n_rounds)))
-  u <- array(stats::runif(n * sims * length(ends)), c(n, sims, length(ends)))
+  u <- array(stats::runif(n * sims * length(ends)), c(sims, n, length(ends)))
 
   total_ticks <- max(progress)
   wp <- matrix(0, n, total_ticks + 1L)
@@ -231,13 +245,14 @@ wp_event <- function(holes, ratings, params, cuts = NULL, n_rounds = NULL,
         })
         if (length(later[[i]])) names(later[[i]]) <- as.character(seq_len(n_rounds)[seq_len(n_rounds) > r])
       }
+      later_total <- lapply(later, function(l) Reduce(wp_convolve, l, wp_point(0L)))
       cache_round <- r
     }
 
     current <- vapply(ids, function(i) cum_to_par[[i]][g + 1L], 0) + start_strokes[ids]
     rest_now <- lapply(ids, function(i) {
       if (k == 18L) return(wp_point(0L))
-      played <- holes$to_par[pid == i & holes$round == r]
+      played <- played_by[[i]][[as.character(r)]]
       ord <- hole_order[[i]][[as.character(r)]]
       if (length(ord) < 18) ord <- c(ord, setdiff(1:18, ord))
       pmfs <- lapply(ord[seq_len(k)], function(h) diff(c(0, stats::plogis(hole_cl[r, h, ]), 1)))
@@ -248,8 +263,7 @@ wp_event <- function(holes, ratings, params, cuts = NULL, n_rounds = NULL,
     pending <- cuts[cuts$after_round > r | (cuts$after_round == r & k < 18L), , drop = FALSE]
     if (!nrow(pending)) {
       dists <- Map(function(i, now, cur) {
-        d <- now
-        for (lt in later[[i]]) d <- wp_convolve(d, lt)
+        d <- wp_convolve(now, later_total[[i]])
         d$lo <- d$lo + as.integer(round(cur))
         d
       }, ids, rest_now, current)
@@ -267,7 +281,7 @@ wp_event <- function(holes, ratings, params, cuts = NULL, n_rounds = NULL,
       })
       slices <- match(seg_ends, ends)
       wp[ids, g + 1L] <- wp_sim(current, segments, pending$rule[order(pending$after_round)],
-                                u[ids, , slices, drop = FALSE])
+                                u[, ids, slices, drop = FALSE])
     }
   }
 
