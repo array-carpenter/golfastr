@@ -63,3 +63,62 @@ test_that("suffix distributions shrink to a point as holes are played", {
   expect_equal(suf[[4]], wp_point(0L))
   expect_equal(suf[[1]]$lo, -9L)
 })
+
+test_params <- function() {
+  prior <- c(0.001, 0.02, 0.2, 0.6, 0.15, 0.025, 0.003, 0.0007, 0.0003)
+  prior <- prior / sum(prior)
+  list(a = 1, w = 0.1, beta = c(`3` = 0.08, `4` = 0.08, `5` = 0.08), sigma_round = 2.5,
+       par_prior = list(`3` = prior, `4` = prior, `5` = prior), prior_n_hole = 5,
+       skill_params = c(half_life = 35, prior_n = 5, prior_mean = -2.5))
+}
+
+fake_event <- function(n_players = 6, rounds = 4, seed = 1) {
+  set.seed(seed)
+  x <- expand.grid(hole = 1:18, round = seq_len(rounds), player_id = as.character(seq_len(n_players)),
+                   stringsAsFactors = FALSE)
+  x$par <- 4L
+  x$score <- 4L + sample(c(-1L, 0L, 0L, 0L, 1L), nrow(x), replace = TRUE)
+  x$tournament_id <- "T1"
+  x
+}
+
+test_that("event win probability sums to one after every hole and ends with the winner", {
+  ev <- fake_event()
+  out <- wp_event(ev, ratings = c(`1` = 1, `2` = 0), params = test_params(), sims = 2000)
+  expect_equal(nrow(out), nrow(ev))
+  by_tick <- tapply(out$win_prob, out$g, sum)
+  expect_true(all(abs(by_tick - 1) < 1e-8))
+  totals <- tapply(ev$score, ev$player_id, sum)
+  leaders <- names(totals)[totals == min(totals)]
+  last <- out[out$g == max(out$g), ]
+  expect_equal(sum(last$win_prob[last$player_id %in% leaders]), 1)
+  expect_equal(out$wpa, out$win_prob - out$win_prob_before)
+})
+
+test_that("a missed cut drops a player to zero and the same seed repeats", {
+  ev <- fake_event(n_players = 8)
+  ev$score[ev$player_id == "8" & ev$round <= 2] <- 7L
+  ev <- ev[!(ev$player_id == "8" & ev$round > 2), ]
+  cuts <- data.frame(after_round = 2L, rule = 7L)
+  a <- wp_event(ev, c(), test_params(), cuts = cuts, sims = 1000, seed = 3)
+  b <- wp_event(ev, c(), test_params(), cuts = cuts, sims = 1000, seed = 3)
+  expect_identical(a$win_prob, b$win_prob)
+  p8 <- a[a$player_id == "8", ]
+  expect_equal(p8$win_prob[p8$g == 36], 0)
+  expect_true(all(abs(tapply(a$win_prob, a$g, sum) - 1) < 1e-8))
+})
+
+test_that("playoff holes settle the tie", {
+  ev <- fake_event(n_players = 10, rounds = 4)
+  ev$score[!ev$player_id %in% c("1", "2") & ev$round == 1] <- 6L
+  t12 <- tapply(ev$score, ev$player_id, sum)
+  ev$score[ev$player_id == "2" & ev$round == 4 & ev$hole == 18] <-
+    ev$score[ev$player_id == "2" & ev$round == 4 & ev$hole == 18] + (t12[["1"]] - t12[["2"]])
+  po <- data.frame(hole = 18L, round = 5L, player_id = c("1", "2"), par = 4L, score = c(4L, 5L),
+                   tournament_id = "T1")
+  out <- wp_event(rbind(ev, po), c(), test_params(), sims = 500)
+  last <- out[out$round == 5, ]
+  expect_equal(last$win_prob_before, c(0.5, 0.5))
+  expect_equal(last$win_prob[last$player_id == "1"], 1)
+  expect_equal(last$win_prob[last$player_id == "2"], 0)
+})

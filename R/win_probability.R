@@ -102,3 +102,202 @@ wp_sim <- function(current, segments, rules, u) {
   lead <- masked == rep(best, each = n)
   rowSums(lead / rep(colSums(lead), each = n)) / sims
 }
+
+# Rounds with only a handful of players are playoff holes.
+#' @noRd
+wp_playoff_rows <- function(holes) {
+  n <- tapply(holes$player_id, holes$round, function(x) length(unique(x)))
+  first <- if ("1" %in% names(n)) n[["1"]] else max(n)
+  playoff_rounds <- as.integer(names(n)[n < 0.25 * first & as.integer(names(n)) > 1])
+  holes$round %in% playoff_rounds
+}
+
+# Win probability after every hole of one event.
+#' @noRd
+wp_event <- function(holes, ratings, params, cuts = NULL, n_rounds = NULL,
+                     order = NULL, start = NULL, sims = 10000, seed = 1) {
+  holes <- as.data.frame(holes, stringsAsFactors = FALSE)
+  holes$player_id <- as.character(holes$player_id)
+  holes$to_par <- holes$score - holes$par
+  playoff <- wp_playoff_rows(holes)
+  po <- holes[playoff, ]
+  holes <- holes[!playoff, ]
+  if (is.null(n_rounds)) n_rounds <- max(4L, max(holes$round))
+  if (is.null(cuts)) cuts <- data.frame(after_round = integer(), rule = integer())
+  cuts <- cuts[cuts$after_round < n_rounds, , drop = FALSE]
+
+  players <- sort(unique(holes$player_id))
+  n <- length(players)
+  pid <- match(holes$player_id, players)
+  rating <- if (length(ratings)) unname(ratings[players]) else rep(NA_real_, n)
+  names(rating) <- players
+  rating[is.na(rating)] <- params$skill_params[["prior_mean"]]
+  skill0 <- params$a * (rating - mean(rating))
+  start_strokes <- if (is.null(start)) rep(0, n) else {
+    s <- start[players]
+    s[is.na(s)] <- 0
+    s
+  }
+  beta <- params$beta
+  grid <- wp_shock_grid(9L, params$sigma_round)
+
+  # each hole's cumulative logits by round; unplayed holes borrow the same
+  # hole's other rounds, then the pooled distribution for its par
+  par_of <- tapply(holes$par, holes$hole, function(p) as.integer(names(which.max(table(p)))))
+  hole_par <- rep(4L, 18)
+  hole_par[as.integer(names(par_of))] <- par_of
+  cl_of <- function(x) {
+    cm <- cumsum(x)[-length(x)]
+    stats::qlogis(pmin(pmax(cm, 1e-12), 1 - 1e-12))
+  }
+  hole_cl <- array(NA_real_, c(n_rounds, 18, length(wp_support) - 1L))
+  hole_beta <- matrix(beta[as.character(hole_par)], n_rounds, 18, byrow = TRUE)
+  for (h in 1:18) {
+    prior <- params$par_prior[[as.character(hole_par[h])]]
+    all_rounds <- holes$to_par[holes$hole == h]
+    for (r in seq_len(n_rounds)) {
+      x <- holes$to_par[holes$hole == h & holes$round == r]
+      pmf <- if (length(x)) wp_hole_pmf(x, prior, params$prior_n_hole) else
+        wp_hole_pmf(all_rounds, prior, params$prior_n_hole)
+      hole_cl[r, h, ] <- cl_of(pmf)
+    }
+  }
+
+  # play order per player-round
+  seq_of <- holes$hole
+  if (!is.null(order)) {
+    key <- paste(order$player_id, order$round, order$hole)
+    s <- order$seq[match(paste(holes$player_id, holes$round, holes$hole), key)]
+    seq_of[!is.na(s)] <- s[!is.na(s)]
+  }
+  holes$seq <- seq_of
+  holes <- holes[order(pid, holes$round, holes$seq), ]
+  pid <- match(holes$player_id, players)
+  holes$g <- 18L * (holes$round - 1L) + stats::ave(holes$seq, pid, holes$round, FUN = seq_along)
+  progress <- tapply(holes$g, factor(pid, levels = seq_len(n)), max)
+  progress[is.na(progress)] <- 0L
+  cum_to_par <- lapply(seq_len(n), function(i) c(0, cumsum(holes$to_par[pid == i])))
+  hole_order <- lapply(seq_len(n), function(i) split(holes$hole[pid == i], holes$round[pid == i]))
+
+  round_sg <- matrix(NA_real_, n, n_rounds)
+  rt <- tapply(holes$to_par, list(factor(pid, levels = seq_len(n)), factor(holes$round, levels = seq_len(n_rounds))), sum)
+  full <- tapply(holes$hole, list(factor(pid, levels = seq_len(n)), factor(holes$round, levels = seq_len(n_rounds))), length) == 18
+  rt[is.na(full) | !full] <- NA
+  round_sg <- -sweep(rt, 2, colMeans(rt, na.rm = TRUE))
+
+  set.seed(seed)
+  ends <- sort(unique(c(cuts$after_round, n_rounds)))
+  u <- array(stats::runif(n * sims * length(ends)), c(n, sims, length(ends)))
+
+  total_ticks <- max(progress)
+  wp <- matrix(0, n, total_ticks + 1L)
+  cache_round <- 0L
+  for (g in 0:total_ticks) {
+    r <- if (g == 0) 1L else as.integer((g - 1L) %/% 18L + 1L)
+    k <- if (g == 0) 0L else as.integer(g - 18L * (r - 1L))
+    active <- progress >= g
+    done_cuts <- cuts$after_round[cuts$after_round < r | (cuts$after_round == r & k == 18L)]
+    for (c in done_cuts) {
+      if (g >= 18L * c) {
+        went_on <- progress > 18L * c
+        if (any(went_on)) {
+          active <- active & went_on
+        } else {
+          tot <- vapply(seq_len(n), function(i) cum_to_par[[i]][min(g, progress[i]) + 1L], 0) + start_strokes
+          line <- sort(tot[active])[min(cuts$rule[cuts$after_round == c], sum(active))]
+          active <- active & tot <= line
+        }
+      }
+    }
+    ids <- which(active)
+    if (!length(ids)) next
+
+    if (r != cache_round) {
+      form <- if (r > 1) rowMeans(round_sg[, seq_len(r - 1), drop = FALSE], na.rm = TRUE) else rep(0, n)
+      form[is.na(form)] <- 0
+      skill <- skill0 + params$w * (form - mean(form[active]))
+      suffix <- vector("list", n)
+      later <- vector("list", n)
+      for (i in seq_len(n)) {
+        ord <- hole_order[[i]][[as.character(r)]]
+        if (length(ord) < 18) ord <- c(ord, setdiff(1:18, ord))
+        cl_r <- matrix(hole_cl[r, ord, ], 18)
+        suffix[[i]] <- lapply(grid$node, function(z) wp_suffixes(cl_r, hole_beta[r, ord], skill[i] + z))
+        later[[i]] <- lapply(seq_len(n_rounds)[seq_len(n_rounds) > r], function(rr) {
+          cl_rr <- matrix(hole_cl[rr, , ], 18)
+          wp_mix(lapply(grid$node, function(z) wp_suffixes(cl_rr, hole_beta[rr, ], skill[i] + z)[[1]]),
+                 grid$weight)
+        })
+        if (length(later[[i]])) names(later[[i]]) <- as.character(seq_len(n_rounds)[seq_len(n_rounds) > r])
+      }
+      cache_round <- r
+    }
+
+    current <- vapply(ids, function(i) cum_to_par[[i]][g + 1L], 0) + start_strokes[ids]
+    rest_now <- lapply(ids, function(i) {
+      if (k == 18L) return(wp_point(0L))
+      played <- holes$to_par[pid == i & holes$round == r]
+      ord <- hole_order[[i]][[as.character(r)]]
+      if (length(ord) < 18) ord <- c(ord, setdiff(1:18, ord))
+      pmfs <- lapply(ord[seq_len(k)], function(h) diff(c(0, stats::plogis(hole_cl[r, h, ]), 1)))
+      post <- wp_shock_posterior(played[seq_len(k)], pmfs, skill[i], hole_beta[r, ord[seq_len(k)]], grid)
+      wp_mix(lapply(suffix[[i]], function(sf) sf[[k + 1L]]), post)
+    })
+
+    pending <- cuts[cuts$after_round > r | (cuts$after_round == r & k < 18L), , drop = FALSE]
+    if (!nrow(pending)) {
+      dists <- Map(function(i, now, cur) {
+        d <- now
+        for (lt in later[[i]]) d <- wp_convolve(d, lt)
+        d$lo <- d$lo + as.integer(round(cur))
+        d
+      }, ids, rest_now, current)
+      wp[ids, g + 1L] <- wp_exact(dists)
+    } else {
+      seg_ends <- sort(unique(c(pending$after_round, n_rounds)))
+      segments <- lapply(seq_along(seg_ends), function(s) {
+        from <- if (s == 1) r + 1L else seg_ends[s - 1] + 1L
+        rounds_in <- seq_len(n_rounds)[seq_len(n_rounds) >= from & seq_len(n_rounds) <= seg_ends[s]]
+        Map(function(i, now) {
+          d <- if (s == 1) now else wp_point(0L)
+          for (rr in rounds_in) d <- wp_convolve(d, later[[i]][[as.character(rr)]])
+          d
+        }, ids, rest_now)
+      })
+      slices <- match(seg_ends, ends)
+      wp[ids, g + 1L] <- wp_sim(current, segments, pending$rule[order(pending$after_round)],
+                                u[ids, , slices, drop = FALSE])
+    }
+  }
+
+  holes$win_prob <- wp[cbind(match(holes$player_id, players), holes$g + 1L)]
+  holes$win_prob_before <- wp[cbind(match(holes$player_id, players), holes$g)]
+  out <- holes
+
+  if (nrow(po)) {
+    final <- wp[, total_ticks + 1L]
+    po <- po[order(po$round, po$hole), ]
+    po$win_prob_before <- NA_real_
+    po$win_prob <- NA_real_
+    po$g <- NA_integer_
+    po$seq <- po$hole
+    alive <- players[final > 0]
+    share <- final
+    for (step in unique(paste(po$round, po$hole))) {
+      rows <- which(paste(po$round, po$hole) == step & po$player_id %in% alive)
+      if (!length(rows)) next
+      before <- share[match(po$player_id[rows], players)]
+      best <- min(po$score[rows])
+      alive <- po$player_id[rows][po$score[rows] == best]
+      share[] <- 0
+      share[match(alive, players)] <- 1 / length(alive)
+      po$win_prob_before[rows] <- before
+      po$win_prob[rows] <- share[match(po$player_id[rows], players)]
+    }
+    keep <- intersect(names(out), names(po))
+    out <- rbind(out[keep], po[keep])
+  }
+  out$wpa <- out$win_prob - out$win_prob_before
+  out$skill_rating <- unname(rating[match(out$player_id, players)])
+  out
+}
