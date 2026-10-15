@@ -50,6 +50,20 @@ reference:
   - calculate_strokes_gained
   - summarise_strokes_gained
 
+- title: Win probability
+  desc: >
+    Each player's chance of winning after every hole, and the win
+    probability added by each hole. Published in load_holes() files for
+    every event since 2004.
+  contents:
+  - add_win_probability
+
+- title: IDs
+  desc: Link ESPN IDs to PGA Tour IDs.
+  contents:
+  - load_player_ids
+  - load_event_ids
+
 - title: Live ESPN API
   desc: Query tournaments directly from ESPN.
   contents:
