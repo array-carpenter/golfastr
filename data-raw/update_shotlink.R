@@ -39,10 +39,10 @@ pga_query <- function(query) {
     req_body_json(list(query = query)) |>
     req_timeout(60) |>
     req_retry(
-      max_tries = 8,
+      max_tries = 5,
       retry_on_failure = TRUE,
       is_transient = function(r) resp_status(r) %in% c(429, 500, 502, 503, 504),
-      backoff = function(i) min(600, 30 * 2^(i - 1))
+      backoff = function(i) min(120, 15 * 2^(i - 1))
     ) |>
     req_error(is_error = function(r) FALSE) |>
     req_perform()
