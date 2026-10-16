@@ -13,6 +13,9 @@
 ##
 ## SHOTLINK_EVENTS=R2025011 limits a run to one or more tournament ids.
 ##
+## --incremental starts from the season files already on the releases and
+## fetches only events missing from them (the weekly job uses this).
+##
 ## Older seasons have strokes, lies and distances but no coordinates or radar.
 
 library(httr2)
@@ -21,6 +24,7 @@ library(jsonlite)
 args <- commandArgs(trailingOnly = TRUE)
 seasons <- as.integer(args[grepl("^\\d{4}$", args)])
 upload <- "--upload" %in% args
+incremental <- "--incremental" %in% args
 delay <- as.numeric(Sys.getenv("SHOTLINK_DELAY", "2"))
 cache_dir <- Sys.getenv("SHOTLINK_CACHE", "data-raw/shotlink-cache")
 only_events <- strsplit(Sys.getenv("SHOTLINK_EVENTS"), ",")[[1]]
@@ -217,12 +221,24 @@ parse_setup <- function(res, season, ev, pr) {
 
 # --- per season -------------------------------------------------------------
 
-run_season <- function(season) {
+published <- function(tag, season) {
+  url <- sprintf("https://github.com/array-carpenter/golfastr/releases/download/%s/%s_%d.rds",
+                 tag, tag, season)
+  tryCatch(readRDS(base::url(url)), error = function(e) NULL)
+}
+
+run_season <- function(season, skip = character()) {
   sdir <- file.path(cache_dir, season)
+  # the list of completed events grows during the season
+  if (incremental) unlink(file.path(sdir, "schedule.json.gz"))
   sched <- cached(file.path(sdir, "schedule.json.gz"), schedule_query(season))
   events <- unlist(lapply(sched$data$schedule$completed, `[[`, "tournaments"),
                    recursive = FALSE)
   if (length(only_events)) events <- Filter(function(ev) ev$id %in% only_events, events)
+  events <- Filter(function(ev) !ev$id %in% skip, events)
+  if (!length(events)) {
+    return(list(tee_times = tibble::tibble(), shots = tibble::tibble(), course_setup = tibble::tibble()))
+  }
   message(season, ": ", length(events), " completed events")
 
   tee_times <- list()
@@ -301,6 +317,23 @@ write_release <- function(x, tag, season) {
 }
 
 for (season in seasons) {
-  data <- run_season(season)
+  if (incremental) {
+    have <- lapply(c(shots = "shots", tee_times = "tee_times", course_setup = "course_setup"),
+                   published, season = season)
+    # majors run outside ShotLink have tee times but no shots
+    done <- unique(c(have$shots$tournament_id, have$tee_times$tournament_id))
+    data <- run_season(season, skip = done)
+    if (!nrow(data$tee_times)) {
+      message(season, ": nothing new")
+      next
+    }
+    for (tag in names(data)) {
+      old <- have[[tag]]
+      if (!is.null(old)) old <- old[!old$tournament_id %in% unique(data[[tag]]$tournament_id), ]
+      data[[tag]] <- dplyr::bind_rows(old, data[[tag]])
+    }
+  } else {
+    data <- run_season(season)
+  }
   for (tag in names(data)) write_release(data[[tag]], tag, season)
 }

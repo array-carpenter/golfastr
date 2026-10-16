@@ -9,12 +9,23 @@
 ## (ESPN id, PGA Tour id) pair. A pair needs 2 or more events, and an id that
 ## pairs with more than one partner goes to data-raw/id_conflicts.csv instead.
 
+## Reads the local build cache when it exists, else the published releases
+## (as in the weekly GitHub Action).
+
 suppressMessages(library(dplyr))
+source("data-raw/wp/helpers.R")
 
 cache <- "data-raw/wp/cache"
+dir.create(cache, recursive = TRUE, showWarnings = FALSE)
 shotlink_out <- "data-raw/shotlink-cache/out"
-holes <- readRDS(file.path(cache, "holes_all.rds"))
-events <- readRDS(file.path(cache, "events.rds"))
+this_year <- as.integer(format(Sys.Date(), "%Y"))
+if (file.exists(file.path(cache, "holes_all.rds"))) {
+  holes <- readRDS(file.path(cache, "holes_all.rds"))
+  events <- readRDS(file.path(cache, "events.rds"))
+} else {
+  holes <- read_hole_history(2012:this_year)
+  events <- event_table(holes, read_schedules(2012:this_year))
+}
 
 norm_name <- function(x) {
   x <- iconv(x, to = "ASCII//TRANSLIT")
@@ -25,8 +36,12 @@ norm_name <- function(x) {
 }
 
 tee_files <- list.files(shotlink_out, "^tee_times_\\d{4}\\.rds$", full.names = TRUE)
-tee <- bind_rows(lapply(tee_files, readRDS))
-message(length(tee_files), " ShotLink seasons, ", length(unique(tee$tournament_id)), " tournaments")
+tee <- if (length(tee_files)) {
+  bind_rows(lapply(tee_files, readRDS))
+} else {
+  bind_rows(lapply(2012:this_year, function(y) read_release("tee_times", sprintf("tee_times_%d.rds", y))))
+}
+message(length(unique(tee$season)), " ShotLink seasons, ", length(unique(tee$tournament_id)), " tournaments")
 
 pga_events <- tee |>
   group_by(tournament_id) |>
@@ -91,7 +106,6 @@ player_ids <- pairs[!conflict, ] |>
 message(nrow(player_ids), " players matched, ", sum(conflict), " conflicting pairs set aside")
 
 # True play order: players starting on the 10th tee play 10-18 then 1-9
-source("data-raw/wp/helpers.R")
 hole_order <- hole_order_table(tee, event_ids, player_ids)
 order_tbl <- distinct(hole_order, tournament_id, player_id, round, start_tee)
 saveRDS(hole_order, file.path(cache, "hole_order.rds"))
