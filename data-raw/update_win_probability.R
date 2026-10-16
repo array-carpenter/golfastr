@@ -4,7 +4,9 @@
 ##   Rscript data-raw/update_win_probability.R [year ...] [--all] [--upload]
 ##
 ## --all recomputes every event in the given years (used to publish the
-## history); WP_CORES sets how many events run at once.
+## history); --since-days N recomputes events that started in the last N
+## days (the weekly job, once ShotLink tee times give the true hole order);
+## WP_CORES sets how many events run at once.
 
 if (requireNamespace("pkgload", quietly = TRUE)) pkgload::load_all(quiet = TRUE) else library(golfastr)
 suppressMessages(library(dplyr))
@@ -13,6 +15,9 @@ source("data-raw/wp/helpers.R")
 args <- commandArgs(trailingOnly = TRUE)
 upload <- "--upload" %in% args
 redo <- "--all" %in% args
+since <- which(args == "--since-days")
+since_days <- if (length(since)) as.integer(args[since + 1]) else NA
+if (length(since)) args <- args[-c(since, since + 1)]
 targets <- as.integer(args[!args %in% c("--upload", "--all")])
 cores <- as.integer(Sys.getenv("WP_CORES", "1"))
 start_file <- "data-raw/wp/starting_strokes.csv"
@@ -37,6 +42,9 @@ for (year in targets) {
   have <- if (!redo && "win_prob" %in% names(h_year)) {
     unique(h_year$tournament_id[!is.na(h_year$win_prob)])
   } else character()
+  recent <- if (is.na(since_days)) character() else
+    events$tournament_id[!is.na(events$start_date) & events$start_date >= Sys.Date() - since_days]
+  have <- setdiff(have, recent)
   todo <- events$tournament_id[events$year == year & events$wp_eligible & !events$tournament_id %in% have]
   limit <- as.integer(Sys.getenv("WP_LIMIT", "0"))
   if (limit > 0) todo <- utils::head(todo, limit)
@@ -48,6 +56,7 @@ for (year in targets) {
   order <- if (have_ids) hole_order_table(tee, ids$events, ids$players)
   waves <- if (have_ids) wave_table(tee, ids$events, ids$players)
   if (redo) h_year <- h_year[setdiff(names(h_year), wp_columns)]
+  h_year[h_year$tournament_id %in% todo, intersect(wp_columns, names(h_year))] <- NA
   results <- parallel::mclapply(todo, function(id) {
     r <- rated$ratings[rated$ratings$tournament_id == id, ]
     ord <- if (!is.null(order)) order[order$tournament_id == id, ]
