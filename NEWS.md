@@ -14,6 +14,13 @@
   left. Fit on 2004-2019, it is calibrated on 2020-2026 events it never
   saw.
 
+### Database
+
+* `update_db()` builds a local SQLite database (or writes to any DBI
+  connection) from the hosted data, in one schema: every table has a
+  `season` column, ShotLink tables carry both PGA Tour and ESPN IDs, and
+  dates are text. Later runs add missing seasons and refresh the latest.
+
 ### Hole history
 
 * `load_holes()` covers 2004 to now (was 2025 to now), including playoff

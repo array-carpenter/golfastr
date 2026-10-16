@@ -64,6 +64,13 @@ reference:
   - load_player_ids
   - load_event_ids
 
+- title: Database
+  desc: >
+    Build a local SQLite (or any DBI) database from the hosted data and
+    keep it current.
+  contents:
+  - update_db
+
 - title: Live ESPN API
   desc: Query tournaments directly from ESPN.
   contents:
