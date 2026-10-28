@@ -176,8 +176,9 @@ ratings_files <- function(holes, events, rated, params) {
 }
 
 save_and_upload <- function(x, name, tag, upload) {
-  out <- file.path(tempdir(), tag)
-  dir.create(out, showWarnings = FALSE)
+  # WP_OUT keeps the files after the run (checked before an upload)
+  out <- file.path(Sys.getenv("WP_OUT", tempdir()), tag)
+  dir.create(out, recursive = TRUE, showWarnings = FALSE)
   base <- file.path(out, name)
   saveRDS(x, paste0(base, ".rds"))
   utils::write.csv(x, paste0(base, ".csv"), row.names = FALSE)
