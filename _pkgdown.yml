@@ -64,6 +64,11 @@ reference:
   - load_player_ids
   - load_event_ids
 
+- title: Logos
+  desc: Logo image URLs for tours, tournaments, courses and clubs.
+  contents:
+  - load_logos
+
 - title: Database
   desc: >
     Build a local SQLite (or any DBI) database from the hosted data and
