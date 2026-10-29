@@ -31,6 +31,13 @@
 * `load_player_ids()` and `load_event_ids()` link ESPN IDs to PGA Tour IDs,
   so ESPN scoring data joins to ShotLink and strokes gained.
 
+### Logos
+
+* `load_logos()` returns logo image URLs for tours, tournaments, ShotLink
+  courses and clubs (every host of a men's or women's major, the Ryder Cup,
+  Presidents Cup or Solheim Cup since 1960), with PGA Tour, ESPN and
+  ShotLink IDs to join on. Only URLs are provided, not images.
+
 ### ShotLink data
 
 * `load_shots()` returns every stroke from PGA Tour ShotLink, 2012 to now:
