@@ -6,6 +6,10 @@
 #' @param year Numeric. The year to load (e.g., 2025).
 #' @param tour Character. Tour type, default "pga".
 #' @return A tibble with tournament schedule data.
+#' @examples
+#' \donttest{
+#' load_pga_schedule(2025)
+#' }
 #' @export
 load_pga_schedule <- function(year, tour = "pga") {
   deprecate_warn("0.2.0", "load_pga_schedule()", "load_schedule()")
@@ -25,6 +29,10 @@ load_pga_schedule <- function(year, tour = "pga") {
 #' @param tour Character. Tour type, default "pga".
 #' @param dir Character. Optional directory to save CSV files.
 #' @return A tibble with leaderboard data.
+#' @examples
+#' \donttest{
+#' load_pga_leaderboards(2025, "Masters Tournament")
+#' }
 #' @export
 load_pga_leaderboards <- function(years,
                                    tournaments = NULL,
@@ -95,6 +103,10 @@ load_pga_leaderboards <- function(years,
 #' @param tour Character. Tour type, default "pga".
 #' @param dir Character. Optional directory to save CSV files.
 #' @return A tibble with hole-by-hole scoring data.
+#' @examples
+#' \donttest{
+#' load_pga_hbh(2025, "Masters Tournament", top_n = 3)
+#' }
 #' @export
 load_pga_hbh <- function(years,
                          tournaments = NULL,

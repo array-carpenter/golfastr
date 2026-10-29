@@ -24,3 +24,8 @@ Deprecated. Use [load_leaderboard()] instead, which serves completed
 tournaments from pre-built hosted files rather than one live request
 per event.
 }
+\examples{
+\donttest{
+load_pga_leaderboards(2025, "Masters Tournament")
+}
+}

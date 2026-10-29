@@ -26,3 +26,8 @@ A tibble with hole-by-hole scoring data.
 Deprecated. Use [load_holes()] instead, which serves full-field
 scorecards for completed tournaments from pre-built hosted files.
 }
+\examples{
+\donttest{
+load_pga_hbh(2025, "Masters Tournament", top_n = 3)
+}
+}
