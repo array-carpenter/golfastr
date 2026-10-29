@@ -46,17 +46,39 @@ score_type <- function(to_par) {
   out
 }
 
-# Par in the source is score minus ESPN's to-par label, and a few players
-# carry a wrong label (par 6 holes and the like). Replace a par that under 5%
-# of the field had on that hole and round with the most common one; real
-# differences on multi-course weeks are far more common than that.
+# Par in the source is score minus ESPN's to-par label, and some players carry
+# a wrong label (a par 6 on a par 4 and the like).
+# Each course is a par card (all 18 pars) shared by at least 10% of the
+# players in a round; multi-course weeks have two or three. A player takes
+# the pars of the closest card, so every par is the most common one for that
+# hole on that player's course. Rounds with no common card (or Stableford
+# events, where par holds points) are left alone.
 fix_par <- function(holes) {
-  key <- paste(holes$tournament_id, holes$round, holes$hole)
-  share <- stats::ave(seq_along(key), key, holes$par, FUN = length) /
-    stats::ave(seq_along(key), key, FUN = length)
-  mode_par <- tapply(holes$par, key, function(p) as.integer(names(which.max(table(p)))))
-  bad <- share < 0.05
-  holes$par[bad] <- mode_par[key[bad]]
+  key <- paste(holes$tournament_id, holes$round)
+  pr <- paste(key, holes$player_id)
+  for (k in unique(key)) {
+    i <- which(key == k)
+    cards <- tapply(seq_along(i), pr[i], function(j) {
+      card <- rep(NA_integer_, 18)
+      card[holes$hole[i[j]]] <- holes$par[i[j]]
+      card
+    }, simplify = FALSE)
+    full <- vapply(cards, function(x) !anyNA(x), TRUE)
+    if (!any(full)) next
+    ids <- vapply(cards[full], paste, "", collapse = ",")
+    n <- table(ids)
+    common <- names(n)[n >= max(3, 0.1 * length(cards))]
+    common <- common[vapply(strsplit(common, ","), function(x) all(x %in% 3:6), TRUE)]
+    if (!length(common)) next
+    common <- lapply(strsplit(common[order(-n[common])], ","), as.integer)
+    for (p in names(cards)) {
+      miss <- vapply(common, function(cc) sum(cc != cards[[p]], na.rm = TRUE), 0)
+      if (min(miss) == 0) next
+      card <- common[[which.min(miss)]]
+      j <- i[pr[i] == p]
+      holes$par[j] <- card[holes$hole[j]]
+    }
+  }
   holes
 }
 

@@ -6,7 +6,8 @@
 ## --all recomputes every event in the given years (used to publish the
 ## history); --since-days N recomputes events that started in the last N
 ## days (the weekly job, once ShotLink tee times give the true hole order);
-## WP_CORES sets how many events run at once.
+## WP_CORES sets how many events run at once; HOLES_DIR reads season hole
+## files from a local build (data-raw/build_hole_history.R) before the release.
 
 if (requireNamespace("pkgload", quietly = TRUE)) pkgload::load_all(quiet = TRUE) else library(golfastr)
 suppressMessages(library(dplyr))
@@ -26,7 +27,8 @@ this_year <- as.integer(format(Sys.Date(), "%Y"))
 if (!length(targets)) targets <- this_year
 
 years <- 2004:max(targets, this_year)
-holes <- read_hole_history(years)
+holes_dir <- Sys.getenv("HOLES_DIR")
+holes <- read_hole_history(years, if (nzchar(holes_dir)) holes_dir)
 events <- event_table(holes, read_schedules(years))
 params <- golfastr:::wp_params
 sp <- params$skill_params

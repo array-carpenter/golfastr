@@ -52,6 +52,42 @@ add_hole_stats <- function(holes) {
     ungroup()
 }
 
+# Same par fix as data-raw/build_hole_history.R: some players carry a wrong
+# to-par label from ESPN (a par 6 on a par 4 and the like).
+# Each course is a par card (all 18 pars) shared by at least 10% of the
+# players in a round; multi-course weeks have two or three. A player takes
+# the pars of the closest card, so every par is the most common one for that
+# hole on that player's course. Rounds with no common card (or Stableford
+# events, where par holds points) are left alone.
+fix_par <- function(holes) {
+  key <- paste(holes$tournament_id, holes$round)
+  pr <- paste(key, holes$player_id)
+  for (k in unique(key)) {
+    i <- which(key == k)
+    cards <- tapply(seq_along(i), pr[i], function(j) {
+      card <- rep(NA_integer_, 18)
+      card[holes$hole[i[j]]] <- holes$par[i[j]]
+      card
+    }, simplify = FALSE)
+    full <- vapply(cards, function(x) !anyNA(x), TRUE)
+    if (!any(full)) next
+    ids <- vapply(cards[full], paste, "", collapse = ",")
+    n <- table(ids)
+    common <- names(n)[n >= max(3, 0.1 * length(cards))]
+    common <- common[vapply(strsplit(common, ","), function(x) all(x %in% 3:6), TRUE)]
+    if (!length(common)) next
+    common <- lapply(strsplit(common[order(-n[common])], ","), as.integer)
+    for (p in names(cards)) {
+      miss <- vapply(common, function(cc) sum(cc != cards[[p]], na.rm = TRUE), 0)
+      if (min(miss) == 0) next
+      card <- common[[which.min(miss)]]
+      j <- i[pr[i] == p]
+      holes$par[j] <- card[holes$hole[j]]
+    }
+  }
+  holes
+}
+
 download_existing <- function(tag, filename) {
   asset_url <- sprintf("https://github.com/%s/releases/download/%s/%s",
                        repo, tag, filename)
@@ -169,7 +205,7 @@ for (year in years) {
                        "tournament_id", "tournament_name",
                        "round", "hole", "par", "score", "score_type", "year",
                        wp_cols)]
-    holes <- add_hole_stats(holes)
+    holes <- add_hole_stats(fix_par(holes))
   }
   save_asset(holes, sprintf("holes_%d", year))
   message("Holes: ", nrow(holes), " rows")
