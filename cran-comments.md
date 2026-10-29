@@ -6,7 +6,14 @@
 
 ## R CMD check results
 
-0 errors | 0 warnings | 0 notes
+0 errors | 0 warnings | 2 notes
+
+Both notes come from the local machine, not the package:
+
+* "checking for future file timestamps ... unable to verify current time"
+  (the time server could not be reached).
+* "checking HTML version of manual ... Skipping checking HTML validation:
+  'tidy' doesn't look like recent enough HTML Tidy."
 
 ## Update
 
@@ -25,6 +32,11 @@ This version:
 * Adds `load_player_ids()` and `load_event_ids()`, which read an ID
   crosswalk hosted as a GitHub release asset, with the same empty-tibble
   fallback as the other loaders.
+* Adds `load_logos()`, which reads a table of logo image URLs hosted as a
+  GitHub release asset. It returns URLs only, not images.
+* Adds `update_db()`, which writes the hosted tables to a local SQLite
+  database or any DBI connection. DBI and RSQLite are in Suggests and are
+  checked with `requireNamespace()`. The example writes to `tempdir()`.
 * Lets analysis and plot functions take a `data` argument so they work on
   tibbles returned by `load_leaderboard()`, not only on user-created files.
 * Aligns older saved-file column names (`display_name`, `event_id`,

@@ -25,6 +25,9 @@
 
 * `load_holes()` covers 2004 to now (was 2025 to now), including playoff
   holes as an extra round.
+* Hole pars come from each player's course card for the round, which fixes
+  ESPN par labels that were off (for example a par 6 on a par 4 hole) and
+  the scores to par built from them.
 
 ### IDs
 

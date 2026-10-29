@@ -96,6 +96,40 @@ Returns per-round averages for all six SG categories:
 | sg_t2g | Strokes Gained: Tee to Green |
 | sg_total | Strokes Gained: Total |
 
+## ShotLink
+
+Every PGA Tour stroke since 2012, plus tee times and course setup by round:
+
+```r
+shots <- load_shots(2026, "Masters")
+tee_times <- load_tee_times(2026, "Masters")
+setup <- load_course_setup(2026, "Masters")
+
+# Strokes gained for every shot, then totals by round
+sg <- calculate_strokes_gained(shots)
+summarise_strokes_gained(sg, by = "round")
+```
+
+## Win Probability
+
+`load_holes()` files carry `win_prob`, `win_prob_before`, `wpa` and
+`skill_rating` for every PGA Tour stroke play event since 2004.
+`add_win_probability()` computes them for an event in progress.
+
+## IDs, Logos and a Local Database
+
+```r
+# ESPN to PGA Tour ID crosswalk
+load_player_ids("Scheffler")
+load_event_ids(2026)
+
+# Logo image URLs for tours, tournaments, courses and clubs
+load_logos("club", "Augusta")
+
+# Build or refresh a local SQLite database
+update_db(dbdir = "~/golf")
+```
+
 ## Core Functions
 
 ### Tournament Schedule
