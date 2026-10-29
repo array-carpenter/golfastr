@@ -38,12 +38,24 @@ A tibble with hole-by-hole data including:
     \item \code{player_id}: ESPN athlete ID
     \item \code{player_name}: Player display name
     \item \code{position}: Final leaderboard standing
-    \item \code{round}: Round number (1-4)
+    \item \code{round}: Round number (1-4; playoff holes come as an
+      extra round)
     \item \code{hole}: Hole number (1-18)
     \item \code{par}: Par for the hole
     \item \code{score}: Player's score on the hole
     \item \code{score_type}: BIRDIE, PAR, BOGEY, EAGLE, etc.
     \item \code{tournament_id}: Event ID
+    \item \code{field_avg}, \code{vs_field}, \code{to_par},
+      \code{cume_to_par}: Field average on the hole that round, strokes
+      against it, score to par and running score to par (hosted data)
+    \item \code{win_prob}, \code{win_prob_before}, \code{wpa}: Chance
+      of winning after and before the hole, and the difference (hosted
+      PGA Tour stroke play events)
+    \item \code{skill_rating}: Pre-event rating, strokes per round
+      better than an average tour player
+    \item \code{hole_order_source}: \code{"shotlink"} when the
+      player's starting tee is known, else \code{"assumed"} (holes 1 to
+      18)
   }
 
 A tibble with hole-by-hole scoring data
@@ -52,11 +64,12 @@ A tibble with hole-by-hole scoring data
 Retrieves hole-by-hole scoring data for tournaments.
 }
 \details{
-For PGA Tour data, completed tournaments are served from pre-built
-full-field files hosted on GitHub releases (updated daily), avoiding
-the one-request-per-player cost of the live ESPN API. The live API is
-used as a fallback for in-progress tournaments, other tours, or when
-the hosted data is unavailable.
+For PGA Tour data, completed tournaments from 2004 on are served from
+pre-built full-field files hosted on GitHub releases (updated daily),
+avoiding the one-request-per-player cost of the live ESPN API. The live
+API is used as a fallback for in-progress tournaments, other tours, or
+when the hosted data is unavailable. Hosted files also carry win
+probability for every hole; see [add_win_probability()] for the method.
 }
 \section{Functions}{
 \itemize{

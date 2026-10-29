@@ -1,15 +1,16 @@
 #' Get Field Descriptions for PGA Data
 #'
 #' Returns a data frame with field names and descriptions for
-#' leaderboard or hole-by-hole data.
+#' leaderboard, hole-by-hole or logo data.
 #'
-#' @param data_type Character. Either "leaderboard" or "holes".
+#' @param data_type Character. One of "leaderboard", "holes" or "logos".
 #' @return A tibble with field and description columns.
 #' @export
 #' @examples
 #' pga_field_descriptions("leaderboard")
 #' pga_field_descriptions("holes")
-pga_field_descriptions <- function(data_type = c("leaderboard", "holes")) {
+#' pga_field_descriptions("logos")
+pga_field_descriptions <- function(data_type = c("leaderboard", "holes", "logos")) {
   data_type <- match.arg(data_type)
 
   if (data_type == "leaderboard") {
@@ -35,6 +36,39 @@ pga_field_descriptions <- function(data_type = c("leaderboard", "holes")) {
         "ESPN event ID",
         "Name of the tournament",
         "Tournament year"
+      )
+    )
+  } else if (data_type == "logos") {
+    tibble::tibble(
+      field = c(
+        "logo_type",
+        "name",
+        "logo_url",
+        "logo_source",
+        "source_page",
+        "tour",
+        "pga_tournament_id",
+        "espn_tournament_id",
+        "course_id",
+        "club_id",
+        "primary_color",
+        "secondary_color",
+        "checked_at"
+      ),
+      description = c(
+        "tour, tournament, course or club",
+        "Display name",
+        "Logo image URL",
+        "Where the logo was found: pgatour, wikimedia, club_site or tour_site",
+        "Page the logo was found on",
+        "Tour code (pga, lpga, dpwt, liv, kft, champions, ...); NA for courses and clubs",
+        "PGA Tour tournament ID (tournaments)",
+        "ESPN event ID (tournaments)",
+        "ShotLink course ID (courses)",
+        "Club slug, e.g. augusta-national; one club can have many courses",
+        "Primary color as hex, where known",
+        "Secondary color as hex, where known",
+        "Date the URL last returned an image"
       )
     )
   } else {

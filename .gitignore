@@ -48,3 +48,12 @@ po/*~
 
 # RStudio Connect folder
 rsconnect/
+
+# ShotLink request cache
+data-raw/shotlink-cache/
+data-raw/shotlink.log
+data-raw/shotlink*.log
+scripts/sg_validation_*.rds
+
+# Logo request cache
+data-raw/logos-cache/
