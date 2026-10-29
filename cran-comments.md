@@ -6,12 +6,10 @@
 
 ## R CMD check results
 
-0 errors | 0 warnings | 2 notes
+0 errors | 0 warnings | 1 note
 
-Both notes come from the local machine, not the package:
+The note comes from the local machine, not the package:
 
-* "checking for future file timestamps ... unable to verify current time"
-  (the time server could not be reached).
 * "checking HTML version of manual ... Skipping checking HTML validation:
   'tidy' doesn't look like recent enough HTML Tidy."
 
@@ -45,9 +43,18 @@ This version:
 * Adds a `year` filter to `load_strokes_gained()`.
 * Wraps the network example for `load_strokes_gained()` in `\donttest{}`.
   The runnable example uses `use_bundled = TRUE`.
+* Adds `\donttest{}` examples to the deprecated `load_pga_schedule()`,
+  `load_pga_leaderboards()` and `load_pga_hbh()`.
 * Documents LIV Golf, LPGA, DP World Tour, and Champions Tour in
   DESCRIPTION and in `tour` arguments.
 * Updates the bundled strokes gained snapshot.
+
+## Method references
+
+The win probability model is original work with no published reference.
+It is a per-hole ordered logit on the field's score distribution, with
+exact tie handling once no cut is left. Strokes gained uses a baseline of
+expected strokes by lie and distance, fitted to public 'ShotLink' data.
 
 ## Note on \dontrun{} usage
 
