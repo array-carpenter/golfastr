@@ -69,6 +69,14 @@ reference:
   contents:
   - load_logos
 
+- title: What's in the bag
+  desc: >
+    Player equipment by bag and club from GolfWRX and PGA Tour Club Tracker
+    posts, and equipment switches.
+  contents:
+  - load_witb
+  - load_witb_switches
+
 - title: Database
   desc: >
     Build a local SQLite (or any DBI) database from the hosted data and

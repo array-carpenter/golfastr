@@ -1,16 +1,19 @@
 #' Get Field Descriptions for PGA Data
 #'
 #' Returns a data frame with field names and descriptions for
-#' leaderboard, hole-by-hole or logo data.
+#' leaderboard, hole-by-hole, logo or what's in the bag data.
 #'
-#' @param data_type Character. One of "leaderboard", "holes" or "logos".
+#' @param data_type Character. One of "leaderboard", "holes", "logos",
+#'   "witb" ([load_witb()]) or "witb_switches" ([load_witb_switches()]).
 #' @return A tibble with field and description columns.
 #' @export
 #' @examples
 #' pga_field_descriptions("leaderboard")
 #' pga_field_descriptions("holes")
 #' pga_field_descriptions("logos")
-pga_field_descriptions <- function(data_type = c("leaderboard", "holes", "logos")) {
+#' pga_field_descriptions("witb")
+pga_field_descriptions <- function(data_type = c("leaderboard", "holes", "logos",
+                                                 "witb", "witb_switches")) {
   data_type <- match.arg(data_type)
 
   if (data_type == "leaderboard") {
@@ -69,6 +72,150 @@ pga_field_descriptions <- function(data_type = c("leaderboard", "holes", "logos"
         "Primary color as hex, where known",
         "Secondary color as hex, where known",
         "Date the URL last returned an image"
+      )
+    )
+  } else if (data_type == "witb") {
+    tibble::tibble(
+      field = c(
+        "bag_id",
+        "player_id",
+        "player_name",
+        "as_of_date",
+        "event_name",
+        "tournament_id",
+        "source",
+        "source_url",
+        "slot",
+        "club_label",
+        "club_order",
+        "head_brand",
+        "head_model",
+        "model_variant",
+        "is_prototype",
+        "finish",
+        "loft_stated",
+        "loft_actual",
+        "lie",
+        "bounce",
+        "grind",
+        "offset",
+        "head_weight",
+        "adapter_setting",
+        "shaft_brand",
+        "shaft_model",
+        "shaft_weight_g",
+        "shaft_flex",
+        "shaft_profile",
+        "tipping_in",
+        "length_in",
+        "swing_weight",
+        "grip_brand",
+        "grip_model",
+        "grip_size",
+        "grip_wraps",
+        "grip_notes",
+        "putter_length_in",
+        "putter_loft",
+        "putter_lie",
+        "head_shape",
+        "hosel",
+        "toe_hang",
+        "head_source",
+        "shaft_source",
+        "grip_source",
+        "putter_source",
+        "notes",
+        "qc_flags"
+      ),
+      description = c(
+        "Bag ID: source and its post key, e.g. golfwrx:687118",
+        "PGA Tour player ID, as in load_shots(); NA for players without one",
+        "Player name as printed by the source",
+        "Date of the bag post",
+        "Event the bag was seen at, where known",
+        "PGA Tour tournament ID, where the event is known",
+        "golfwrx or clubtracker (PGA Tour Club Tracker)",
+        "Page the bag was published on",
+        "driver, fairway, hybrid, utility, iron, wedge or putter",
+        "Club as listed, e.g. 3W, 7i, 56 or Putter",
+        "Order in the bag, 1 = longest club",
+        "Head brand",
+        "Head model",
+        "Model variant, e.g. LS",
+        "TRUE for a prototype head",
+        "Head finish",
+        "Stated loft in degrees",
+        "Loft in degrees after bending, where given",
+        "Lie angle in degrees",
+        "Bounce in degrees (wedges)",
+        "Wedge grind",
+        "Offset",
+        "Head weight as written",
+        "Adjustable hosel setting",
+        "Shaft brand",
+        "Shaft model",
+        "Shaft weight in grams",
+        "Shaft flex",
+        "Shaft profile, e.g. soft stepped",
+        "Tipping in inches",
+        "Club length in inches",
+        "Swing weight",
+        "Grip brand",
+        "Grip model",
+        "Grip size",
+        "Extra wraps of tape under the grip",
+        "Other grip notes",
+        "Putter length in inches",
+        "Putter loft in degrees",
+        "Putter lie angle in degrees",
+        "Putter head shape",
+        "Putter hosel",
+        "Putter toe hang",
+        "Source of the head fields: golfwrx, clubtracker or both",
+        "Source of the shaft fields",
+        "Source of the grip fields",
+        "Source of the putter fields",
+        "Other spec notes",
+        "Data checks the bag did not pass, '; '-separated (e.g. club_count=15, team_post)"
+      )
+    )
+  } else if (data_type == "witb_switches") {
+    tibble::tibble(
+      field = c(
+        "player_id",
+        "player_name",
+        "slot",
+        "component",
+        "old_value",
+        "new_value",
+        "last_seen_old",
+        "first_seen_new",
+        "first_seen_event",
+        "tournament_id",
+        "old_bag_id",
+        "new_bag_id",
+        "gap_days",
+        "uncertain",
+        "reason",
+        "brand_change"
+      ),
+      description = c(
+        "PGA Tour player ID",
+        "Player name",
+        "driver, fairway, hybrid, utility, iron, wedge or putter",
+        "head, shaft or grip",
+        "Equipment before the switch",
+        "Equipment after the switch",
+        "Date of the last bag with the old equipment",
+        "Date of the first bag with the new equipment",
+        "Event of the first bag with the new equipment",
+        "PGA Tour tournament ID of that event, where known",
+        "bag_id of the last bag with the old equipment",
+        "bag_id of the first bag with the new equipment",
+        "Days between the two bags",
+        "TRUE when the switch may not be real",
+        "Why it is uncertain, e.g. old value back within 30 days",
+        "TRUE when the old and new equipment share no brand"
       )
     )
   } else {

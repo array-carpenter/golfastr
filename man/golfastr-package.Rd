@@ -8,7 +8,7 @@
 \description{
 \if{html}{\figure{logo.png}{options: style='float: right' alt='logo' width='120'}}
 
-Fetch professional golf tournament data from ESPN \url{https://www.espn.com/golf/}, including leaderboards and hole-by-hole scoring for the PGA Tour, LIV Golf, LPGA, DP World Tour, and Champions Tour. Data is returned in tidy 'tibble' format. Completed PGA Tour seasons are served from hosted files for fast repeated access. Also provides shot-level PGA Tour 'ShotLink' data with tee times and course setup, strokes gained for every shot, live and historical win probability after every hole, an ESPN to PGA Tour ID crosswalk, and logo image URLs. Supports local storage via RDS, 'Apache Arrow' Parquet files or a 'SQLite' database.
+Designed for quickly grabbing PGA Tour data. Includes a large data update with shot-level PGA Tour 'ShotLink' data, tee times and course setup, strokes gained, win probability after every hole, a what's in the bag database (WITBDB) of player equipment, an ID crosswalk between 'ESPN' and the PGA Tour, and logo image URLs. Leaderboards and hole-by-hole scoring come from 'ESPN' \url{https://www.espn.com/golf/} for the PGA Tour, LIV Golf, LPGA, DP World Tour and Champions Tour. Completed seasons are served from hosted files for fast repeated access, and data can be saved as RDS, 'Apache Arrow' Parquet or a 'SQLite' database.
 }
 \seealso{
 Useful links:

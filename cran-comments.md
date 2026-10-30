@@ -32,6 +32,9 @@ This version:
   fallback as the other loaders.
 * Adds `load_logos()`, which reads a table of logo image URLs hosted as a
   GitHub release asset. It returns URLs only, not images.
+* Adds `load_witb()` and `load_witb_switches()`, which read player
+  equipment tables (what's in the bag) hosted as GitHub release assets,
+  with the same empty-tibble fallback as the other loaders.
 * Adds `update_db()`, which writes the hosted tables to a local SQLite
   database or any DBI connection. DBI and RSQLite are in Suggests and are
   checked with `requireNamespace()`. The example writes to `tempdir()`.
@@ -51,14 +54,13 @@ This version:
 
 ## Method references
 
-The win probability model is original work with no published reference.
-It is a per-hole ordered logit on the field's score distribution, with
-exact tie handling once no cut is left. Strokes gained uses a baseline of
-expected strokes by lie and distance, fitted to public 'ShotLink' data.
+* Win probability: original model, no published reference. Each hole uses an ordered logit shift of that day's field score distribution for the hole. A round-level random effect updates as holes are played. Win probability after the last cut is exact, including ties.
+* Strokes gained: the standard expected-strokes method. The baseline is fitted to public PGA Tour 'ShotLink' shot data from 2025 and 2026.
 
-## Note on \dontrun{} usage
+## Notes
 
-Examples using `\dontrun{}` still require a user-created data file or a
-network call that the user opts into. Analysis examples now also show the
-`data = load_leaderboard()` path inside `\dontrun{}` because that path
-downloads hosted season files.
+* Large data sets are not in the package. They are GitHub release files, and the loaders download them on demand.
+* If a download fails, the loaders return an empty tibble with a message, not an error.
+* `\dontrun{}` examples need a user-created data file or a large download.
+* Network examples use `\donttest{}`.
+* The tarball is 268 KB.

@@ -41,6 +41,14 @@
   Presidents Cup or Solheim Cup since 1960), with PGA Tour, ESPN and
   ShotLink IDs to join on. Only URLs are provided, not images.
 
+### What's in the bag
+
+* `load_witb()` returns player equipment from the what's in the bag
+  database (WITBDB): one row per club with head, loft, shaft and grip
+  specs, parsed from GolfWRX and PGA Tour Club Tracker bag posts, with the
+  source URL of every bag. `load_witb_switches()` lists each player's
+  equipment changes by slot.
+
 ### ShotLink data
 
 * `load_shots()` returns every stroke from PGA Tour ShotLink, 2012 to now:

@@ -126,6 +126,9 @@ load_event_ids(2026)
 # Logo image URLs for tours, tournaments, courses and clubs
 load_logos("club", "Augusta")
 
+# What's in the bag: equipment by club, and switches
+load_witb("Scheffler", year = 2026, slot = "putter")
+
 # Build or refresh a local SQLite database
 update_db(dbdir = "~/golf")
 ```

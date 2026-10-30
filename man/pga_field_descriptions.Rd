@@ -4,20 +4,24 @@
 \alias{pga_field_descriptions}
 \title{Get Field Descriptions for PGA Data}
 \usage{
-pga_field_descriptions(data_type = c("leaderboard", "holes", "logos"))
+pga_field_descriptions(
+  data_type = c("leaderboard", "holes", "logos", "witb", "witb_switches")
+)
 }
 \arguments{
-\item{data_type}{Character. One of "leaderboard", "holes" or "logos".}
+\item{data_type}{Character. One of "leaderboard", "holes", "logos",
+"witb" ([load_witb()]) or "witb_switches" ([load_witb_switches()]).}
 }
 \value{
 A tibble with field and description columns.
 }
 \description{
 Returns a data frame with field names and descriptions for
-leaderboard, hole-by-hole or logo data.
+leaderboard, hole-by-hole, logo or what's in the bag data.
 }
 \examples{
 pga_field_descriptions("leaderboard")
 pga_field_descriptions("holes")
 pga_field_descriptions("logos")
+pga_field_descriptions("witb")
 }
