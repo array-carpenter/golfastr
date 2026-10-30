@@ -63,4 +63,4 @@ This version:
 * If a download fails, the loaders return an empty tibble with a message, not an error.
 * `\dontrun{}` examples need a user-created data file or a large download.
 * Network examples use `\donttest{}`.
-* The tarball is SIZE KB.
+* The tarball is 268 KB.
