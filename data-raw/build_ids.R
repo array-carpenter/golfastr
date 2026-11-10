@@ -35,11 +35,15 @@ norm_name <- function(x) {
   gsub("\\s+", " ", trimws(x))
 }
 
-tee_files <- list.files(shotlink_out, "^tee_times_\\d{4}\\.rds$", full.names = TRUE)
-tee <- if (length(tee_files)) {
-  bind_rows(lapply(tee_files, readRDS))
-} else {
-  bind_rows(lapply(2012:this_year, function(y) read_release("tee_times", sprintf("tee_times_%d.rds", y))))
+# The weekly job only has the current season on disk, so fall back to the
+# release for every season without a local file.
+tee <- bind_rows(lapply(2012:this_year, function(y) {
+  f <- file.path(shotlink_out, sprintf("tee_times_%d.rds", y))
+  if (file.exists(f)) readRDS(f) else read_release("tee_times", sprintf("tee_times_%d.rds", y))
+}))
+missing_seasons <- setdiff(2012:(this_year - 1), tee$season)
+if (length(missing_seasons)) {
+  stop("No tee times for ", paste(missing_seasons, collapse = ", "), "; not rebuilding the crosswalk")
 }
 message(length(unique(tee$season)), " ShotLink seasons, ", length(unique(tee$tournament_id)), " tournaments")
 
