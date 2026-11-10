@@ -1,0 +1,204 @@
+---
+title: "What's New in golfastr 0.3.0"
+description: >
+  Every ShotLink stroke since 2012, free strokes gained, win probability for
+  every hole since 2004, ID crosswalks, logos and what's in the bag.
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{What's New in golfastr 0.3.0}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r setup, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>",
+  eval = FALSE
+)
+```
+
+golfastr 0.3.0 is the biggest release so far: shot-level data, strokes
+gained, win probability, ID crosswalks, logos and equipment. The examples
+below use the 2025 Players Championship, which Rory McIlroy won in a playoff
+over J.J. Spaun. The full list of changes is in the
+[changelog](../news/index.html).
+
+```{r}
+library(golfastr)
+library(dplyr)
+```
+
+## ShotLink: every stroke since 2012
+
+`load_shots()` returns every stroke from PGA Tour ShotLink for 2012 to now:
+distance, distance to the hole, lie before and after, and the play-by-play
+text. Recent seasons also have shot coordinates and launch monitor readings
+(club speed, ball speed, spin, launch angle, apex height).
+
+```{r}
+shots <- load_shots(2025, "Players")
+
+shots |>
+  filter(player_name == "Rory McIlroy", round == 1, hole == 1) |>
+  select(stroke, distance, distance_remaining, from_location, to_location)
+#> # A tibble: 3 × 5
+#>   stroke distance distance_remaining from_location to_location
+#>    <int>    <dbl>              <dbl> <chr>         <chr>
+#> 1      1   276                139    Tee Box       Right Fairway
+#> 2      2   137                  2.39 Fairway       Left Green
+#> 3      3     2.39              NA    Green         Green
+```
+
+Two more loaders come from the same feed:
+
+* `load_tee_times()` gives pairings, tee times and the starting hole for
+  every round.
+* `load_course_setup()` gives par, yardage and pin position by hole and
+  round.
+
+All three read season files from GitHub releases and take a `tournament`
+filter. `load_shots()` and `load_tee_times()` also take a `player` filter.
+
+## Strokes gained for every player
+
+`calculate_strokes_gained()` scores each shot against a baseline of expected
+strokes by lie and distance, fit from ShotLink. `summarise_strokes_gained()`
+adds it up by round, tournament or season (as per-round averages), adjusted
+to the field.
+
+```{r}
+sg <- calculate_strokes_gained(shots)
+
+summarise_strokes_gained(sg, by = "tournament") |>
+  arrange(desc(sg_total)) |>
+  select(player_name, sg_ott, sg_app, sg_arg, sg_putt, sg_total) |>
+  head(5)
+#> # A tibble: 5 × 6
+#>   player_name    sg_ott sg_app sg_arg    sg_putt sg_total
+#>   <chr>           <dbl>  <dbl>  <dbl>      <dbl>    <dbl>
+#> 1 Rory McIlroy  -0.254   2.72  -0.230  1.42          3.65
+#> 2 J.J. Spaun     0.395   2.62   0.641 -0.0000578     3.65
+#> 3 Lucas Glover   0.516   0.567  1.26   0.814         3.15
+#> 4 Tom Hoge       0.543   1.92  -0.264  0.952         3.15
+#> 5 Akshay Bhatia -0.0872  1.65   0.255  1.34          3.15
+```
+
+McIlroy and Spaun tied after 72 holes, so their totals match. They got
+there differently: McIlroy lost strokes off the tee and made them up on
+the greens, and Spaun gained nothing putting.
+
+Season totals track the PGA Tour's official strokes gained total closely
+(correlation 0.97 in 2025 and 0.98 in 2026). They also cover every player
+in the field, not only those with enough measured rounds.
+
+## Win probability after every hole
+
+`load_holes()` now goes back to 2004 and has four new columns:
+
+| Column | Meaning |
+|---|---|
+| `win_prob` | Chance of winning after the hole |
+| `win_prob_before` | Chance of winning before the hole |
+| `wpa` | Win probability added by the hole |
+| `skill_rating` | The player's rating going into the event |
+
+```{r}
+holes <- load_holes(2025, "Players")
+
+holes |>
+  filter(player_name %in% c("Rory McIlroy", "J.J. Spaun")) |>
+  arrange(desc(abs(wpa))) |>
+  select(player_name, round, hole, score, win_prob, wpa) |>
+  head(6)
+#> # A tibble: 6 × 6
+#>   player_name  round  hole score win_prob    wpa
+#>   <chr>        <int> <int> <int>    <dbl>  <dbl>
+#> 1 J.J. Spaun       5    17     6    0     -0.5
+#> 2 Rory McIlroy     5    17     4    1      0.5
+#> 3 Rory McIlroy     4     8     2    0.492  0.267
+#> 4 J.J. Spaun       4    16     4    0.463  0.255
+#> 5 Rory McIlroy     4    11     4    0.648  0.250
+#> 6 Rory McIlroy     4    16     5    0.513 -0.212
+```
+
+Playoff holes come through as an extra round (round 5 here). The playoff
+was a coin flip until Spaun's triple bogey on 17.
+
+The model plays out the rest of the event from every hole. Each hole is
+drawn from how the field played it that day, shifted for the player's skill
+rating and for how the player has done this week and this round. Cuts and
+playoffs are handled. It was fit on 2004-2019 and is calibrated on
+2020-2026 events it never saw.
+
+For an event in progress, or your own hole data, use
+`add_win_probability()`:
+
+```{r}
+live <- load_holes(live = TRUE)
+add_win_probability(live)
+```
+
+## Joining ESPN and PGA Tour data
+
+Scoring data in golfastr uses ESPN IDs, and ShotLink uses PGA Tour IDs.
+`load_player_ids()` and `load_event_ids()` link the two, so hole scores join
+to shots and strokes gained.
+
+```{r}
+load_player_ids("Scheffler")
+load_event_ids(2025)
+```
+
+## A local database
+
+`update_db()` builds a SQLite database (or writes to any DBI connection)
+from the hosted data. Every table has a `season` column, and ShotLink tables
+carry both PGA Tour and ESPN IDs. Later runs add missing seasons and refresh
+the latest one.
+
+```{r}
+update_db()
+```
+
+## Logos
+
+`load_logos()` returns logo image URLs for tours, tournaments, ShotLink
+courses and clubs, with PGA Tour, ESPN and ShotLink IDs to join on. Clubs
+include every host of a men's or women's major, the Ryder Cup, Presidents
+Cup or Solheim Cup since 1960. Only URLs are provided, not images.
+
+```{r}
+load_logos("tournament", "Players") |>
+  select(name, logo_url, pga_tournament_id)
+```
+
+## What's in the bag
+
+`load_witb()` returns player equipment, one row per club, with head, loft,
+shaft and grip specs. Bags come from GolfWRX and PGA Tour Club Tracker
+posts, and every row keeps its source URL. `load_witb_switches()` lists
+each equipment change by slot.
+
+```{r}
+load_witb("Scheffler", slot = "driver") |>
+  filter(as_of_date == max(as_of_date)) |>
+  select(as_of_date, head_brand, head_model, loft_stated, shaft_model)
+#> # A tibble: 1 × 5
+#>   as_of_date head_brand head_model loft_stated shaft_model
+#>   <date>     <chr>      <chr>            <dbl> <chr>
+#> 1 2026-09-24 TaylorMade Qi4D                 8 Ventus Black 7
+
+load_witb_switches("Scheffler", slot = "driver") |>
+  select(component, old_value, new_value, first_seen_new)
+#> # A tibble: 7 × 4
+#>   component old_value               new_value      first_seen_new
+#>   <chr>     <chr>                   <chr>          <date>
+#> 1 head      G400 LST                Stealth Plus   2022-02-13
+#> 2 head      Stealth Plus            Stealth 2 Plus 2023-02-12
+#> 3 head      Stealth 2 Plus          Qi10           2024-03-05
+#> 4 head      Qi10                    Qi4D           2025-12-09
+#> 5 head      Qi4D                    Qi10           2026-01-25
+#> 6 head      Qi10                    Qi4D           2026-08-16
+#> 7 shaft     Atmos Black Tour Spec 7 Ventus Black 7 2022-02-13
+```

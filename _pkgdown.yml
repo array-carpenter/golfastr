@@ -24,6 +24,7 @@ articles:
   navbar: ~
   contents:
   - articles/golfastr
+  - articles/whats-new-0-3-0
   - articles/plotting-golf-data
   - articles/field-descriptions
 
